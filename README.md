@@ -4,7 +4,7 @@ Welcome to the GitHub repository for workshop on community ecology analyses usin
 
 #### NOTE: This will be a work in progress until late July 2014.
 
-**Location and time:** 
+**Location and time:**    
 Saturday, August 9, 2014    
 12:00 PM - 5:00 PM     
 Location TBD     
