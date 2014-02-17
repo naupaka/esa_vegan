@@ -1,13 +1,8 @@
-esa_vegan
-=========
-
-Content for a workshop to be held at ESA 2014 on using R's vegan library for community ecology analyses.
-
-# Community data analysis using the vegan package in R    
+## Community data analysis using the vegan package in R    
 
 Welcome to the GitHub repository for workshop on community ecology analyses using the ```vegan``` package at ESA 2014.
 
-### NOTE: This will be a work in progress until late July 2014.
+#### NOTE: This will be a work in progress until late July 2014.
 
 **Location and time:** 
 Saturday, August 9, 2014    
