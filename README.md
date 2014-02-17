@@ -32,8 +32,6 @@ install.packages("reshape2")
 ### Downloading code/data from this repository  
 If you're already familiar with `Git`, then simply clone this repo. If you're not familiar with Git, simply hit the **Download ZIP** button on the right side of this page. If you're not sure where to save it, just download and unzip to your Desktop.
 
-![](how_to_clone.png)
-
 If you're having any trouble with these steps please drop us an [email](mailto:naupaka@gmail.com). We'll also strive to have local copies if you forget to install any of these tools.
 
 ---
