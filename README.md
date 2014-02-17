@@ -27,8 +27,8 @@ If you don't already have R set up with a suitable code editor, we recommend dow
 install.packages("vegan", dependencies = TRUE)
 install.packages("plyr")
 install.packages("reshape2")
-
 ```
+
 ### Downloading code/data from this repository  
 If you're already familiar with `Git`, then simply clone this repo. If you're not familiar with Git, simply hit the **Download ZIP** button on the right side of this page. If you're not sure where to save it, just download and unzip to your Desktop.
 
