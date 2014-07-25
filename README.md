@@ -10,7 +10,7 @@ Saturday, August 9, 2014
 Location TBD     
 
 ## Organizers
-[Naupaka Zimmerman](http://naupaka.net), [Nate Hough-Snee](http://www.natehough-snee.org), and [Gavin Simpson](http://www.ucl.ac.uk/~ucfagls/).
+[Naupaka Zimmerman](http://naupaka.net), [Nate Hough-Snee](http://www.natehough-snee.org), and [Gavin Simpson](http://www.fromthebottomoftheheap.net/).
 
 ---
 
