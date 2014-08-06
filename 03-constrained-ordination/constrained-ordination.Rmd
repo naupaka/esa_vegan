@@ -37,3 +37,158 @@ Formula interface is the more powerful --- *recommended*
 cca1 <- cca(varespec ~ ., data = varechem)
 cca1
 ```
+
+## Redundancy Analysis
+
+RDA is the constraindd form of PCA; fitted using `rda()`.
+
+```{r rda-model}
+rda1 <- rda(varespec ~ ., data = varechem)
+rda1
+```
+
+## The `cca.object`
+
+ * Objects of class `"cca"` are complex with many components
+ * Entire class described in `?cca.object`
+ * Depending on what analysis performed some components may be `NULL`
+ * Used for (C)CA, PCA, RDA, and CAP (`capscale()`)
+
+## The `cca.object`
+
+`cca1` has a large number of components
+
+ * **`$call`** how the function was called
+ * **`$grand.total`** in (C)CA sum of `rowsum}
+ * **`$rowsum`** the row sums
+ * **`$colsum`** the column sums
+ * **`$tot.chi`** total inertia, sum of Eigenvalues
+ * **`$pCCA`** Conditioned (partialled out) components
+ * **`$CCA`** Constrained components
+ * **`$CA`** Unconstrained components
+ * **`$method`** Ordination method used
+ * **`$inertia`** Description of what inertia is
+
+## The `cca.object`
+
+Depending on how one called `cca()` etc some of these components will be `NULL`
+
+`$pCCA` is only filled in if a *partial* constrained ordination fitted
+
+`rda()` returns objects with classes `"rda"` and `"cca"`, but in most cases those objects work like those of class `"cca"`
+
+The Eigenvalues and axis scores are now spread about the `$CA` and `$CCA` components (also `$pCCA` if a *partial* CCA)
+
+Thankfully we can use *extractor* functions to get at such things
+
+## Eigenvalues
+
+Use `eigenvals()` to extract Eigenvalues from a fitted ordination object
+
+```{r eigenvals}
+eigenvals(cca1)
+```
+
+## Extracting axis scores
+
+To extract a range of scores from  a fitted ordination use `scores()`
+
+ * takes an ordination object as the first argument
+ * `choices` --- which axes? Defaults to `c(1,2)`
+ * `display` --- which type(s) of scores to return
+
+```{r scores}
+str(scores(ca1, choices = 1:4, display = c("species","sites")), max = 1)
+head(scores(ca1, choices = 1:2, display = "sites"))
+```
+
+## Scalings...
+
+When we draw the results of many ordinations we display 2 or more sets of data
+
+Can't display all of these and maintain relationships between the scores
+
+*Solution* scale one set of scores relative to the other
+
+Controlled via the `scaling` argument
+
+ * `scaling = 1` --- Focus on species, scale site scores by $\lambda_i$
+ * `scaling = 2` --- Focus on sites, scale species scores by $\lambda_i$
+ * `scaling = 3` --- Symmetric scaling, scale both scores by $\sqrt{\lambda_i}$
+ * `scaling = -1` --- As above, but
+ * `scaling = -2` --- For `cca()` multiply results by $\sqrt{(1/(1-\lambda_i))}$
+ * `scaling = -3` --- this is Hill's scaling
+ * `scaling < 0` --- For `rda()` divide species scores by species' $\sigma$
+ * `scaling = 0` --- raw scores
+ 
+ ```{r scaling-example, results = "hide"}
+ scores(ca1, choices = 1:2, display = "species", scaling = 3)
+ ```
+
+## Partial constrained ordinations
+
+*Partial* constrained ordinations remove the effect of one or more variables *then* fit model of interest
+
+Argument `Z` is used for a data frame of variables to partial out
+
+Or with the formula interface use the `Condition()` function
+
+```{r partial-ordination}
+pcca <- cca(X = varespec,
+            Y = varechem[, "Ca", drop = FALSE],
+            Z = varechem[, "pH", drop = FALSE])
+pcca <- cca(varespec ~ Ca + Condition(pH), data = varechem) ## easier!
+```
+
+# Model building
+
+## Building constrained ordination models
+
+If we don't want to think it's easy to fit a poor model with many constraints
+
+That's what we just did with `cca1` and `rda1`
+
+Remember, CCA and RDA are *just regression methods* --- everything you know about regression applies here
+
+A better approach is to *think* about the important variables and include only those
+
+The formula interface allows you to create interaction or quadratic terms easily (though be careful with latter)
+
+It also handles factor or class constraints automatically unlike the basic interface
+
+----
+
+```{r cca-model-build1}
+vare.cca <- cca(varespec ~ Al + P*(K + Baresoil), data = varechem)
+vare.cca
+```
+
+## Building constrained ordination models
+
+For CCA we have little choice but to do
+
+ 1. Fit well-chosen set of candidate models & compare, or
+ 2. Fit a *full* model of well-chosen variables & then do stepwise selection
+
+But automatic approaches to model building should be used cautiously!
+
+The standard `step()` function can be used as **vegan** provides two helper methods, `deviance()` and `extractAIC()`, used by `step()`
+
+Vegan also provides methods for class `"cca"` for `add1()` and `drop1()`
+
+## Stepwise selection in CCA
+
+Uses function `step()`
+
+ 1. Define an upper and lower model scope, say the full model and the null model
+ 2. To step from the lower scope or null model we use
+
+```{r stepwise-1}
+upr <- cca(varespec ~ ., data = varechem)
+lwr <- cca(varespec ~ 1, data = varechem)
+mods <- step(lwr, scope = formula(upr), test = "perm", trace = 0)
+```
+
+`trace = 0` is used her to turn off printing of progress
+
+`test = "perm"` indicates permutation tests are used (more on these later); the theory for an AIC for ordination is somewhat loose
