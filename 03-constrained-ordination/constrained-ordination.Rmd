@@ -1,0 +1,14 @@
+---
+title: "Constrained Ordination & Permutation Tests"
+output:
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+    keep_md: true
+---
+
+# Constrained Ordination
+
