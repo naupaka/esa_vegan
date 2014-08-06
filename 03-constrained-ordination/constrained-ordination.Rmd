@@ -9,6 +9,7 @@ output:
     fig_caption: true
     keep_md: true
     highlight: zenburn
+    bibliography: constrained-ordination.bib
 ---
 
 ```{r setup, include = FALSE}
@@ -186,9 +187,228 @@ Uses function `step()`
 ```{r stepwise-1}
 upr <- cca(varespec ~ ., data = varechem)
 lwr <- cca(varespec ~ 1, data = varechem)
+set.seed(1)
 mods <- step(lwr, scope = formula(upr), test = "perm", trace = 0)
 ```
 
 `trace = 0` is used her to turn off printing of progress
 
 `test = "perm"` indicates permutation tests are used (more on these later); the theory for an AIC for ordination is somewhat loose
+
+## Stepwise selection in CCA
+
+The object returned by `step()` is a standard `"cca"` object with an extra component `$anova`
+
+The `$anova` component contains a summary of the steps involved in automatic model building
+
+```{r stepwise-cca}
+mods
+```
+
+## Stepwise selection in CCA
+
+The `$anova` component contains a summary of the steps involved in automatic model building
+
+```{r stepwise-anova}
+mods$anova
+```
+
+## Stepwise selection in CCA
+
+Step-wise model selection is fairly fragile; if we start from the full model we won't end up with the same final model
+
+```{r stepwise-reverse}
+mods2 <- step(upr, scope = list(lower = formula(lwr), upper = formula(upr)), trace = 0,
+              test = "perm")
+mods2
+```
+
+## Adjusted $R^2$ for *linear* models
+
+As with ordinary $R^2$, that of an RDA is biased for the same reasons as for a linear regression
+
+ * adding a variable to constraints will increase $R^2$
+ * the larger the number of constraints in the model the larger $R^2$ is due to random correlations
+
+Can attempt to account for this bias via an *adjusted* $R^2$ measure
+
+$$R^2_{adj} = 1 - \frac{n - 1}{n - m - 1}(1 - R^2)$$
+
+where
+
+ * $n$ is number of samples
+ * $m$ is number of constraints (model degrees of freedom)
+
+Can be used up to $\sim M > n/2$ before becomes too conservative
+
+Can be negative
+
+Compute using `RsquareAdj()`
+
+## Variance inflation factors
+
+*Linear* dependencies between constraints can be investigated via the *variance inflation factor* or VIF
+
+VIF is a measure of how much the variance of $\hat{\beta}_j$ is inflated by presence of other covariates
+
+Lots of rules of thumb
+
+ * VIF >= 20 indicates *strong collinearity* in constraints
+ * VIF >= 10 potnetially of concern & should be looked at
+
+Computed via `vif.cca()`
+
+
+## Stepwise selection via adjusted $R^2$
+
+The problems with stepwise selection in regression models are myriad. Affects RDA, CCA, etc as well
+
+@Blanchet2008 proposed a two-step solution for models where $R2_{adj}$ makes sense
+
+ * *Global test* of all constraints
+     - Proceed **only** if this test is significant
+     - Helps prevent inflation of overall type I error
+ * Proceed with forward selection, but with *two* stopping rules
+     - Usual significance threshold $\alpha$
+     - The global $R^2_{adj}$
+     - Stop if next candidate model is non-significant or if $R^2_{adj}$ exceeds the global $R^2_{adj}$
+
+Available in `ordiR2step()`
+
+# Permutation tests
+
+## Permutation tests in vegan
+
+RDA has lots of theory behind it, CCA not as much. However, ecological/environmental data invariably violate what little theory we have
+
+Instead we use permutation tests to assess the *importance* of fitted models --- the data are shuffled in some way and the model refitted to derive a Null distribution under some hypothesis of *no effect*
+
+What *is* shuffled and *how* is of **paramount** importance for the test to be valid
+
+ * No conditioning (partial) variables then rows of the species data are permuted
+ * With conditioning variables, two options are available, both of which *permute residuals* from model fits
+     - The *full model* uses residuals from model $Y = X + Z + \varepsilon$
+     - The *reduced model* uses residuals from model $Y = X + Z + \varepsilon$
+ * In **vegan** which is used can be set via argument `method` with `"direct"`, `"full"`, and `"reduced"` respectively
+
+A test statistic is required, computed for observed model & each permuted model
+
+**vegan** uses a pseudo-$F$ statistic
+
+$$F=\frac{\chi^2_{model} / df_{model}}{\chi^2_{resid} / df_{resid}}$$
+
+Evaluate whether $F$ is unusually large relative to the null (permutation) distribution of $F$
+
+## Permutation tests in vegan: `anova()`
+
+ * The main user function is the `anova()` method
+ * It is an interface to the lower-level function `permutest.cca()`
+ * At its most simplest, the \texttt{anova()} method tests whether the ``model'' as a whole is significant
+   $$F = \frac{1.4415 / 14}{0.6417 / 9} = 1.4441$$
+
+```{r cca-anova}
+set.seed(42)
+(perm <- anova(cca1))
+```
+
+## Permutation tests in vegan: `anova()`
+
+ * `anova()` will continue permuting only as long as it is uncertain whether the the $p$-value is above or below the chosen threshold (say $p = 0.05$)
+ * If the function is sure the permuted $p$ is above the threshold `anova()` may return after only a few hundred permutations
+ * In other cases many hundreds or thousands of permutations may be required to say whether the model is above or below the threshold
+ * In the example, 1599 permutations were required
+
+```{r cca-anova-2}
+perm
+```
+
+## Permutation tests in vegan: `anova()`
+
+ * `anova.cca()` has a number of arguments
+
+```{r}
+args(anova.cca)
+```
+
+ * `alpha` is the desired $p$ value threshold (Type I error rate)
+ * `beta` is the Type II error rate
+ * Permuting stops if the result is different from `alpha` for the given `beta`
+ * This is evaluated every `step` permutations
+ * `perm.max` sets a limit on the number of permutations
+ * `by` determines what is tested; the default is to test the model
+ * More direct control can be achieved via `permutest.cca()`
+
+## Types of permutation test in vegan
+
+A number of types of test can be envisaged
+
+ * Testing the overall significance of the model
+ * Testing constrained (canonical) axes
+ * Testing individual model terms *sequentially*
+ * The *marginal* effect of a single variable
+
+The first is the default in `anova()`
+
+The other three can be selected via the argument `method`
+
+## Permutation tests | testing canonical axes
+
+ * The constrained (canonical) axes can be individually tests by specifying `by = "axis"`
+ * The first axis is tested in terms of variance explained compared to residual variance
+ * The second axis is tested after partialling out the first axis... and so on
+
+```{r anova-by-axis}
+set.seed(1)
+anova(mods, by = "axis")
+```
+
+## Permutation tests | testing terms sequentially
+
+ * The individual terms in the model can be tested using `by = "terms"`
+ * The terms are assessed in the order they were specified in the model, sequentially from first to last
+ * Test is of the additional variance explained by adding the $k$th variable to the model
+ * **Ordering of the terms** will affect the results
+
+```{r anova-by-term}
+set.seed(5)
+anova(mods, by = "terms")
+```
+
+## Permutation tests | testing terms marginal effects
+
+ * The marginal *effect* of a model term can be assessed using `by = "margin"`
+ * The marginal *effect* is the effect of a particular term when all other model terms are included in the model
+ * 
+ * 
+
+```{r anova-by-margin}
+set.seed(10)
+anova(mods, by = "margin")
+```
+
+## Restricted permutations
+
+## Diagnostics for constrained ordinations
+
+**vegan** provides a series of diagnostics to help assess the model fit
+
+ * `goodness()`
+ * `inertiacomp()`
+ * `intersetcor()`
+ * `vif.caa()`
+ 
+## Diagnostics for constrained ordinations | goodness of fit
+
+`goodness() computes two goodness of fit statistics for species or sites
+
+Which goodness of fit measure is returned is controlled by argument `statistic`
+
+ * `statistic = "explained` gives the cumulative proportion of variance explained by each axis
+ * `statistic = "distance"` gives the residual distance between the "fitted" location in constrained ordination space and the location in the full dimensional space
+
+```{r goodness}
+head(goodness(mods))
+head(goodness(mods, summarize = TRUE))
+```
+
+## References
