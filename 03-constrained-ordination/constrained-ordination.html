@@ -83,7 +83,44 @@
           </hgroup>
   </slide>
 
-<slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Constrained Ordination</h2></hgroup><article  id="constrained-ordination" class="smaller "></article></slide>
+<slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Constrained Ordination</h2></hgroup><article  id="constrained-ordination" class="smaller ">
+
+</article></slide><slide class=''><hgroup><h2>Canonical Correspondence Analysis</h2></hgroup><article  id="canonical-correspondence-analysis" class="smaller ">
+
+<p>CCA is the constrained form of CA; fitted using <code>cca()</code>.</p>
+
+<p>Two interfaces for specifying models</p>
+
+<ul>
+<li>basic; <code>cca1 &lt;- cca(X = varespec, Y = varechem)</code></li>
+<li>formula; <code>cca1 &lt;- cca(varespec ~ ., data = varechem)</code></li>
+</ul>
+
+<p>Formula interface is the more powerful &#8212; <em>recommended</em></p>
+
+</article></slide><slide class=''><hgroup><h2>Canonical Correspondence Analysis</h2></hgroup><article  id="canonical-correspondence-analysis-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>cca1 &lt;- cca(varespec ~ ., data = varechem)
+cca1</pre>
+
+<pre >Call: cca(formula = varespec ~ N + P + K + Ca + Mg + S + Al + Fe +
+Mn + Zn + Mo + Baresoil + Humdepth + pH, data = varechem)
+
+              Inertia Proportion Rank
+Total           2.083      1.000     
+Constrained     1.441      0.692   14
+Unconstrained   0.642      0.308    9
+Inertia is mean squared contingency coefficient 
+
+Eigenvalues for constrained axes:
+   CCA1    CCA2    CCA3    CCA4    CCA5    CCA6    CCA7    CCA8    CCA9 
+0.43887 0.29178 0.16285 0.14213 0.11795 0.08903 0.07029 0.05836 0.03114 
+  CCA10   CCA11   CCA12   CCA13   CCA14 
+0.01329 0.00836 0.00654 0.00616 0.00473 
+
+Eigenvalues for unconstrained axes:
+    CA1     CA2     CA3     CA4     CA5     CA6     CA7     CA8     CA9 
+0.19776 0.14193 0.10117 0.07079 0.05330 0.03330 0.01887 0.01510 0.00949 </pre></article></slide>
 
 
   <slide class="backdrop"></slide>

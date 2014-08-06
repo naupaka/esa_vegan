@@ -8,7 +8,32 @@ output:
     fig_height: 6
     fig_caption: true
     keep_md: true
+    highlight: zenburn
 ---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(comment = "")
+library("vegan")
+data(varespec)
+data(varechem)
+```
 
 # Constrained Ordination
 
+## Canonical Correspondence Analysis
+
+CCA is the constrained form of CA; fitted using `cca()`.
+
+Two interfaces for specifying models
+
+ * basic; `cca1 <- cca(X = varespec, Y = varechem)`
+ * formula; `cca1 <- cca(varespec ~ ., data = varechem)`
+
+Formula interface is the more powerful --- *recommended*
+
+## Canonical Correspondence Analysis
+
+```{r cca-model}
+cca1 <- cca(varespec ~ ., data = varechem)
+cca1
+```
