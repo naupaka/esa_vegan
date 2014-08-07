@@ -378,22 +378,231 @@ anova(mods, by = "terms")
 
  * The marginal *effect* of a model term can be assessed using `by = "margin"`
  * The marginal *effect* is the effect of a particular term when all other model terms are included in the model
- * 
- * 
 
 ```{r anova-by-margin}
 set.seed(10)
 anova(mods, by = "margin")
 ```
 
+## Restricted permutation tests
+
+What *is* shuffled and *how* is of **paramount** importance for the test to be valid
+
+Complete randomisation (default in **vegan**) assumes a null hypothesis where all observations are *independent*
+
+Ecological / environmental data often aren't independent
+
+ * Temporal or spatial correlation
+ * Clustering, repeated measures
+ * Nested sampling designs (Split-plots designs)
+ * Blocks
+ * ...
+
+Permutation *must* give null distribution of the test statistic whilst preserving the *dependence* between observations
+
+Trick is to shuffle the data whilst preserving that dependence
+
 ## Restricted permutations
+
+Canoco has had restricted permutations for a *long* time. **vegan** has only recently caught up & we're not there yet
+
+**vegan** still only knows how to completely randomise data or completely randomise within blocks (called `strata` in **vegan**)
+
+The newish package **permute** grew out of initial code in the **vegan** repository to generate the sorts of restricted permutations available in Canoco
+
+We still haven't fully integrated **permute** into **vegan**...
+
+...but you can pass **vegan** functions a matrix of permutations to use instead of having it generate its own
+
+**vegan** depends on **permute** so you should have it already installed & loaded when using **vegan**
+
+## Restricted permutations with **permute**
+
+**permute** follows Canoco closely --- at the chiding of Cajo ter Braak when it didn't do what he wanted !
+
+Samples can be thought of as belonging to three levels of a hierarchy
+
+ * the *sample* level; how are individual samples permuted
+ * the *plot* level; how are samples grouped at an intermediate level
+ * the *block* level; how are samples grouped at the outermost level
+
+Blocks define groups of plots, each of which can contain groups of samples
+
+## Restricted permutations with **permute**
+
+Blocks are *never* permuted; if defined, only plots or samples *within* the blocks get shuffled & samples never swapped between blocks
+
+Plots or samples within plots, or both can be permuted following one of four simple permutation types
+
+ 1. Free permutation (randomisation)
+ 2. Time series or linear transect, equal spacing
+ 3. Spatial grid designs, equal regular spacing
+ 4. Permutation of plots (groups of samples)
+ 5. Fixed (no permutation)
+
+Multiple plots per block, multiple samples per plot; plots could be arranged in a spatial grid and samples within each of the plots form a time series
+
+## Restricted permutations with **permute** | blocks
+
+Blocks are a random factor that does not interact with factors that vary within blocks
+
+Blocks form groups of samples that are never permuted between blocks, only within blocks
+
+Using blocks you can achieve what the `strata` argument does now in **vegan**; needs to be a factor variable
+
+The variation *between* blocks should be excluded from the test; **permute** doesn't do this for you!
+
+Use `+ Condition(blocks)` in the model formula where `blocks` is a factor containing the block membership for each observation
+
+## Restricted permutations with **permute** | time series & linear transects
+
+Can link *randomly* starting point of one series to any time point of another series if series are stationary under null hypothesis that the series are unrelated
+
+Achieve this via cyclic shift permutations --- wrap series into a circle by joining start and end points
+
+Works OK if there are no trends or cyclic pattern --- autocorrelation structure only broken at the end points *if* series are stationary
+
+Can detrend to make series stationary but not if you want to test significance of a trend
+
+```{r shuffle-time-series}
+shuffle(10, control = how(within = Within(type = "series")))
+```
+
+## Restricted permutations with **permute** | spatial grids
+
+<div class="columns-2">
+The trick of cyclic shifts can be extended to two dimensions for a regular spatial grid arrangement of points
+
+Now shifts are *toroidal* as we join the end point in the *x* direction together and in the *y* direction together
+
+```{r set-up-toroidal, include = FALSE}
+set.seed(4)
+h <- how(within = Within(type = "grid", ncol = 3, nrow = 3))
+perm <- shuffle(9, control = h)
+```
+```{r show-toroidal}
+matrix(perm, ncol = 3)
+```
+</div>
+
+## Restricted permutations with **permute** | whole-plots & split-plots I
+
+Split-plot designs are hierarchical with two levels of units
+
+ 1. **whole-plots** , which contain
+ 2. **split-plots** (the samples)
+
+Can permute one or both of these but whole-plots must be of equal size
+
+Essentially allows more than one error stratum to be anlyzed
+
+Test effect of constraints that vary *between* whole plots by permuting the whole-plots whilst retaining order of split-splots (samples) within the whole-plots
+
+Test effect of constraints that vary *within* whole-plots by permuting the split-plots within whole-plots without permuting the whole-plots
+
+## Restricted permutations with **permute** | whole-plots & split-plots II
+
+Whole-plots or split-plots can be time series, linear transects or rectangular grids in which case the appropriate restricted permutation is used
+
+If the split-plots are parallel time series & `time` is an autocorrelated error component affecting all series then the same cyclic shift can be applied to each time series (within each whole-plot) (`constant = TRUE`)
+
+## Restricted permutations with **permute** | mirroring
+
+(Without wanting to get *too* technical) Mirroring in restricted permutations allows for isotropy in dependences by reflecting the ordering of samples in time or spatial dimensions
+
+For a linear transect, technically the autocorrelation at lag *h* is equal to that at lag -*h* (also in a trend-free time series)
+
+Hence the series `(1, 2, 3, 4)` and `(4, 3, 2, 1)` are equivalent fom this point of view & we can draw permutations from either version
+
+Similar argument can be made for spatial grids
+
+Using `mirror = TRUE` then can double (time series, linear transects) or quadruple (spatial grids) the size of the set of permutations
+
+## Restricted permutations with **permute** | the set of permutations
+
+Using restricted permutations can severely reduce the size of the set of allowed permutations
+
+As the minimum *p* value obtaininable is $1 / np$ where $np$ is number of allowed permutations (including the observed) this can impact the ability to detect signal/pattern
+
+If we don't want mirroring
+
+ * in a time series of 20 samples the minimum *p* is 1/20 (0.05)
+ * in a time series of 100 samples the minimum *p* is 1/100 (0.01)
+ * in a data set with 10 time series each of 20 observations (200 total), if we assume an autocorrelated error component over all series (`constant = TRUE`) then there are only 20 permutations of the data and minimum *p* is 0.05
+
+When the set of permutations is small it is better to switch to an exact test & evaluate all permutations in the set rather than randomly sample from the set
+
+## Restricted permutations with **permute** | designing permutation schemes
+
+In **permute**, we set up a permutation scheme with `how()`
+
+We sample from the permutation scheme with
+
+ * `shuffle()`, which gives a single draw from scheme, or
+ * `shuffleSet()`, which returns a set of `n` draws from the scheme
+
+`allPerms()` can generated the entire set of permutations --- **note** this was designed for small sets of permutations & is slow if you request it for a scheme with many thousands of permutations!
+
+## Restricted permutations with **permute** | designing permutation schemes
+
+`how()` has three main arguments
+
+ 1. `within` --- takes input from helper `Within()`
+ 2. `plots`  --- takes input from helper `Plots()`
+ 3. `blocks` --- takes a factor variable as input
+
+Helper functions make it easy to change one or a few aspects of permutation scheme, rest left at defaults
+
+```{r helper-funs}
+args(Within)
+args(Plots)
+```
+
+## Restricted permutations with **permute** | designing permutation schemes
+
+`how()` has additional arguments, many of which control the heuristics that kick in to stop you shooting yourself in the foot and demanding 9999 permutations when there are only 10
+
+ * `complete` should we enumerate the entire set of permutations?
+ * `minperm` lower bound on the size of the set of permutations at & below which we turn on complete enumeration
+
+```{r helper-funs}
+args(how)
+```
+
+## Restricted permutations with **permute** | time series example I
+
+Time series within 3 plots, 10 observation each
+
+```{r}
+plt <- gl(3, 10)
+h <- how(within = Within(type = "series"), plots = Plots(strata = plt))
+set.seed(4)
+p <- shuffle(30, control = h)
+do.call("rbind", split(p, plt)) ## look at perms in context
+```
+## Restricted permutations with **permute** | time series example II
+
+Time series within 3 plots, 10 observation each, same permutation within each
+
+```{r}
+plt <- gl(3, 10)
+h <- how(within = Within(type = "series", constant = TRUE), plots = Plots(strata = plt))
+set.seed(4)
+p <- shuffle(30, control = h)
+do.call("rbind", split(p, plt)) ## look at perms in context
+```
+
+## Restricted permutations with **permute** | worked example with **vegan**
+
+To do
 
 ## Diagnostics for constrained ordinations
 
 **vegan** provides a series of diagnostics to help assess the model fit
 
  * `goodness()`
- * `inertiacomp()`
+ * `inertcomp()`
+ * `spenvcor()`
  * `intersetcor()`
  * `vif.caa()`
  
@@ -403,12 +612,59 @@ anova(mods, by = "margin")
 
 Which goodness of fit measure is returned is controlled by argument `statistic`
 
- * `statistic = "explained` gives the cumulative proportion of variance explained by each axis
+ * `statistic = "explained` (default) gives the cumulative proportion of variance explained by each axis
  * `statistic = "distance"` gives the residual distance between the "fitted" location in constrained ordination space and the location in the full dimensional space
 
 ```{r goodness}
 head(goodness(mods))
 head(goodness(mods, summarize = TRUE))
+```
+
+## Diagnostics for constrained ordinations | inertia decomposition
+
+`inertcomp() decomposes the variance in samples or species in partial, constrained, and unconstrained components
+
+Same two types of  measure available by argument `statistic`
+
+ * `statistic = "explained` (default) gives the decomposition in terms of variance
+ * `statistic = "distance"` gives decomposition in terms of the the residual distance
+
+* Can output as proportions of total via `proportion = TRUE`
+
+```{r goodness}
+head(inertcomp(mods, proportional = TRUE))
+```
+
+## Diagnostics for constrained ordinations | species-environment correlations
+
+`spenvcor() returns the species-environment correlation
+
+The (weighted) correlation between the weighted average-based and the linear combination-based sets of site scores
+
+A *poor* measure of goodness of fit. Sensitive to
+
+ * outliers (like all correlations)
+ * overfitting (using too many constraints)
+
+Better models can have poorer species-environment correlations
+
+```{r spenvcor}
+spenvcor(mods)
+```
+
+## Diagnostics for constrained ordinations | interset correlations
+
+`intersetcor() returns the interset correlations; the (weighted) correlation between the weighted average-based site scores and each constraint variable
+
+Another *poor* diagnostic
+
+ * correlation based
+ * focuses on a single constraint--axis combination at a time
+
+Vector fitting (`envfit()`) or biplot scores (`scores(model, display = "bp")`) are better alternatives
+
+```{r inertcomp}
+intersetcor(mods)
 ```
 
 ## References
