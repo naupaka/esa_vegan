@@ -1,7 +1,6 @@
 ---
 title: "Introduction to vegan"
 bibliography: intro-basics.bib
-csl: biomed-central.csl
 
 output:
   ioslides_presentation:
