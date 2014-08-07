@@ -1,0 +1,22 @@
+---
+title: "Vegan Miscellany"
+bibliography: misc-vegan.bib
+
+output:
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+    keep_md: true
+    highlight: tango
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(comment = "", cache = TRUE)
+```
+
+## **vegan** Miscellany
+
+## References
