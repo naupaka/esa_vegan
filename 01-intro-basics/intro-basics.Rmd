@@ -1,5 +1,7 @@
 ---
-title: "Introduction to vegan"
+title: "Community data analysis using the vegan package in R"
+author: "Naupaka Zimmerman and Gavin Simpson"
+date: "August 9, 2014 • ESA 2014"
 bibliography: intro-basics.bib
 
 output:
