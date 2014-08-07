@@ -113,8 +113,8 @@ Can't display all of these and maintain relationships between the scores
 
 Controlled via the `scaling` argument
 
- * `scaling = 1` --- Focus on species, scale site scores by $\lambda_i$
- * `scaling = 2` --- Focus on sites, scale species scores by $\lambda_i$
+ * `scaling = 1` --- Focus on sites, scale site scores by $\lambda_i$
+ * `scaling = 2` --- Focus on species, scale species scores by $\lambda_i$
  * `scaling = 3` --- Symmetric scaling, scale both scores by $\sqrt{\lambda_i}$
  * `scaling = -1` --- As above, but
  * `scaling = -2` --- For `cca()` multiply results by $\sqrt{(1/(1-\lambda_i))}$
