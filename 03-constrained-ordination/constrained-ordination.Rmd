@@ -1,5 +1,7 @@
 ---
 title: "Constrained Ordination & Permutation Tests"
+bibliography: constrained-ordination.bib
+
 output:
   ioslides_presentation:
     widescreen: true
@@ -8,8 +10,7 @@ output:
     fig_height: 6
     fig_caption: true
     keep_md: true
-    highlight: zenburn
-    bibliography: constrained-ordination.bib
+    highlight: tango
 ---
 
 ```{r setup, include = FALSE}
@@ -97,6 +98,13 @@ To extract a range of scores from  a fitted ordination use `scores()`
  * takes an ordination object as the first argument
  * `choices` --- which axes? Defaults to `c(1,2)`
  * `display` --- which type(s) of scores to return
+    - `"sites"` or `"wa"`: scores for samples in response matrix
+    - `"species"`: scores for variables/columns in response
+    - `"lc"`: linear combination site scores
+    - `"bp"`: biplot scores (coords of arrow tip)
+    - `"cn"`: centroid scores (coords of factor centroids)
+
+## Extracting axis scores
 
 ```{r scores}
 str(scores(cca1, choices = 1:4, display = c("species","sites")), max = 1)
@@ -122,9 +130,9 @@ Controlled via the `scaling` argument
  * `scaling < 0` --- For `rda()` divide species scores by species' $\sigma$
  * `scaling = 0` --- raw scores
  
- ```{r scaling-example, results = "hide"}
- scores(cca1, choices = 1:2, display = "species", scaling = 3)
- ```
+```{r scaling-example, results = "hide"}
+scores(cca1, choices = 1:2, display = "species", scaling = 3)
+```
 
 ## Partial constrained ordinations
 
@@ -240,11 +248,9 @@ where
  * $n$ is number of samples
  * $m$ is number of constraints (model degrees of freedom)
 
-Can be used up to $\sim M > n/2$ before becomes too conservative
-
-Can be negative
-
-Compute using `RsquareAdj()`
+ * Can be used up to $\sim M > n/2$ before becomes too conservative
+ * Can be negative
+ * Compute using `RsquareAdj()`
 
 ## Variance inflation factors
 
@@ -258,7 +264,6 @@ Lots of rules of thumb
  * VIF >= 10 potnetially of concern & should be looked at
 
 Computed via `vif.cca()`
-
 
 ## Stepwise selection via adjusted $R^2$
 
@@ -291,6 +296,8 @@ What *is* shuffled and *how* is of **paramount** importance for the test to be v
      - The *full model* uses residuals from model $Y = X + Z + \varepsilon$
      - The *reduced model* uses residuals from model $Y = X + Z + \varepsilon$
  * In **vegan** which is used can be set via argument `method` with `"direct"`, `"full"`, and `"reduced"` respectively
+
+## Permutation tests in vegan
 
 A test statistic is required, computed for observed model & each permuted model
 
@@ -327,7 +334,7 @@ perm
 
  * `anova.cca()` has a number of arguments
 
-```{r}
+```{r anova-args}
 args(anova.cca)
 ```
 
@@ -551,6 +558,13 @@ We sample from the permutation scheme with
  1. `within` --- takes input from helper `Within()`
  2. `plots`  --- takes input from helper `Plots()`
  3. `blocks` --- takes a factor variable as input
+ 
+```{r}
+plt <- gl(3, 10)
+h <- how(within = Within(type = "series"), plots = Plots(strata = plt))
+```
+
+## Restricted permutations with **permute** | designing permutation schemes
 
 Helper functions make it easy to change one or a few aspects of permutation scheme, rest left at defaults
 
@@ -574,18 +588,19 @@ args(how)
 
 Time series within 3 plots, 10 observation each
 
-```{r}
+```{r ts-perm-example1}
 plt <- gl(3, 10)
 h <- how(within = Within(type = "series"), plots = Plots(strata = plt))
 set.seed(4)
 p <- shuffle(30, control = h)
 do.call("rbind", split(p, plt)) ## look at perms in context
 ```
+
 ## Restricted permutations with **permute** | time series example II
 
 Time series within 3 plots, 10 observation each, same permutation within each
 
-```{r}
+```{r ts-perm-example2}
 plt <- gl(3, 10)
 h <- how(within = Within(type = "series", constant = TRUE), plots = Plots(strata = plt))
 set.seed(4)
@@ -609,7 +624,7 @@ To do
  
 ## Diagnostics for constrained ordinations | goodness of fit
 
-`goodness() computes two goodness of fit statistics for species or sites
+`goodness()` computes two goodness of fit statistics for species or sites
 
 Which goodness of fit measure is returned is controlled by argument `statistic`
 
@@ -623,7 +638,7 @@ head(goodness(mods, summarize = TRUE))
 
 ## Diagnostics for constrained ordinations | inertia decomposition
 
-`inertcomp() decomposes the variance in samples or species in partial, constrained, and unconstrained components
+`inertcomp()` decomposes the variance in samples or species in partial, constrained, and unconstrained components
 
 Same two types of  measure available by argument `statistic`
 
@@ -638,7 +653,7 @@ head(inertcomp(mods, proportional = TRUE))
 
 ## Diagnostics for constrained ordinations | species-environment correlations
 
-`spenvcor() returns the species-environment correlation
+`spenvcor()` returns the species-environment correlation
 
 The (weighted) correlation between the weighted average-based and the linear combination-based sets of site scores
 
@@ -655,7 +670,7 @@ spenvcor(mods)
 
 ## Diagnostics for constrained ordinations | interset correlations
 
-`intersetcor() returns the interset correlations; the (weighted) correlation between the weighted average-based site scores and each constraint variable
+`intersetcor()` returns the interset correlations; the (weighted) correlation between the weighted average-based site scores and each constraint variable
 
 Another *poor* diagnostic
 

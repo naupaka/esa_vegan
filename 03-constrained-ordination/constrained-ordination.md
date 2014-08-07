@@ -134,6 +134,13 @@ To extract a range of scores from  a fitted ordination use `scores()`
  * takes an ordination object as the first argument
  * `choices` --- which axes? Defaults to `c(1,2)`
  * `display` --- which type(s) of scores to return
+    - `"sites"` or `"wa"`: scores for samples in response matrix
+    - `"species"`: scores for variables/columns in response
+    - `"lc"`: linear combination site scores
+    - `"bp"`: biplot scores (coords of arrow tip)
+    - `"cn"`: centroid scores (coords of factor centroids)
+
+## Extracting axis scores
 
 
 ```r
@@ -181,10 +188,10 @@ Controlled via the `scaling` argument
  * `scaling < 0` --- For `rda()` divide species scores by species' $\sigma$
  * `scaling = 0` --- raw scores
  
- 
- ```r
- scores(cca1, choices = 1:2, display = "species", scaling = 3)
- ```
+
+```r
+scores(cca1, choices = 1:2, display = "species", scaling = 3)
+```
 
 ## Partial constrained ordinations
 
@@ -374,11 +381,9 @@ where
  * $n$ is number of samples
  * $m$ is number of constraints (model degrees of freedom)
 
-Can be used up to $\sim M > n/2$ before becomes too conservative
-
-Can be negative
-
-Compute using `RsquareAdj()`
+ * Can be used up to $\sim M > n/2$ before becomes too conservative
+ * Can be negative
+ * Compute using `RsquareAdj()`
 
 ## Variance inflation factors
 
@@ -392,7 +397,6 @@ Lots of rules of thumb
  * VIF >= 10 potnetially of concern & should be looked at
 
 Computed via `vif.cca()`
-
 
 ## Stepwise selection via adjusted $R^2$
 
@@ -425,6 +429,8 @@ What *is* shuffled and *how* is of **paramount** importance for the test to be v
      - The *full model* uses residuals from model $Y = X + Z + \varepsilon$
      - The *reduced model* uses residuals from model $Y = X + Z + \varepsilon$
  * In **vegan** which is used can be set via argument `method` with `"direct"`, `"full"`, and `"reduced"` respectively
+
+## Permutation tests in vegan
 
 A test statistic is required, computed for observed model & each permuted model
 
@@ -767,6 +773,14 @@ We sample from the permutation scheme with
  1. `within` --- takes input from helper `Within()`
  2. `plots`  --- takes input from helper `Plots()`
  3. `blocks` --- takes a factor variable as input
+ 
+
+```r
+plt <- gl(3, 10)
+h <- how(within = Within(type = "series"), plots = Plots(strata = plt))
+```
+
+## Restricted permutations with **permute** | designing permutation schemes
 
 Helper functions make it easy to change one or a few aspects of permutation scheme, rest left at defaults
 
@@ -829,6 +843,7 @@ do.call("rbind", split(p, plt)) ## look at perms in context
 2   12   13   14   15   16   17   18   19   20    11
 3   24   25   26   27   28   29   30   21   22    23
 ```
+
 ## Restricted permutations with **permute** | time series example II
 
 Time series within 3 plots, 10 observation each, same permutation within each
@@ -865,7 +880,7 @@ To do
  
 ## Diagnostics for constrained ordinations | goodness of fit
 
-`goodness() computes two goodness of fit statistics for species or sites
+`goodness()` computes two goodness of fit statistics for species or sites
 
 Which goodness of fit measure is returned is controlled by argument `statistic`
 
@@ -898,7 +913,7 @@ Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl
 
 ## Diagnostics for constrained ordinations | inertia decomposition
 
-`inertcomp() decomposes the variance in samples or species in partial, constrained, and unconstrained components
+`inertcomp()` decomposes the variance in samples or species in partial, constrained, and unconstrained components
 
 Same two types of  measure available by argument `statistic`
 
@@ -924,7 +939,7 @@ Pin.syl 0.00601 0.9940
 
 ## Diagnostics for constrained ordinations | species-environment correlations
 
-`spenvcor() returns the species-environment correlation
+`spenvcor()` returns the species-environment correlation
 
 The (weighted) correlation between the weighted average-based and the linear combination-based sets of site scores
 
@@ -947,7 +962,7 @@ spenvcor(mods)
 
 ## Diagnostics for constrained ordinations | interset correlations
 
-`intersetcor() returns the interset correlations; the (weighted) correlation between the weighted average-based site scores and each constraint variable
+`intersetcor()` returns the interset correlations; the (weighted) correlation between the weighted average-based site scores and each constraint variable
 
 Another *poor* diagnostic
 
