@@ -1,0 +1,23 @@
+---
+title: "Introduction to vegan"
+bibliography: intro-basics.bib
+csl: biomed-central.csl
+
+output:
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+    keep_md: true
+    highlight: tango
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(comment = "", cache = TRUE)
+```
+
+## Introduction to **vegan**
+
+## References
