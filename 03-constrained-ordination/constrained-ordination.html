@@ -120,7 +120,865 @@ Eigenvalues for constrained axes:
 
 Eigenvalues for unconstrained axes:
     CA1     CA2     CA3     CA4     CA5     CA6     CA7     CA8     CA9 
-0.19776 0.14193 0.10117 0.07079 0.05330 0.03330 0.01887 0.01510 0.00949 </pre></article></slide>
+0.19776 0.14193 0.10117 0.07079 0.05330 0.03330 0.01887 0.01510 0.00949 </pre>
+
+</article></slide><slide class=''><hgroup><h2>Redundancy Analysis</h2></hgroup><article  id="redundancy-analysis" class="smaller ">
+
+<p>RDA is the constraindd form of PCA; fitted using <code>rda()</code>.</p>
+
+<pre class = 'prettyprint lang-r'>rda1 &lt;- rda(varespec ~ ., data = varechem)
+rda1</pre>
+
+<pre >Call: rda(formula = varespec ~ N + P + K + Ca + Mg + S + Al + Fe +
+Mn + Zn + Mo + Baresoil + Humdepth + pH, data = varechem)
+
+              Inertia Proportion Rank
+Total          1826.0        1.0     
+Constrained    1460.0        0.8   14
+Unconstrained   366.0        0.2    9
+Inertia is variance 
+
+Eigenvalues for constrained axes:
+   RDA1    RDA2    RDA3    RDA4    RDA5    RDA6    RDA7    RDA8    RDA9 
+820.104 399.285 102.562  47.632  26.838  24.048  19.064  10.167   4.429 
+  RDA10   RDA11   RDA12   RDA13   RDA14 
+  2.272   1.535   0.926   0.716   0.312 
+
+Eigenvalues for unconstrained axes:
+   PC1    PC2    PC3    PC4    PC5    PC6    PC7    PC8    PC9 
+186.19  88.46  38.19  18.40  12.84  10.55   5.52   4.52   1.09 </pre>
+
+</article></slide><slide class=''><hgroup><h2>The <code>cca.object</code></h2></hgroup><article  id="the-cca.object" class="smaller ">
+
+<ul>
+<li>Objects of class <code>&quot;cca&quot;</code> are complex with many components</li>
+<li>Entire class described in <code>?cca.object</code></li>
+<li>Depending on what analysis performed some components may be <code>NULL</code></li>
+<li>Used for (C)CA, PCA, RDA, and CAP (<code>capscale()</code>)</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>The <code>cca.object</code></h2></hgroup><article  id="the-cca.object-1" class="smaller ">
+
+<p><code>cca1</code> has a large number of components</p>
+
+<ul>
+<li><strong><code>$call</code></strong> how the function was called</li>
+<li><strong><code>$grand.total</code></strong> in (C)CA sum of `rowsum}</li>
+<li><strong><code>$rowsum</code></strong> the row sums</li>
+<li><strong><code>$colsum</code></strong> the column sums</li>
+<li><strong><code>$tot.chi</code></strong> total inertia, sum of Eigenvalues</li>
+<li><strong><code>$pCCA</code></strong> Conditioned (partialled out) components</li>
+<li><strong><code>$CCA</code></strong> Constrained components</li>
+<li><strong><code>$CA</code></strong> Unconstrained components</li>
+<li><strong><code>$method</code></strong> Ordination method used</li>
+<li><strong><code>$inertia</code></strong> Description of what inertia is</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>The <code>cca.object</code></h2></hgroup><article  id="the-cca.object-2" class="smaller ">
+
+<p>Depending on how one called <code>cca()</code> etc some of these components will be <code>NULL</code></p>
+
+<p><code>$pCCA</code> is only filled in if a <em>partial</em> constrained ordination fitted</p>
+
+<p><code>rda()</code> returns objects with classes <code>&quot;rda&quot;</code> and <code>&quot;cca&quot;</code>, but in most cases those objects work like those of class <code>&quot;cca&quot;</code></p>
+
+<p>The Eigenvalues and axis scores are now spread about the <code>$CA</code> and <code>$CCA</code> components (also <code>$pCCA</code> if a <em>partial</em> CCA)</p>
+
+<p>Thankfully we can use <em>extractor</em> functions to get at such things</p>
+
+</article></slide><slide class=''><hgroup><h2>Eigenvalues</h2></hgroup><article  id="eigenvalues" class="smaller ">
+
+<p>Use <code>eigenvals()</code> to extract Eigenvalues from a fitted ordination object</p>
+
+<pre class = 'prettyprint lang-r'>eigenvals(cca1)</pre>
+
+<pre >  CCA1   CCA2   CCA3   CCA4   CCA5   CCA6   CCA7   CCA8   CCA9  CCA10 
+0.4389 0.2918 0.1628 0.1421 0.1180 0.0890 0.0703 0.0584 0.0311 0.0133 
+ CCA11  CCA12  CCA13  CCA14    CA1    CA2    CA3    CA4    CA5    CA6 
+0.0084 0.0065 0.0062 0.0047 0.1978 0.1419 0.1012 0.0708 0.0533 0.0333 
+   CA7    CA8    CA9 
+0.0189 0.0151 0.0095 </pre>
+
+</article></slide><slide class=''><hgroup><h2>Extracting axis scores</h2></hgroup><article  id="extracting-axis-scores" class="smaller ">
+
+<p>To extract a range of scores from a fitted ordination use <code>scores()</code></p>
+
+<ul>
+<li>takes an ordination object as the first argument</li>
+<li><code>choices</code> &#8212; which axes? Defaults to <code>c(1,2)</code></li>
+<li><code>display</code> &#8212; which type(s) of scores to return</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>str(scores(cca1, choices = 1:4, display = c(&quot;species&quot;,&quot;sites&quot;)), max = 1)</pre>
+
+<pre >List of 2
+ $ species: num [1:44, 1:4] 0.0753 -0.1813 -1.0535 -1.2774 -0.1526 ...
+  ..- attr(*, &quot;dimnames&quot;)=List of 2
+ $ sites  : num [1:24, 1:4] 0.178 -0.97 -1.28 -1.501 -0.598 ...
+  ..- attr(*, &quot;dimnames&quot;)=List of 2</pre>
+
+<pre class = 'prettyprint lang-r'>head(scores(cca1, choices = 1:2, display = &quot;sites&quot;))</pre>
+
+<pre >      CCA1    CCA2
+18  0.1785 -1.0599
+15 -0.9702 -0.1971
+24 -1.2798  0.4764
+27 -1.5009  0.6522
+23 -0.5981 -0.1840
+19 -0.1103  0.7143</pre>
+
+</article></slide><slide class=''><hgroup><h2>Scalings&#8230;</h2></hgroup><article  id="scalings..." class="smaller ">
+
+<p>When we draw the results of many ordinations we display 2 or more sets of data</p>
+
+<p>Can&#39;t display all of these and maintain relationships between the scores</p>
+
+<p><em>Solution</em> scale one set of scores relative to the other</p>
+
+<p>Controlled via the <code>scaling</code> argument</p>
+
+<ul>
+<li><code>scaling = 1</code> &#8212; Focus on sites, scale site scores by \(\lambda_i\)</li>
+<li><code>scaling = 2</code> &#8212; Focus on species, scale species scores by \(\lambda_i\)</li>
+<li><code>scaling = 3</code> &#8212; Symmetric scaling, scale both scores by \(\sqrt{\lambda_i}\)</li>
+<li><code>scaling = -1</code> &#8212; As above, but</li>
+<li><code>scaling = -2</code> &#8212; For <code>cca()</code> multiply results by \(\sqrt{(1/(1-\lambda_i))}\)</li>
+<li><code>scaling = -3</code> &#8212; this is Hill&#39;s scaling</li>
+<li><code>scaling &lt; 0</code> &#8212; For <code>rda()</code> divide species scores by species&#39; \(\sigma\)</li>
+<li><code>scaling = 0</code> &#8212; raw scores</li>
+</ul>
+
+<p><code>r  scores(cca1, choices = 1:2, display = &quot;species&quot;, scaling = 3)</code></p>
+
+</article></slide><slide class=''><hgroup><h2>Partial constrained ordinations</h2></hgroup><article  id="partial-constrained-ordinations" class="smaller ">
+
+<p><em>Partial</em> constrained ordinations remove the effect of one or more variables <em>then</em> fit model of interest</p>
+
+<p>Argument <code>Z</code> is used for a data frame of variables to partial out</p>
+
+<p>Or with the formula interface use the <code>Condition()</code> function</p>
+
+<pre class = 'prettyprint lang-r'>pcca &lt;- cca(X = varespec,
+            Y = varechem[, &quot;Ca&quot;, drop = FALSE],
+            Z = varechem[, &quot;pH&quot;, drop = FALSE])
+pcca &lt;- cca(varespec ~ Ca + Condition(pH), data = varechem) ## easier!</pre>
+
+</article></slide><slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Model building</h2></hgroup><article  id="model-building" class="smaller ">
+
+</article></slide><slide class=''><hgroup><h2>Building constrained ordination models</h2></hgroup><article  id="building-constrained-ordination-models" class="smaller ">
+
+<p>If we don&#39;t want to think it&#39;s easy to fit a poor model with many constraints</p>
+
+<p>That&#39;s what we just did with <code>cca1</code> and <code>rda1</code></p>
+
+<p>Remember, CCA and RDA are <em>just regression methods</em> &#8212; everything you know about regression applies here</p>
+
+<p>A better approach is to <em>think</em> about the important variables and include only those</p>
+
+<p>The formula interface allows you to create interaction or quadratic terms easily (though be careful with latter)</p>
+
+<p>It also handles factor or class constraints automatically unlike the basic interface</p>
+
+</article></slide><slide class=''><hgroup><h2>Building constrained ordination models</h2></hgroup><article  id="building-constrained-ordination-models-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>vare.cca &lt;- cca(varespec ~ Al + P*(K + Baresoil), data = varechem)
+vare.cca</pre>
+
+<pre >Call: cca(formula = varespec ~ Al + P * (K + Baresoil), data =
+varechem)
+
+              Inertia Proportion Rank
+Total           2.083      1.000     
+Constrained     1.046      0.502    6
+Unconstrained   1.038      0.498   17
+Inertia is mean squared contingency coefficient 
+
+Eigenvalues for constrained axes:
+  CCA1   CCA2   CCA3   CCA4   CCA5   CCA6 
+0.3756 0.2342 0.1407 0.1323 0.1068 0.0561 
+
+Eigenvalues for unconstrained axes:
+   CA1    CA2    CA3    CA4    CA5    CA6    CA7    CA8 
+0.2758 0.1541 0.1354 0.1180 0.0889 0.0551 0.0492 0.0378 
+(Showed only 8 of all 17 unconstrained eigenvalues)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Building constrained ordination models</h2></hgroup><article  id="building-constrained-ordination-models-2" class="smaller ">
+
+<p>For CCA we have little choice but to do</p>
+
+<ol>
+<li>Fit well-chosen set of candidate models &amp; compare, or</li>
+<li>Fit a <em>full</em> model of well-chosen variables &amp; then do stepwise selection</li>
+</ol>
+
+<p>But automatic approaches to model building should be used cautiously!</p>
+
+<p>The standard <code>step()</code> function can be used as <strong>vegan</strong> provides two helper methods, <code>deviance()</code> and <code>extractAIC()</code>, used by <code>step()</code></p>
+
+<p>Vegan also provides methods for class <code>&quot;cca&quot;</code> for <code>add1()</code> and <code>drop1()</code></p>
+
+</article></slide><slide class=''><hgroup><h2>Stepwise selection in CCA</h2></hgroup><article  id="stepwise-selection-in-cca" class="smaller ">
+
+<p>Uses function <code>step()</code></p>
+
+<ol>
+<li>Define an upper and lower model scope, say the full model and the null model</li>
+<li>To step from the lower scope or null model we use</li>
+</ol>
+
+<pre class = 'prettyprint lang-r'>upr &lt;- cca(varespec ~ ., data = varechem)
+lwr &lt;- cca(varespec ~ 1, data = varechem)
+set.seed(1)
+mods &lt;- step(lwr, scope = formula(upr), test = &quot;perm&quot;, trace = 0)</pre>
+
+<p><code>trace = 0</code> is used her to turn off printing of progress</p>
+
+<p><code>test = &quot;perm&quot;</code> indicates permutation tests are used (more on these later); the theory for an AIC for ordination is somewhat loose</p>
+
+</article></slide><slide class=''><hgroup><h2>Stepwise selection in CCA</h2></hgroup><article  id="stepwise-selection-in-cca-1" class="smaller ">
+
+<p>The object returned by <code>step()</code> is a standard <code>&quot;cca&quot;</code> object with an extra component <code>$anova</code></p>
+
+<p>The <code>$anova</code> component contains a summary of the steps involved in automatic model building</p>
+
+<pre class = 'prettyprint lang-r'>mods</pre>
+
+<pre >Call: cca(formula = varespec ~ Al + P + K, data = varechem)
+
+              Inertia Proportion Rank
+Total           2.083      1.000     
+Constrained     0.644      0.309    3
+Unconstrained   1.439      0.691   20
+Inertia is mean squared contingency coefficient 
+
+Eigenvalues for constrained axes:
+ CCA1  CCA2  CCA3 
+0.362 0.170 0.113 
+
+Eigenvalues for unconstrained axes:
+   CA1    CA2    CA3    CA4    CA5    CA6    CA7    CA8 
+0.3500 0.2201 0.1851 0.1551 0.1351 0.1003 0.0773 0.0537 
+(Showed only 8 of all 20 unconstrained eigenvalues)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Stepwise selection in CCA</h2></hgroup><article  id="stepwise-selection-in-cca-2" class="smaller ">
+
+<p>The <code>$anova</code> component contains a summary of the steps involved in automatic model building</p>
+
+<pre class = 'prettyprint lang-r'>mods$anova</pre>
+
+<pre >  Step Df Deviance Resid. Df Resid. Dev   AIC
+1      NA       NA        23       5037 130.3
+2 + Al -1    720.9        22       4316 128.6
+3  + P -1    459.1        21       3857 127.9
+4  + K -1    377.3        20       3479 127.4</pre>
+
+</article></slide><slide class=''><hgroup><h2>Stepwise selection in CCA</h2></hgroup><article  id="stepwise-selection-in-cca-3" class="smaller ">
+
+<p>Step-wise model selection is fairly fragile; if we start from the full model we won&#39;t end up with the same final model</p>
+
+<pre class = 'prettyprint lang-r'>mods2 &lt;- step(upr, scope = list(lower = formula(lwr), upper = formula(upr)), trace = 0,
+              test = &quot;perm&quot;)
+mods2</pre>
+
+<pre >Call: cca(formula = varespec ~ P + K + Mg + S + Mn + Mo + Baresoil
++ Humdepth, data = varechem)
+
+              Inertia Proportion Rank
+Total           2.083      1.000     
+Constrained     1.117      0.536    8
+Unconstrained   0.967      0.464   15
+Inertia is mean squared contingency coefficient 
+
+Eigenvalues for constrained axes:
+  CCA1   CCA2   CCA3   CCA4   CCA5   CCA6   CCA7   CCA8 
+0.4007 0.2488 0.1488 0.1266 0.0875 0.0661 0.0250 0.0130 
+
+Eigenvalues for unconstrained axes:
+    CA1     CA2     CA3     CA4     CA5     CA6     CA7     CA8     CA9 
+0.25821 0.18813 0.11927 0.10204 0.08791 0.06085 0.04461 0.02782 0.02691 
+   CA10    CA11    CA12    CA13    CA14    CA15 
+0.01646 0.01364 0.00823 0.00655 0.00365 0.00238 </pre>
+
+</article></slide><slide class=''><hgroup><h2>Adjusted \(R^2\) for <em>linear</em> models</h2></hgroup><article  id="adjusted-r2-for-linear-models" class="smaller ">
+
+<p>As with ordinary \(R^2\), that of an RDA is biased for the same reasons as for a linear regression</p>
+
+<ul>
+<li>adding a variable to constraints will increase \(R^2\)</li>
+<li>the larger the number of constraints in the model the larger \(R^2\) is due to random correlations</li>
+</ul>
+
+<p>Can attempt to account for this bias via an <em>adjusted</em> \(R^2\) measure</p>
+
+<p>\[R^2_{adj} = 1 - \frac{n - 1}{n - m - 1}(1 - R^2)\]</p>
+
+<p>where</p>
+
+<ul>
+<li>\(n\) is number of samples</li>
+<li>\(m\) is number of constraints (model degrees of freedom)</li>
+</ul>
+
+<p>Can be used up to \(\sim M &gt; n/2\) before becomes too conservative</p>
+
+<p>Can be negative</p>
+
+<p>Compute using <code>RsquareAdj()</code></p>
+
+</article></slide><slide class=''><hgroup><h2>Variance inflation factors</h2></hgroup><article  id="variance-inflation-factors" class="smaller ">
+
+<p><em>Linear</em> dependencies between constraints can be investigated via the <em>variance inflation factor</em> or VIF</p>
+
+<p>VIF is a measure of how much the variance of \(\hat{\beta}_j\) is inflated by presence of other covariates</p>
+
+<p>Lots of rules of thumb</p>
+
+<ul>
+<li>VIF &gt;= 20 indicates <em>strong collinearity</em> in constraints</li>
+<li>VIF &gt;= 10 potnetially of concern &amp; should be looked at</li>
+</ul>
+
+<p>Computed via <code>vif.cca()</code></p>
+
+</article></slide><slide class=''><hgroup><h2>Stepwise selection via adjusted \(R^2\)</h2></hgroup><article  id="stepwise-selection-via-adjusted-r2" class="smaller ">
+
+<p>The problems with stepwise selection in regression models are myriad. Affects RDA, CCA, etc as well</p>
+
+<p><span class="cite">@Blanchet2008</span> proposed a two-step solution for models where \(R2_{adj}\) makes sense</p>
+
+<ul>
+<li><em>Global test</em> of all constraints
+
+<ul>
+<li>Proceed <strong>only</strong> if this test is significant</li>
+<li>Helps prevent inflation of overall type I error</li>
+</ul></li>
+<li>Proceed with forward selection, but with <em>two</em> stopping rules
+
+<ul>
+<li>Usual significance threshold \(\alpha\)</li>
+<li>The global \(R^2_{adj}\)</li>
+<li>Stop if next candidate model is non-significant or if \(R^2_{adj}\) exceeds the global \(R^2_{adj}\)</li>
+</ul></li>
+</ul>
+
+<p>Available in <code>ordiR2step()</code></p>
+
+</article></slide><slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Permutation tests</h2></hgroup><article  id="permutation-tests" class="smaller ">
+
+</article></slide><slide class=''><hgroup><h2>Permutation tests in vegan</h2></hgroup><article  id="permutation-tests-in-vegan" class="smaller ">
+
+<p>RDA has lots of theory behind it, CCA not as much. However, ecological/environmental data invariably violate what little theory we have</p>
+
+<p>Instead we use permutation tests to assess the <em>importance</em> of fitted models &#8212; the data are shuffled in some way and the model refitted to derive a Null distribution under some hypothesis of <em>no effect</em></p>
+
+<p>What <em>is</em> shuffled and <em>how</em> is of <strong>paramount</strong> importance for the test to be valid</p>
+
+<ul>
+<li>No conditioning (partial) variables then rows of the species data are permuted</li>
+<li>With conditioning variables, two options are available, both of which <em>permute residuals</em> from model fits
+
+<ul>
+<li>The <em>full model</em> uses residuals from model \(Y = X + Z + \varepsilon\)</li>
+<li>The <em>reduced model</em> uses residuals from model \(Y = X + Z + \varepsilon\)</li>
+</ul></li>
+<li>In <strong>vegan</strong> which is used can be set via argument <code>method</code> with <code>&quot;direct&quot;</code>, <code>&quot;full&quot;</code>, and <code>&quot;reduced&quot;</code> respectively</li>
+</ul>
+
+<p>A test statistic is required, computed for observed model &amp; each permuted model</p>
+
+<p><strong>vegan</strong> uses a pseudo-\(F\) statistic</p>
+
+<p>\[F=\frac{\chi^2_{model} / df_{model}}{\chi^2_{resid} / df_{resid}}\]</p>
+
+<p>Evaluate whether \(F\) is unusually large relative to the null (permutation) distribution of \(F\)</p>
+
+</article></slide><slide class=''><hgroup><h2>Permutation tests in vegan: <code>anova()</code></h2></hgroup><article  id="permutation-tests-in-vegan-anova" class="smaller ">
+
+<ul>
+<li>The main user function is the <code>anova()</code> method</li>
+<li>It is an interface to the lower-level function <code>permutest.cca()</code></li>
+<li>At its most simplest, the  method tests whether the ``model&#39;&#39; as a whole is significant \[F = \frac{1.4415 / 14}{0.6417 / 9} = 1.4441\]</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>set.seed(42)
+(perm &lt;- anova(cca1))</pre>
+
+<pre >Permutation test for cca under reduced model
+
+Model: cca(formula = varespec ~ N + P + K + Ca + Mg + S + Al + Fe + Mn + Zn + Mo + Baresoil + Humdepth + pH, data = varechem)
+         Df Chisq    F N.Perm Pr(&gt;F)  
+Model    14  1.44 1.44   1599  0.036 *
+Residual  9  0.64                     
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+</article></slide><slide class=''><hgroup><h2>Permutation tests in vegan: <code>anova()</code></h2></hgroup><article  id="permutation-tests-in-vegan-anova-1" class="smaller ">
+
+<ul>
+<li><code>anova()</code> will continue permuting only as long as it is uncertain whether the the \(p\)-value is above or below the chosen threshold (say \(p = 0.05\))</li>
+<li>If the function is sure the permuted \(p\) is above the threshold <code>anova()</code> may return after only a few hundred permutations</li>
+<li>In other cases many hundreds or thousands of permutations may be required to say whether the model is above or below the threshold</li>
+<li>In the example, 1599 permutations were required</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>perm</pre>
+
+<pre >Permutation test for cca under reduced model
+
+Model: cca(formula = varespec ~ N + P + K + Ca + Mg + S + Al + Fe + Mn + Zn + Mo + Baresoil + Humdepth + pH, data = varechem)
+         Df Chisq    F N.Perm Pr(&gt;F)  
+Model    14  1.44 1.44   1599  0.036 *
+Residual  9  0.64                     
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+</article></slide><slide class=''><hgroup><h2>Permutation tests in vegan: <code>anova()</code></h2></hgroup><article  id="permutation-tests-in-vegan-anova-2" class="smaller ">
+
+<ul>
+<li><code>anova.cca()</code> has a number of arguments</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>args(anova.cca)</pre>
+
+<pre >function (object, alpha = 0.05, beta = 0.01, step = 100, perm.max = 9999, 
+    by = NULL, ...) 
+NULL</pre>
+
+<ul>
+<li><code>alpha</code> is the desired \(p\) value threshold (Type I error rate)</li>
+<li><code>beta</code> is the Type II error rate</li>
+<li>Permuting stops if the result is different from <code>alpha</code> for the given <code>beta</code></li>
+<li>This is evaluated every <code>step</code> permutations</li>
+<li><code>perm.max</code> sets a limit on the number of permutations</li>
+<li><code>by</code> determines what is tested; the default is to test the model</li>
+<li>More direct control can be achieved via <code>permutest.cca()</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Types of permutation test in vegan</h2></hgroup><article  id="types-of-permutation-test-in-vegan" class="smaller ">
+
+<p>A number of types of test can be envisaged</p>
+
+<ul>
+<li>Testing the overall significance of the model</li>
+<li>Testing constrained (canonical) axes</li>
+<li>Testing individual model terms <em>sequentially</em></li>
+<li>The <em>marginal</em> effect of a single variable</li>
+</ul>
+
+<p>The first is the default in <code>anova()</code></p>
+
+<p>The other three can be selected via the argument <code>method</code></p>
+
+</article></slide><slide class=''><hgroup><h2>Permutation tests </h2><h3> testing canonical axes</h3></hgroup><article  id="permutation-tests-testing-canonical-axes" class="smaller ">
+
+<ul>
+<li>The constrained (canonical) axes can be individually tests by specifying <code>by = &quot;axis&quot;</code></li>
+<li>The first axis is tested in terms of variance explained compared to residual variance</li>
+<li>The second axis is tested after partialling out the first axis&#8230; and so on</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>set.seed(1)
+anova(mods, by = &quot;axis&quot;)</pre>
+
+<pre >Model: cca(formula = varespec ~ Al + P + K, data = varechem)
+         Df Chisq    F N.Perm Pr(&gt;F)   
+CCA1      1  0.36 5.02    199  0.005 **
+CCA2      1  0.17 2.36    299  0.017 * 
+CCA3      1  0.11 1.57     99  0.160   
+Residual 20  1.44                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+</article></slide><slide class=''><hgroup><h2>Permutation tests </h2><h3> testing terms sequentially</h3></hgroup><article  id="permutation-tests-testing-terms-sequentially" class="smaller ">
+
+<ul>
+<li>The individual terms in the model can be tested using <code>by = &quot;terms&quot;</code></li>
+<li>The terms are assessed in the order they were specified in the model, sequentially from first to last</li>
+<li>Test is of the additional variance explained by adding the \(k\)th variable to the model</li>
+<li><strong>Ordering of the terms</strong> will affect the results</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>set.seed(5)
+anova(mods, by = &quot;terms&quot;)</pre>
+
+<pre >Permutation test for cca under reduced model
+Terms added sequentially (first to last)
+
+Model: cca(formula = varespec ~ Al + P + K, data = varechem)
+         Df Chisq    F N.Perm Pr(&gt;F)   
+Al        1  0.30 4.14     99   0.01 **
+P         1  0.19 2.64     99   0.01 **
+K         1  0.16 2.17     99   0.03 * 
+Residual 20  1.44                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+</article></slide><slide class=''><hgroup><h2>Permutation tests </h2><h3> testing terms marginal effects</h3></hgroup><article  id="permutation-tests-testing-terms-marginal-effects" class="smaller ">
+
+<ul>
+<li>The marginal <em>effect</em> of a model term can be assessed using <code>by = &quot;margin&quot;</code></li>
+<li>The marginal <em>effect</em> is the effect of a particular term when all other model terms are included in the model</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>set.seed(10)
+anova(mods, by = &quot;margin&quot;)</pre>
+
+<pre >Permutation test for cca under reduced model
+Marginal effects of terms
+
+Model: cca(formula = varespec ~ Al + P + K, data = varechem)
+         Df Chisq    F N.Perm Pr(&gt;F)   
+Al        1  0.31 4.33    199  0.005 **
+P         1  0.17 2.34    199  0.015 * 
+K         1  0.16 2.17    299  0.020 * 
+Residual 20  1.44                      
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutation tests</h2></hgroup><article  id="restricted-permutation-tests" class="smaller ">
+
+<p>What <em>is</em> shuffled and <em>how</em> is of <strong>paramount</strong> importance for the test to be valid</p>
+
+<p>Complete randomisation (default in <strong>vegan</strong>) assumes a null hypothesis where all observations are <em>independent</em></p>
+
+<p>Ecological / environmental data often aren&#39;t independent</p>
+
+<ul>
+<li>Temporal or spatial correlation</li>
+<li>Clustering, repeated measures</li>
+<li>Nested sampling designs (Split-plots designs)</li>
+<li>Blocks</li>
+<li>&#8230;</li>
+</ul>
+
+<p>Permutation <em>must</em> give null distribution of the test statistic whilst preserving the <em>dependence</em> between observations</p>
+
+<p>Trick is to shuffle the data whilst preserving that dependence</p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations</h2></hgroup><article  id="restricted-permutations" class="smaller ">
+
+<p>Canoco has had restricted permutations for a <em>long</em> time. <strong>vegan</strong> has only recently caught up &amp; we&#39;re not there yet</p>
+
+<p><strong>vegan</strong> still only knows how to completely randomise data or completely randomise within blocks (called <code>strata</code> in <strong>vegan</strong>)</p>
+
+<p>The newish package <strong>permute</strong> grew out of initial code in the <strong>vegan</strong> repository to generate the sorts of restricted permutations available in Canoco</p>
+
+<p>We still haven&#39;t fully integrated <strong>permute</strong> into <strong>vegan</strong>&#8230;</p>
+
+<p>&#8230;but you can pass <strong>vegan</strong> functions a matrix of permutations to use instead of having it generate its own</p>
+
+<p><strong>vegan</strong> depends on <strong>permute</strong> so you should have it already installed &amp; loaded when using <strong>vegan</strong></p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong></h2></hgroup><article  id="restricted-permutations-with-permute" class="smaller ">
+
+<p><strong>permute</strong> follows Canoco closely &#8212; at the chiding of Cajo ter Braak when it didn&#39;t do what he wanted !</p>
+
+<p>Samples can be thought of as belonging to three levels of a hierarchy</p>
+
+<ul>
+<li>the <em>sample</em> level; how are individual samples permuted</li>
+<li>the <em>plot</em> level; how are samples grouped at an intermediate level</li>
+<li>the <em>block</em> level; how are samples grouped at the outermost level</li>
+</ul>
+
+<p>Blocks define groups of plots, each of which can contain groups of samples</p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong></h2></hgroup><article  id="restricted-permutations-with-permute-1" class="smaller ">
+
+<p>Blocks are <em>never</em> permuted; if defined, only plots or samples <em>within</em> the blocks get shuffled &amp; samples never swapped between blocks</p>
+
+<p>Plots or samples within plots, or both can be permuted following one of four simple permutation types</p>
+
+<ol>
+<li>Free permutation (randomisation)</li>
+<li>Time series or linear transect, equal spacing</li>
+<li>Spatial grid designs, equal regular spacing</li>
+<li>Permutation of plots (groups of samples)</li>
+<li>Fixed (no permutation)</li>
+</ol>
+
+<p>Multiple plots per block, multiple samples per plot; plots could be arranged in a spatial grid and samples within each of the plots form a time series</p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> blocks</h3></hgroup><article  id="restricted-permutations-with-permute-blocks" class="smaller ">
+
+<p>Blocks are a random factor that does not interact with factors that vary within blocks</p>
+
+<p>Blocks form groups of samples that are never permuted between blocks, only within blocks</p>
+
+<p>Using blocks you can achieve what the <code>strata</code> argument does now in <strong>vegan</strong>; needs to be a factor variable</p>
+
+<p>The variation <em>between</em> blocks should be excluded from the test; <strong>permute</strong> doesn&#39;t do this for you!</p>
+
+<p>Use <code>+ Condition(blocks)</code> in the model formula where <code>blocks</code> is a factor containing the block membership for each observation</p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> time series &amp; linear transects</h3></hgroup><article  id="restricted-permutations-with-permute-time-series-linear-transects" class="smaller ">
+
+<p>Can link <em>randomly</em> starting point of one series to any time point of another series if series are stationary under null hypothesis that the series are unrelated</p>
+
+<p>Achieve this via cyclic shift permutations &#8212; wrap series into a circle by joining start and end points</p>
+
+<p>Works OK if there are no trends or cyclic pattern &#8212; autocorrelation structure only broken at the end points <em>if</em> series are stationary</p>
+
+<p>Can detrend to make series stationary but not if you want to test significance of a trend</p>
+
+<pre class = 'prettyprint lang-r'>shuffle(10, control = how(within = Within(type = &quot;series&quot;)))</pre>
+
+<pre > [1]  6  7  8  9 10  1  2  3  4  5</pre>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> spatial grids</h3></hgroup><article  id="restricted-permutations-with-permute-spatial-grids" class="smaller ">
+
+<div class="columns-2">
+<p>The trick of cyclic shifts can be extended to two dimensions for a regular spatial grid arrangement of points</p>
+
+<p>Now shifts are <em>toroidal</em> as we join the end point in the <em>x</em> direction together and in the <em>y</em> direction together</p>
+
+<pre class = 'prettyprint lang-r'>matrix(perm, ncol = 3)</pre>
+
+<pre >     [,1] [,2] [,3]
+[1,]    6    9    3
+[2,]    4    7    1
+[3,]    5    8    2</pre></div>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> whole-plots &amp; split-plots I</h3></hgroup><article  id="restricted-permutations-with-permute-whole-plots-split-plots-i" class="smaller ">
+
+<p>Split-plot designs are hierarchical with two levels of units</p>
+
+<ol>
+<li><strong>whole-plots</strong> , which contain</li>
+<li><strong>split-plots</strong> (the samples)</li>
+</ol>
+
+<p>Can permute one or both of these but whole-plots must be of equal size</p>
+
+<p>Essentially allows more than one error stratum to be anlyzed</p>
+
+<p>Test effect of constraints that vary <em>between</em> whole plots by permuting the whole-plots whilst retaining order of split-splots (samples) within the whole-plots</p>
+
+<p>Test effect of constraints that vary <em>within</em> whole-plots by permuting the split-plots within whole-plots without permuting the whole-plots</p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> whole-plots &amp; split-plots II</h3></hgroup><article  id="restricted-permutations-with-permute-whole-plots-split-plots-ii" class="smaller ">
+
+<p>Whole-plots or split-plots can be time series, linear transects or rectangular grids in which case the appropriate restricted permutation is used</p>
+
+<p>If the split-plots are parallel time series &amp; <code>time</code> is an autocorrelated error component affecting all series then the same cyclic shift can be applied to each time series (within each whole-plot) (<code>constant = TRUE</code>)</p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> mirroring</h3></hgroup><article  id="restricted-permutations-with-permute-mirroring" class="smaller ">
+
+<p>(Without wanting to get <em>too</em> technical) Mirroring in restricted permutations allows for isotropy in dependences by reflecting the ordering of samples in time or spatial dimensions</p>
+
+<p>For a linear transect, technically the autocorrelation at lag <em>h</em> is equal to that at lag -<em>h</em> (also in a trend-free time series)</p>
+
+<p>Hence the series <code>(1, 2, 3, 4)</code> and <code>(4, 3, 2, 1)</code> are equivalent fom this point of view &amp; we can draw permutations from either version</p>
+
+<p>Similar argument can be made for spatial grids</p>
+
+<p>Using <code>mirror = TRUE</code> then can double (time series, linear transects) or quadruple (spatial grids) the size of the set of permutations</p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> the set of permutations</h3></hgroup><article  id="restricted-permutations-with-permute-the-set-of-permutations" class="smaller ">
+
+<p>Using restricted permutations can severely reduce the size of the set of allowed permutations</p>
+
+<p>As the minimum <em>p</em> value obtaininable is \(1 / np\) where \(np\) is number of allowed permutations (including the observed) this can impact the ability to detect signal/pattern</p>
+
+<p>If we don&#39;t want mirroring</p>
+
+<ul>
+<li>in a time series of 20 samples the minimum <em>p</em> is 1/20 (0.05)</li>
+<li>in a time series of 100 samples the minimum <em>p</em> is 1/100 (0.01)</li>
+<li>in a data set with 10 time series each of 20 observations (200 total), if we assume an autocorrelated error component over all series (<code>constant = TRUE</code>) then there are only 20 permutations of the data and minimum <em>p</em> is 0.05</li>
+</ul>
+
+<p>When the set of permutations is small it is better to switch to an exact test &amp; evaluate all permutations in the set rather than randomly sample from the set</p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> designing permutation schemes</h3></hgroup><article  id="restricted-permutations-with-permute-designing-permutation-schemes" class="smaller ">
+
+<p>In <strong>permute</strong>, we set up a permutation scheme with <code>how()</code></p>
+
+<p>We sample from the permutation scheme with</p>
+
+<ul>
+<li><code>shuffle()</code>, which gives a single draw from scheme, or</li>
+<li><code>shuffleSet()</code>, which returns a set of <code>n</code> draws from the scheme</li>
+</ul>
+
+<p><code>allPerms()</code> can generated the entire set of permutations &#8212; <strong>note</strong> this was designed for small sets of permutations &amp; is slow if you request it for a scheme with many thousands of permutations!</p>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> designing permutation schemes</h3></hgroup><article  id="restricted-permutations-with-permute-designing-permutation-schemes-1" class="smaller ">
+
+<p><code>how()</code> has three main arguments</p>
+
+<ol>
+<li><code>within</code> &#8212; takes input from helper <code>Within()</code></li>
+<li><code>plots</code> &#8212; takes input from helper <code>Plots()</code></li>
+<li><code>blocks</code> &#8212; takes a factor variable as input</li>
+</ol>
+
+<p>Helper functions make it easy to change one or a few aspects of permutation scheme, rest left at defaults</p>
+
+<pre class = 'prettyprint lang-r'>args(Within)</pre>
+
+<pre >function (type = c(&quot;free&quot;, &quot;series&quot;, &quot;grid&quot;, &quot;none&quot;), constant = FALSE, 
+    mirror = FALSE, ncol = NULL, nrow = NULL) 
+NULL</pre>
+
+<pre class = 'prettyprint lang-r'>args(Plots)</pre>
+
+<pre >function (strata = NULL, type = c(&quot;none&quot;, &quot;free&quot;, &quot;series&quot;, &quot;grid&quot;), 
+    mirror = FALSE, ncol = NULL, nrow = NULL) 
+NULL</pre>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> designing permutation schemes</h3></hgroup><article  id="restricted-permutations-with-permute-designing-permutation-schemes-2" class="smaller ">
+
+<p><code>how()</code> has additional arguments, many of which control the heuristics that kick in to stop you shooting yourself in the foot and demanding 9999 permutations when there are only 10</p>
+
+<ul>
+<li><code>complete</code> should we enumerate the entire set of permutations?</li>
+<li><code>minperm</code> lower bound on the size of the set of permutations at &amp; below which we turn on complete enumeration</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>args(how)</pre>
+
+<pre >function (within = Within(), plots = Plots(), blocks = NULL, 
+    nperm = 199, complete = FALSE, maxperm = 9999, minperm = 99, 
+    all.perms = NULL, make = TRUE, observed = FALSE) 
+NULL</pre>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> time series example I</h3></hgroup><article  id="restricted-permutations-with-permute-time-series-example-i" class="smaller ">
+
+<p>Time series within 3 plots, 10 observation each</p>
+
+<pre class = 'prettyprint lang-r'>plt &lt;- gl(3, 10)
+h &lt;- how(within = Within(type = &quot;series&quot;), plots = Plots(strata = plt))
+set.seed(4)
+p &lt;- shuffle(30, control = h)
+do.call(&quot;rbind&quot;, split(p, plt)) ## look at perms in context</pre>
+
+<pre >  [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+1    7    8    9   10    1    2    3    4    5     6
+2   12   13   14   15   16   17   18   19   20    11
+3   24   25   26   27   28   29   30   21   22    23</pre>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> time series example II</h3></hgroup><article  id="restricted-permutations-with-permute-time-series-example-ii" class="smaller ">
+
+<p>Time series within 3 plots, 10 observation each, same permutation within each</p>
+
+<pre class = 'prettyprint lang-r'>plt &lt;- gl(3, 10)
+h &lt;- how(within = Within(type = &quot;series&quot;, constant = TRUE), plots = Plots(strata = plt))
+set.seed(4)
+p &lt;- shuffle(30, control = h)
+do.call(&quot;rbind&quot;, split(p, plt)) ## look at perms in context</pre>
+
+<pre >  [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+1    7    8    9   10    1    2    3    4    5     6
+2   17   18   19   20   11   12   13   14   15    16
+3   27   28   29   30   21   22   23   24   25    26</pre>
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> worked example with <strong>vegan</strong></h3></hgroup><article  id="restricted-permutations-with-permute-worked-example-with-vegan" class="smaller ">
+
+<p>To do</p>
+
+</article></slide><slide class=''><hgroup><h2>Diagnostics for constrained ordinations</h2></hgroup><article  id="diagnostics-for-constrained-ordinations" class="smaller ">
+
+<p><strong>vegan</strong> provides a series of diagnostics to help assess the model fit</p>
+
+<ul>
+<li><code>goodness()</code></li>
+<li><code>inertcomp()</code></li>
+<li><code>spenvcor()</code></li>
+<li><code>intersetcor()</code></li>
+<li><code>vif.caa()</code></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Diagnostics for constrained ordinations </h2><h3> goodness of fit</h3></hgroup><article  id="diagnostics-for-constrained-ordinations-goodness-of-fit" class="smaller ">
+
+<p>`goodness() computes two goodness of fit statistics for species or sites</p>
+
+<p>Which goodness of fit measure is returned is controlled by argument <code>statistic</code></p>
+
+<ul>
+<li><code>statistic = &quot;explained</code> (default) gives the cumulative proportion of variance explained by each axis</li>
+<li><code>statistic = &quot;distance&quot;</code> gives the residual distance between the &quot;fitted&quot; location in constrained ordination space and the location in the full dimensional space</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>head(goodness(mods))</pre>
+
+<pre >             CCA1     CCA2    CCA3
+Cal.vul 0.0062472 0.318908 0.82547
+Emp.nig 0.1164702 0.137605 0.19532
+Led.pal 0.0999090 0.169698 0.18242
+Vac.myr 0.2361483 0.240516 0.24067
+Vac.vit 0.1523705 0.156502 0.21105
+Pin.syl 0.0009244 0.004802 0.00601</pre>
+
+<pre class = 'prettyprint lang-r'>head(goodness(mods, summarize = TRUE))</pre>
+
+<pre >Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl 
+0.82547 0.19532 0.18242 0.24067 0.21105 0.00601 </pre>
+
+</article></slide><slide class=''><hgroup><h2>Diagnostics for constrained ordinations </h2><h3> inertia decomposition</h3></hgroup><article  id="diagnostics-for-constrained-ordinations-inertia-decomposition" class="smaller ">
+
+<p>`inertcomp() decomposes the variance in samples or species in partial, constrained, and unconstrained components</p>
+
+<p>Same two types of measure available by argument <code>statistic</code></p>
+
+<ul>
+<li><code>statistic = &quot;explained</code> (default) gives the decomposition in terms of variance</li>
+<li><p><code>statistic = &quot;distance&quot;</code> gives decomposition in terms of the the residual distance</p></li>
+<li><p>Can output as proportions of total via <code>proportion = TRUE</code></p></li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>head(inertcomp(mods, proportional = TRUE))</pre>
+
+<pre >            CCA     CA
+Cal.vul 0.82547 0.1745
+Emp.nig 0.19532 0.8047
+Led.pal 0.18242 0.8176
+Vac.myr 0.24067 0.7593
+Vac.vit 0.21105 0.7889
+Pin.syl 0.00601 0.9940</pre>
+
+</article></slide><slide class=''><hgroup><h2>Diagnostics for constrained ordinations </h2><h3> species-environment correlations</h3></hgroup><article  id="diagnostics-for-constrained-ordinations-species-environment-correlations" class="smaller ">
+
+<p>`spenvcor() returns the species-environment correlation</p>
+
+<p>The (weighted) correlation between the weighted average-based and the linear combination-based sets of site scores</p>
+
+<p>A <em>poor</em> measure of goodness of fit. Sensitive to</p>
+
+<ul>
+<li>outliers (like all correlations)</li>
+<li>overfitting (using too many constraints)</li>
+</ul>
+
+<p>Better models can have poorer species-environment correlations</p>
+
+<pre class = 'prettyprint lang-r'>spenvcor(mods)</pre>
+
+<pre >  CCA1   CCA2   CCA3 
+0.8555 0.8133 0.8793 </pre>
+
+</article></slide><slide class=''><hgroup><h2>Diagnostics for constrained ordinations </h2><h3> interset correlations</h3></hgroup><article  id="diagnostics-for-constrained-ordinations-interset-correlations" class="smaller ">
+
+<p>`intersetcor() returns the interset correlations; the (weighted) correlation between the weighted average-based site scores and each constraint variable</p>
+
+<p>Another <em>poor</em> diagnostic</p>
+
+<ul>
+<li>correlation based</li>
+<li>focuses on a single constraint&#8211;axis combination at a time</li>
+</ul>
+
+<p>Vector fitting (<code>envfit()</code>) or biplot scores (<code>scores(model, display = &quot;bp&quot;)</code>) are better alternatives</p>
+
+<pre class = 'prettyprint lang-r'>intersetcor(mods)</pre>
+
+<pre >      CCA1    CCA2   CCA3
+Al  0.7356 -0.1302 0.4260
+P  -0.3590 -0.6111 0.4479
+K  -0.3768 -0.1339 0.7760</pre>
+
+</article></slide><slide class=''><hgroup><h2>References</h2></hgroup><article  id="references" class="smaller "></article></slide>
 
 
   <slide class="backdrop"></slide>

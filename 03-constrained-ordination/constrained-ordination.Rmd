@@ -13,7 +13,7 @@ output:
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(comment = "")
+knitr::opts_chunk$set(comment = "", cache = TRUE)
 library("vegan")
 data(varespec)
 data(varechem)
@@ -99,8 +99,8 @@ To extract a range of scores from  a fitted ordination use `scores()`
  * `display` --- which type(s) of scores to return
 
 ```{r scores}
-str(scores(ca1, choices = 1:4, display = c("species","sites")), max = 1)
-head(scores(ca1, choices = 1:2, display = "sites"))
+str(scores(cca1, choices = 1:4, display = c("species","sites")), max = 1)
+head(scores(cca1, choices = 1:2, display = "sites"))
 ```
 
 ## Scalings...
@@ -123,7 +123,7 @@ Controlled via the `scaling` argument
  * `scaling = 0` --- raw scores
  
  ```{r scaling-example, results = "hide"}
- scores(ca1, choices = 1:2, display = "species", scaling = 3)
+ scores(cca1, choices = 1:2, display = "species", scaling = 3)
  ```
 
 ## Partial constrained ordinations
@@ -157,7 +157,8 @@ The formula interface allows you to create interaction or quadratic terms easily
 
 It also handles factor or class constraints automatically unlike the basic interface
 
-----
+
+## Building constrained ordination models
 
 ```{r cca-model-build1}
 vare.cca <- cca(varespec ~ Al + P*(K + Baresoil), data = varechem)
@@ -565,7 +566,7 @@ args(Plots)
  * `complete` should we enumerate the entire set of permutations?
  * `minperm` lower bound on the size of the set of permutations at & below which we turn on complete enumeration
 
-```{r helper-funs}
+```{r how-args}
 args(how)
 ```
 
@@ -631,7 +632,7 @@ Same two types of  measure available by argument `statistic`
 
 * Can output as proportions of total via `proportion = TRUE`
 
-```{r goodness}
+```{r inertcomp}
 head(inertcomp(mods, proportional = TRUE))
 ```
 
@@ -663,7 +664,7 @@ Another *poor* diagnostic
 
 Vector fitting (`envfit()`) or biplot scores (`scores(model, display = "bp")`) are better alternatives
 
-```{r inertcomp}
+```{r intersetcor}
 intersetcor(mods)
 ```
 
