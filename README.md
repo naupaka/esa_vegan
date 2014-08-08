@@ -2,7 +2,7 @@
 
 Welcome to the GitHub repository for workshop on community ecology analyses using the ```vegan``` package at ESA 2014.
 
-#### NOTE: This will be a work in progress until late July 2014.
+#### NOTE: This will be a work in progress until August 9th, 2014.
 
 **Location and time:**    
 Saturday, August 9, 2014    
@@ -10,7 +10,7 @@ Saturday, August 9, 2014
 Location: Room **105**, Sacramento Convention Center     
 
 ## Organizers
-[Naupaka Zimmerman](http://naupaka.net), and [Gavin Simpson](http://www.fromthebottomoftheheap.net/).
+[Naupaka Zimmerman](http://naupaka.net) and [Gavin Simpson](http://www.fromthebottomoftheheap.net/).
 
 ---
 
@@ -42,7 +42,7 @@ If you get errors and not a new window in which you can edit the biplot, then yo
 ### Downloading code/data from this repository  
 If you're already familiar with `Git`, then simply clone this repo. If you're not familiar with Git, simply hit the **Download ZIP** button on the right side of this page. If you're not sure where to save it, just download and unzip to your Desktop.
 
-Please wait until Saturday afternoon to this so you are able to download the latest changes. Otherwise do another git pull or replace your donwloaded copy with a newer one.
+*Please wait until Saturday afternoon to this so you are able to download the latest changes. Otherwise do another git pull or replace your donwloaded copy with a newer one.*
 
 If you're having any trouble with these steps please drop us an [email](mailto:naupaka@gmail.com). We'll also strive to have local copies if you forget to install any of these tools.
 
