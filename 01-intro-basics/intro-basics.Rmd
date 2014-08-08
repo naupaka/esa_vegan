@@ -19,27 +19,65 @@ output:
 knitr::opts_chunk$set(comment = "", cache = TRUE)
 ```
 
+## Workshop logistics
+
+* Etherpad [[link here]]
+* Red and Green Stickies
+
+## Packages installed?
+
+```{r, eval=FALSE}
+install.packages("vegan", dependencies = TRUE)
+install.packages("plyr")
+install.packages("reshape2")
+```
+
 ## Introduction to **vegan**
 
 * What is it?
 * Who developed it?
 * How does it differ from other alternatives?
 
-## Workshop logistics
+## Digging in | Prepping your data for R and vegan
 
-* Etherpad
-* Red and Green Stickies
+### “The purpose of computing is insight, not numbers” 
+### - Richard Hamming 
 
 ## Digging in | Prepping your data for R and vegan
 
-* We've all heard data horror stories
-* Data image
+We've all heard data horror stories
+![](img/otherpeoplesdata.png)
 
 ## Cleaning your data for import into R for use in vegan
 
 * Spreadsheet example
-* format of site/species matrix and environmental data matrix
-* will use built-in datasets  for species `varespec` and environmental variables `varechem`
+
+## Cleaning your data for import into R for use in vegan
+
+* We will use built-in datasets for species `varespec` and environmental variables `varechem`
+    * from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)
+
+```{r, results='hide'}
+library("vegan")
+data(varespec)
+data(varechem)
+```
+
+```{r}
+head(varespec[,1:8], n = 3)
+```
+
+## Summarizing data with `apply()`
+
+Sum of rows
+```{r}
+sum.of.rows <- apply(varespec, 1, sum)
+```
+Sum of columns
+```{r}
+sum.of.columns <- apply(varespec, 2, sum)
+```
+
 
 ## Data transformation with `decostand()`
 
@@ -64,6 +102,13 @@ Examples:
 * Bray
 * Jaccard
 * Morisita
-* `rankindex()`
+* How to choose a good one for your data set?
+    * `rankindex()`
+
+## Rarefaction
+
+## Within vs between group similarities
+
+* `betadisper()`
 
 ## References
