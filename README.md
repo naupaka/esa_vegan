@@ -7,10 +7,10 @@ Welcome to the GitHub repository for workshop on community ecology analyses usin
 **Location and time:**    
 Saturday, August 9, 2014    
 12:00 PM - 5:00 PM     
-Location TBD     
+Location: Room **105**, Sacramento Convention Center     
 
 ## Organizers
-[Naupaka Zimmerman](http://naupaka.net), [Nate Hough-Snee](http://www.natehough-snee.org), and [Gavin Simpson](http://www.fromthebottomoftheheap.net/).
+[Naupaka Zimmerman](http://naupaka.net), and [Gavin Simpson](http://www.fromthebottomoftheheap.net/).
 
 ---
 
@@ -23,11 +23,21 @@ If you don't already have R set up with a suitable code editor, we recommend dow
 
 ### Installing packages
 
-```coffee
+```r
 install.packages("vegan", dependencies = TRUE)
 install.packages("plyr")
 install.packages("reshape2")
 ```
+
+### Extra check for MacOS X users
+In order to use the `orditkplot()` function you need a working Tcl/Tk installation. This may not be installed on Macs; to check run the following code
+
+```r
+data(varespec)
+orditkplot(rda(varespec))
+```
+
+If you get errors and not a new window in which you can edit the biplot, then you probably don't have the correct setup on your system to use Tcl/Tk. Refer to the [Tcl/Tk Issues section](http://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html#Tcl_002fTk-issues) of the R Mac OS X FAQ.
 
 ### Downloading code/data from this repository  
 If you're already familiar with `Git`, then simply clone this repo. If you're not familiar with Git, simply hit the **Download ZIP** button on the right side of this page. If you're not sure where to save it, just download and unzip to your Desktop.
