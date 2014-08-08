@@ -1,13 +1,15 @@
 ---
 title: "Constrained Ordination & Permutation Tests"
+author: "Naupaka Zimmerman and Gavin Simpson"
+date: "August 9, 2014 • ESA 2014"
 bibliography: constrained-ordination.bib
 
 output:
   ioslides_presentation:
     widescreen: true
     smaller: true
-    fig_width: 7
-    fig_height: 6
+    fig_width: 6
+    fig_height: 5
     fig_caption: true
     keep_md: true
     highlight: tango
@@ -42,7 +44,7 @@ cca1
 
 ## Redundancy Analysis
 
-RDA is the constraindd form of PCA; fitted using `rda()`.
+RDA is the constrained form of PCA; fitted using `rda()`.
 
 ```{r rda-model}
 rda1 <- rda(varespec ~ ., data = varechem)
@@ -188,7 +190,7 @@ Vegan also provides methods for class `"cca"` for `add1()` and `drop1()`
 
 ## Stepwise selection in CCA
 
-Uses function `step()`
+`step()` uses AIC which is a fudge for RDA/CCA. Alternatively use function `ordistep()`
 
  1. Define an upper and lower model scope, say the full model and the null model
  2. To step from the lower scope or null model we use
@@ -197,12 +199,12 @@ Uses function `step()`
 upr <- cca(varespec ~ ., data = varechem)
 lwr <- cca(varespec ~ 1, data = varechem)
 set.seed(1)
-mods <- step(lwr, scope = formula(upr), test = "perm", trace = 0)
+mods <- ordistep(lwr, scope = formula(upr), trace = 0)
 ```
 
 `trace = 0` is used her to turn off printing of progress
 
-`test = "perm"` indicates permutation tests are used (more on these later); the theory for an AIC for ordination is somewhat loose
+Permutation tests are used (more on these later); the theory for an AIC for ordination is somewhat loose
 
 ## Stepwise selection in CCA
 
@@ -390,6 +392,37 @@ anova(mods, by = "terms")
 ```{r anova-by-margin}
 set.seed(10)
 anova(mods, by = "margin")
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+Example & data taken from Leps & Smilauer, Case Study 2
+
+Spring fen meadow vegetation in westernmost Carpathian mountains
+
+```{r meadows-setup}
+## load vegan
+library("vegan")
+
+## load the data
+spp <- read.csv("data/meadow-spp.csv", header = TRUE, row.names = 1)
+env <- read.csv("data/meadow-env.csv", header = TRUE, row.names = 1)
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+CCA a reasonable starting point as the gradient is long here (check with `decorana()` if you want)
+
+```{r meadows-cca-full}
+m1 <- cca(spp ~ ., data = env)
+set.seed(32)
+anova(m1)
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+```{r meadows-cca-full-triplot, echo = FALSE}
+plot(m1)
 ```
 
 ## Restricted permutation tests

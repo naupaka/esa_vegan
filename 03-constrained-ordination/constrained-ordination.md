@@ -1,4 +1,6 @@
 # Constrained Ordination & Permutation Tests
+Naupaka Zimmerman and Gavin Simpson  
+August 9, 2014 • ESA 2014  
 
 
 
@@ -46,7 +48,7 @@ Eigenvalues for unconstrained axes:
 
 ## Redundancy Analysis
 
-RDA is the constraindd form of PCA; fitted using `rda()`.
+RDA is the constrained form of PCA; fitted using `rda()`.
 
 
 ```r
@@ -269,7 +271,7 @@ Vegan also provides methods for class `"cca"` for `add1()` and `drop1()`
 
 ## Stepwise selection in CCA
 
-Uses function `step()`
+`step()` uses AIC which is a fudge for RDA/CCA. Alternatively use function `ordistep()`
 
  1. Define an upper and lower model scope, say the full model and the null model
  2. To step from the lower scope or null model we use
@@ -279,12 +281,12 @@ Uses function `step()`
 upr <- cca(varespec ~ ., data = varechem)
 lwr <- cca(varespec ~ 1, data = varechem)
 set.seed(1)
-mods <- step(lwr, scope = formula(upr), test = "perm", trace = 0)
+mods <- ordistep(lwr, scope = formula(upr), trace = 0)
 ```
 
 `trace = 0` is used her to turn off printing of progress
 
-`test = "perm"` indicates permutation tests are used (more on these later); the theory for an AIC for ordination is somewhat loose
+Permutation tests are used (more on these later); the theory for an AIC for ordination is somewhat loose
 
 ## Stepwise selection in CCA
 
@@ -326,11 +328,12 @@ mods$anova
 ```
 
 ```
-  Step Df Deviance Resid. Df Resid. Dev   AIC
-1      NA       NA        23       5037 130.3
-2 + Al -1    720.9        22       4316 128.6
-3  + P -1    459.1        21       3857 127.9
-4  + K -1    377.3        20       3479 127.4
+     Df AIC    F N.Perm Pr(>F)   
++ Al  1 129 3.67    199  0.005 **
++ P   1 128 2.50    199  0.010 **
++ K   1 127 2.17    999  0.037 * 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
 ## Stepwise selection in CCA
@@ -598,6 +601,48 @@ Residual 20  1.44
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
+## Constrained ordination worked example | spring meadow vegetation
+
+Example & data taken from Leps & Smilauer, Case Study 2
+
+Spring fen meadow vegetation in westernmost Carpathian mountains
+
+
+```r
+## load vegan
+library("vegan")
+
+## load the data
+spp <- read.csv("data/meadow-spp.csv", header = TRUE, row.names = 1)
+env <- read.csv("data/meadow-env.csv", header = TRUE, row.names = 1)
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+CCA a reasonable starting point as the gradient is long here (check with `decorana()` if you want)
+
+
+```r
+m1 <- cca(spp ~ ., data = env)
+set.seed(32)
+anova(m1)
+```
+
+```
+Permutation test for cca under reduced model
+
+Model: cca(formula = spp ~ Ca + Mg + Fe + K + Na + Si + SO4 + PO4 + NO3 + NH3 + Cl + Corg + pH + conduct + slope, data = env)
+         Df Chisq    F N.Perm Pr(>F)   
+Model    15  1.56 1.50    199  0.005 **
+Residual 54  3.75                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+![plot of chunk meadows-cca-full-triplot](./constrained-ordination_files/figure-html/meadows-cca-full-triplot.png) 
+
 ## Restricted permutation tests
 
 What *is* shuffled and *how* is of **paramount** importance for the test to be valid
@@ -684,7 +729,7 @@ shuffle(10, control = how(within = Within(type = "series")))
 ```
 
 ```
- [1]  6  7  8  9 10  1  2  3  4  5
+ [1]  1  2  3  4  5  6  7  8  9 10
 ```
 
 ## Restricted permutations with **permute** | spatial grids
