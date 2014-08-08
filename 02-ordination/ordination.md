@@ -1,23 +1,8 @@
----
-title: "Ordination with vegan"
-author: "Naupaka Zimmerman and Gavin Simpson"
-date: "August 9, 2014 • ESA 2014"
-bibliography: ordination.bib
+# Ordination with vegan
+Naupaka Zimmerman and Gavin Simpson  
+August 9, 2014 • ESA 2014  
 
-output:
-  ioslides_presentation:
-    widescreen: true
-    smaller: true
-    fig_width: 7
-    fig_height: 6
-    fig_caption: true
-    keep_md: true
-    highlight: tango
----
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(comment = "", cache = TRUE)
-```
 
 ## Unconstrained ordination
 
