@@ -7,7 +7,7 @@ bibliography: intro-basics.bib
 output:
   ioslides_presentation:
     widescreen: true
-    smaller: true
+    smaller: false
     fig_width: 7
     fig_height: 6
     fig_caption: true
@@ -20,5 +20,31 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
 ```
 
 ## Introduction to **vegan**
+
+* What is it?
+* Who developed it?
+* How does it differ from other alternatives?
+
+## Workshop logistics
+
+* Etherpad
+* Red and Green Stickies
+
+## Digging in | Prepping your data for R and vegan
+
+* We've all heard data horror stories
+
+## Data transformation
+
+* Square root
+* Wisconsin
+* Etc
+
+## Calculating community distances
+
+* vegdist
+* decostand
+
+## Types of distance metrics | and why you might want to use one instead of another
 
 ## References
