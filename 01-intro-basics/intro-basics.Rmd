@@ -19,8 +19,17 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
 <!----------------------------slide boundary--------------------------------->
 ## Workshop logistics
 
-* Etherpad [[link here]]
-* Red and Green Stickies
+* Etherpad 
+    * https://etherpad.mozilla.org/ESA2014-vegan
+
+<!----------------------------slide boundary--------------------------------->
+## Workshop logistics
+
+* Etherpad 
+    * https://etherpad.mozilla.org/ESA2014-vegan
+* Red and Green Stickies 
+  
+![](img/Green_post_it.png)&nbsp;&nbsp;&nbsp;&nbsp;![](img/Red_post_it.png)
 
 <!----------------------------slide boundary--------------------------------->
 ## Packages installed?
@@ -39,6 +48,8 @@ install.packages("reshape2")
 * How does it differ from other alternatives?
 
 <!----------------------------slide boundary--------------------------------->
+# Cleaning and importing data
+<!----------------------------slide boundary--------------------------------->
 ## Digging in | Prepping your data for R and vegan
 
 ### “The purpose of computing is insight, not numbers” 
@@ -47,19 +58,39 @@ install.packages("reshape2")
 <!----------------------------slide boundary--------------------------------->
 ## Digging in | Prepping your data for R and vegan
 
+### “The purpose of computing is insight, not numbers” 
+### - Richard Hamming 
+<br /><br /><br />
+But you have to get through the numbers to get to the insight...
+
+<!----------------------------slide boundary--------------------------------->
+## Digging in | Prepping your data for R and vegan
+
 We've all heard data horror stories
 ![](img/otherpeoplesdata.png)
 
 <!----------------------------slide boundary--------------------------------->
-## Cleaning your data for import into R for use in vegan
+## Cleaning your data for R and vegan
 
-* Spreadsheet example
+Cleaning spreadsheet example  
 
 <!----------------------------slide boundary--------------------------------->
-## Cleaning your data for import into R for use in vegan
+## Cleaning your data for R and vegan
 
-* We will use built-in datasets for species `varespec` and environmental variables `varechem`
-    * from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)
+Cleaning spreadsheet example
+<br /><br />
+Then...  
+```{r, eval=FALSE}
+setwd("your/working/directory/data")
+varespec.csv.in <- read.csv("varespec.csv", header = TRUE, row.names = 1)
+```
+
+
+<!----------------------------slide boundary--------------------------------->
+## Cleaning your data for R and vegan
+
+* We will use some of vegan's built-in datasets for species `varespec` and environmental variables `varechem`
+    * from Väre, H., Ohtonen, R. and Oksanen, J. (1995)
 
 ```{r, results='hide'}
 library("vegan")
@@ -68,7 +99,7 @@ data(varechem)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Cleaning your data for import into R for use in vegan
+## Cleaning your data for R and vegan
 
 * We will use built-in datasets for species `varespec` and environmental variables `varechem`
     * from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)
@@ -83,6 +114,8 @@ data(varechem)
 head(varespec[,1:8], n = 3)
 ```
 
+<!----------------------------slide boundary--------------------------------->
+# Basic data summarizing
 <!----------------------------slide boundary--------------------------------->
 ## Summarizing data with `apply()` | sums and sorting
 
@@ -116,6 +149,8 @@ sort(spec.pres, decreasing = TRUE)[1:18]
 ```
 
 <!----------------------------slide boundary--------------------------------->
+# Data Transformation
+<!----------------------------slide boundary--------------------------------->
 ## Basic data transformation
 
 **Square root transformation**
@@ -134,7 +169,7 @@ head(spec.sqrt[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Total**
 ```{r}
@@ -142,7 +177,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Total**
 ```{r}
@@ -152,7 +187,7 @@ head(spec.total[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Maximum**
 ```{r}
@@ -160,7 +195,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Maximum** 
 ```{r}
@@ -170,7 +205,7 @@ head(spec.max[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
 ```{r}
@@ -178,7 +213,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
 ```{r}
@@ -188,7 +223,7 @@ head(spec.pa[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Hellinger (Legendre & Gallagher 2001)**
 Square root of method "total"
@@ -197,7 +232,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Hellinger (Legendre & Gallagher 2001)**
 Square root of method "total"
@@ -208,7 +243,7 @@ head(spec.hellinger[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
 Species standardized to maximum, then sites by totals.  
@@ -217,10 +252,10 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
-Species standardized to maximum, then sites by totals.
+Shotcut function for standardizing species to maximum, then sites by totals.
 ```{r}
 head(varespec[,1:8], n = 3)
 spec.wisc <- wisconsin(varespec)
@@ -228,6 +263,7 @@ head(spec.wisc[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Types of distance metrics | and why you might want to use one instead of another
 
 * Presence/absence

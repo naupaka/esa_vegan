@@ -7,8 +7,17 @@ August 9, 2014 • ESA 2014
 <!----------------------------slide boundary--------------------------------->
 ## Workshop logistics
 
-* Etherpad [[link here]]
-* Red and Green Stickies
+* Etherpad 
+    * https://etherpad.mozilla.org/ESA2014-vegan
+
+<!----------------------------slide boundary--------------------------------->
+## Workshop logistics
+
+* Etherpad 
+    * https://etherpad.mozilla.org/ESA2014-vegan
+* Red and Green Stickies 
+  
+![](img/Green_post_it.png)&nbsp;&nbsp;&nbsp;&nbsp;![](img/Red_post_it.png)
 
 <!----------------------------slide boundary--------------------------------->
 ## Packages installed?
@@ -28,6 +37,8 @@ install.packages("reshape2")
 * How does it differ from other alternatives?
 
 <!----------------------------slide boundary--------------------------------->
+# Cleaning and importing data
+<!----------------------------slide boundary--------------------------------->
 ## Digging in | Prepping your data for R and vegan
 
 ### “The purpose of computing is insight, not numbers” 
@@ -36,19 +47,40 @@ install.packages("reshape2")
 <!----------------------------slide boundary--------------------------------->
 ## Digging in | Prepping your data for R and vegan
 
+### “The purpose of computing is insight, not numbers” 
+### - Richard Hamming 
+<br /><br /><br />
+But you have to get through the numbers to get to the insight...
+
+<!----------------------------slide boundary--------------------------------->
+## Digging in | Prepping your data for R and vegan
+
 We've all heard data horror stories
 ![](img/otherpeoplesdata.png)
 
 <!----------------------------slide boundary--------------------------------->
-## Cleaning your data for import into R for use in vegan
+## Cleaning your data for R and vegan
 
-* Spreadsheet example
+Cleaning spreadsheet example  
 
 <!----------------------------slide boundary--------------------------------->
-## Cleaning your data for import into R for use in vegan
+## Cleaning your data for R and vegan
 
-* We will use built-in datasets for species `varespec` and environmental variables `varechem`
-    * from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)
+Cleaning spreadsheet example
+<br /><br />
+Then...  
+
+```r
+setwd("your/working/directory/data")
+varespec.csv.in <- read.csv("varespec.csv", header = TRUE, row.names = 1)
+```
+
+
+<!----------------------------slide boundary--------------------------------->
+## Cleaning your data for R and vegan
+
+* We will use some of vegan's built-in datasets for species `varespec` and environmental variables `varechem`
+    * from Väre, H., Ohtonen, R. and Oksanen, J. (1995)
 
 
 ```r
@@ -58,7 +90,7 @@ data(varechem)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Cleaning your data for import into R for use in vegan
+## Cleaning your data for R and vegan
 
 * We will use built-in datasets for species `varespec` and environmental variables `varechem`
     * from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)
@@ -82,6 +114,8 @@ head(varespec[,1:8], n = 3)
 24    0.10    1.55       0    0.00   13.47    0.25       0       0
 ```
 
+<!----------------------------slide boundary--------------------------------->
+# Basic data summarizing
 <!----------------------------slide boundary--------------------------------->
 ## Summarizing data with `apply()` | sums and sorting
 
@@ -140,6 +174,8 @@ Cla.gra Cla.def Cla.ste Cla.fim Pin.syl Pol.jun Poh.nut Cla.coc Pti.cil
      23      23      22      22      21      20      20      19      17 
 ```
 
+<!----------------------------slide boundary--------------------------------->
+# Data Transformation
 <!----------------------------slide boundary--------------------------------->
 ## Basic data transformation
 
@@ -409,6 +445,7 @@ head(spec.wisc[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Types of distance metrics | and why you might want to use one instead of another
 
 * Presence/absence
