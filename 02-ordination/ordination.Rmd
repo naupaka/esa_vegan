@@ -87,6 +87,7 @@ head(dune[,1:10], n=3)
 
 ```{r}
 head(dune.env, n=3)
+summary(dune.env)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -101,6 +102,8 @@ There are two more basic NMDS ordination functions:
 Vegan also has a wrapper function for doing NMDS ordinations using best practices:
 
 * `metaMDS()`
+
+This will do handy things like try to standardize your data if necessary and perform rotation, among other things.
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -248,6 +251,15 @@ ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
 plot(dune.bray.ord, display = "sites", cex=2)
 ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
 ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```{r, fig.height=5}
+# Plot first, then add layers
+plot(dune.bray.ord, display = "sites", cex=2)
 ```
 
 <!----------------------------slide boundary--------------------------------->

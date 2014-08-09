@@ -95,6 +95,20 @@ head(dune.env, n=3)
 4  4.2        2         SF Haypastu      4
 ```
 
+```r
+summary(dune.env)
+```
+
+```
+       A1        Moisture Management       Use    Manure
+ Min.   : 2.80   1:7      BF:3       Hayfield:7   0:6   
+ 1st Qu.: 3.50   2:4      HF:5       Haypastu:8   1:3   
+ Median : 4.20   4:2      NM:6       Pasture :5   2:4   
+ Mean   : 4.85   5:7      SF:6                    3:4   
+ 3rd Qu.: 5.72                                    4:3   
+ Max.   :11.50                                          
+```
+
 <!----------------------------slide boundary--------------------------------->
 
 ## Basic ordination and plotting
@@ -107,6 +121,8 @@ There are two more basic NMDS ordination functions:
 Vegan also has a wrapper function for doing NMDS ordinations using best practices:
 
 * `metaMDS()`
+
+This will do handy things like try to standardize your data if necessary and perform rotation, among other things.
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -294,19 +310,20 @@ ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 
 
 ```r
+# Plot first, then add layers
 plot(dune.bray.ord, display = "sites", cex=2)
-ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 ```
 
 ![plot of chunk unnamed-chunk-19](./ordination_files/figure-html/unnamed-chunk-19.png) 
 
 <!----------------------------slide boundary--------------------------------->
 
-## Adding other layers - axes scaling
+## Adding other layers
 
 
 ```r
-plot(dune.bray.ord, type = "n")
+plot(dune.bray.ord, display = "sites", cex=2)
+ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 ```
 
 ![plot of chunk unnamed-chunk-20](./ordination_files/figure-html/unnamed-chunk-20.png) 
@@ -318,7 +335,6 @@ plot(dune.bray.ord, type = "n")
 
 ```r
 plot(dune.bray.ord, type = "n")
-points(dune.bray.ord,display = "sites", cex = 2)
 ```
 
 ![plot of chunk unnamed-chunk-21](./ordination_files/figure-html/unnamed-chunk-21.png) 
@@ -329,7 +345,8 @@ points(dune.bray.ord,display = "sites", cex = 2)
 
 
 ```r
-plot(dune.bray.ord, display = "sites", type = "n")
+plot(dune.bray.ord, type = "n")
+points(dune.bray.ord,display = "sites", cex = 2)
 ```
 
 ![plot of chunk unnamed-chunk-22](./ordination_files/figure-html/unnamed-chunk-22.png) 
@@ -341,10 +358,21 @@ plot(dune.bray.ord, display = "sites", type = "n")
 
 ```r
 plot(dune.bray.ord, display = "sites", type = "n")
-points(dune.bray.ord, display = "sites", cex = 2)
 ```
 
 ![plot of chunk unnamed-chunk-23](./ordination_files/figure-html/unnamed-chunk-23.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers - axes scaling
+
+
+```r
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex = 2)
+```
+
+![plot of chunk unnamed-chunk-24](./ordination_files/figure-html/unnamed-chunk-24.png) 
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -357,7 +385,7 @@ points(dune.bray.ord,display = "sites", cex = 2)
 ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 ```
 
-![plot of chunk unnamed-chunk-24](./ordination_files/figure-html/unnamed-chunk-24.png) 
+![plot of chunk unnamed-chunk-25](./ordination_files/figure-html/unnamed-chunk-25.png) 
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -370,7 +398,7 @@ points(dune.bray.ord, display = "sites", cex = 2)
 ordiellipse(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 ```
 
-![plot of chunk unnamed-chunk-25](./ordination_files/figure-html/unnamed-chunk-25.png) 
+![plot of chunk unnamed-chunk-26](./ordination_files/figure-html/unnamed-chunk-26.png) 
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -382,7 +410,7 @@ points(dune.bray.ord,display = "sites", cex = 2)
 ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
 ```
 
-![plot of chunk unnamed-chunk-26](./ordination_files/figure-html/unnamed-chunk-26.png) 
+![plot of chunk unnamed-chunk-27](./ordination_files/figure-html/unnamed-chunk-27.png) 
 
 ```
 
@@ -391,7 +419,7 @@ Link function: identity
 
 Formula:
 y ~ s(x1, x2, k = 10, bs = "tp", fx = FALSE)
-<environment: 0x7fae16f1aa68>
+<environment: 0x7fb629a14268>
 
 Estimated degrees of freedom:
 1.62  total = 2.62 
@@ -432,7 +460,7 @@ plot(dune.bray.ord.A1.fit, add = TRUE)
 ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
 ```
 
-![plot of chunk unnamed-chunk-28](./ordination_files/figure-html/unnamed-chunk-28.png) 
+![plot of chunk unnamed-chunk-29](./ordination_files/figure-html/unnamed-chunk-29.png) 
 
 ```
 
@@ -441,7 +469,7 @@ Link function: identity
 
 Formula:
 y ~ s(x1, x2, k = 10, bs = "tp", fx = FALSE)
-<environment: 0x7fae13bb2fc0>
+<environment: 0x7fb629c34e78>
 
 Estimated degrees of freedom:
 1.62  total = 2.62 
