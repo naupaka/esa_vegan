@@ -13,10 +13,12 @@ output:
     fig_caption: true
     keep_md: true
     highlight: tango
+    self_contained: false
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(comment = "", cache = TRUE)
+knitr::opts_chunk$set(comment = "", cache = TRUE, crop = TRUE)
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
 library("vegan")
 data(varespec)
 data(varechem)
@@ -422,7 +424,7 @@ anova(m1)
 ## Constrained ordination worked example | spring meadow vegetation
 
 ```{r meadows-cca-full-triplot, echo = FALSE}
-plot(m1)
+plot(m1) ## foo
 ```
 
 ## Restricted permutation tests
