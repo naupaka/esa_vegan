@@ -33,6 +33,7 @@ install.packages("reshape2")
 In order to use the `orditkplot()` function you need a working Tcl/Tk installation. This may not be installed on Macs; to check run the following code
 
 ```r
+library("vegan")
 data(varespec)
 orditkplot(rda(varespec))
 ```
