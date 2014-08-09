@@ -277,6 +277,24 @@ Eigenvalues for unconstrained axes:
             Z = varechem[, &quot;pH&quot;, drop = FALSE])
 pcca &lt;- cca(varespec ~ Ca + Condition(pH), data = varechem) ## easier!</pre>
 
+</article></slide><slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Plotting constrained ordinations</h2></hgroup><article  id="plotting-constrained-ordinations" class="smaller ">
+
+</article></slide><slide class=''><hgroup><h2>Triplots</h2></hgroup><article  id="triplots" class="smaller ">
+
+<p>Triplots will generally produce a mess; we can really only display a couple of bits approximately anyway</p>
+
+<p>Trying to cram three things in is a recipe for a mess&#8230;</p>
+
+<p>&#8230;but we can do it</p>
+
+<pre class = 'prettyprint lang-r'>plot(cca1)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Triplots</h2></hgroup><article  id="triplots-1" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>plot(cca1)</pre>
+
+<img src='constrained-ordination_files/figure-html/triplot-2.png' title='fig:'/><p class='caption'>plot of chunk triplot-2</p>
+
 </article></slide><slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Model building</h2></hgroup><article  id="model-building" class="smaller ">
 
 </article></slide><slide class=''><hgroup><h2>Building constrained ordination models</h2></hgroup><article  id="building-constrained-ordination-models" class="smaller ">
@@ -456,7 +474,7 @@ Eigenvalues for unconstrained axes:
 
 <p>The problems with stepwise selection in regression models are myriad. Affects RDA, CCA, etc as well</p>
 
-<p><span class="cite">Blanchet, Legendre, and Borcard (2008)</span> proposed a two-step solution for models where \(R2_{adj}\) makes sense</p>
+<p><span class="cite">Blanchet, Legendre, and Borcard (2008)</span> proposed a two-step solution for models where \(R^2_{adj}\) makes sense</p>
 
 <ul>
 <li><em>Global test</em> of all constraints
@@ -484,6 +502,8 @@ Eigenvalues for unconstrained axes:
 
 <p>Instead we use permutation tests to assess the <em>importance</em> of fitted models &#8212; the data are shuffled in some way and the model refitted to derive a Null distribution under some hypothesis of <em>no effect</em></p>
 
+</article></slide><slide class=''><hgroup><h2>Permutation tests in vegan</h2></hgroup><article  id="permutation-tests-in-vegan-1" class="smaller ">
+
 <p>What <em>is</em> shuffled and <em>how</em> is of <strong>paramount</strong> importance for the test to be valid</p>
 
 <ul>
@@ -497,7 +517,7 @@ Eigenvalues for unconstrained axes:
 <li>In <strong>vegan</strong> which is used can be set via argument <code>method</code> with <code>&quot;direct&quot;</code>, <code>&quot;full&quot;</code>, and <code>&quot;reduced&quot;</code> respectively</li>
 </ul>
 
-</article></slide><slide class=''><hgroup><h2>Permutation tests in vegan</h2></hgroup><article  id="permutation-tests-in-vegan-1" class="smaller ">
+</article></slide><slide class=''><hgroup><h2>Permutation tests in vegan</h2></hgroup><article  id="permutation-tests-in-vegan-2" class="smaller ">
 
 <p>A test statistic is required, computed for observed model &amp; each permuted model</p>
 
@@ -684,6 +704,83 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 
 <img src='constrained-ordination_files/figure-html/meadows-cca-full-triplot.png' title='fig:'/><p class='caption'>plot of chunk meadows-cca-full-triplot</p>
 
+</article></slide><slide class=''><hgroup><h2>Constrained ordination worked example </h2><h3> spring meadow vegetation</h3></hgroup><article  id="constrained-ordination-worked-example-spring-meadow-vegetation-3" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>set.seed(67)
+lwr &lt;- cca(spp ~ 1, data = env)
+m2 &lt;- ordistep(lwr, scope = formula(m1), perm.max = 499, trace = FALSE)</pre>
+
+<pre class = 'prettyprint lang-r'>m2</pre>
+
+<pre >Call: cca(formula = spp ~ Ca + conduct + Corg + Na + NH3 + Fe +
+pH, data = env)
+
+              Inertia Proportion Rank
+Total           5.310      1.000     
+Constrained     0.990      0.186    7
+Unconstrained   4.320      0.814   62
+Inertia is mean squared contingency coefficient 
+
+Eigenvalues for constrained axes:
+  CCA1   CCA2   CCA3   CCA4   CCA5   CCA6   CCA7 
+0.4268 0.1447 0.1116 0.0936 0.0760 0.0719 0.0652 
+
+Eigenvalues for unconstrained axes:
+  CA1   CA2   CA3   CA4   CA5   CA6   CA7   CA8 
+0.273 0.195 0.167 0.150 0.146 0.142 0.133 0.122 
+(Showed only 8 of all 62 unconstrained eigenvalues)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Constrained ordination worked example </h2><h3> spring meadow vegetation</h3></hgroup><article  id="constrained-ordination-worked-example-spring-meadow-vegetation-4" class="smaller ">
+
+<img src='constrained-ordination_files/figure-html/meadows-cca-reduced-triplot.png' title='fig:'/><p class='caption'>plot of chunk meadows-cca-reduced-triplot</p>
+
+</article></slide><slide class=''><hgroup><h2>Constrained ordination worked example </h2><h3> spring meadow vegetation</h3></hgroup><article  id="constrained-ordination-worked-example-spring-meadow-vegetation-5" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>m2$anova</pre>
+
+<pre >          Df AIC    F N.Perm Pr(&gt;F)   
++ Ca       1 453 4.79    199  0.005 **
++ conduct  1 453 1.79    199  0.005 **
++ Corg     1 454 1.60    199  0.005 **
++ Na       1 454 1.58    199  0.005 **
++ NH3      1 454 1.45    199  0.015 * 
++ Fe       1 455 1.34    299  0.013 * 
++ pH       1 455 1.28    499  0.026 * 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+</article></slide><slide class=''><hgroup><h2>Constrained ordination worked example </h2><h3> spring meadow vegetation</h3></hgroup><article  id="constrained-ordination-worked-example-spring-meadow-vegetation-6" class="smaller ">
+
+<p>Alternative is RDA with a transformation</p>
+
+<pre class = 'prettyprint lang-r'>spph &lt;- decostand(spp, method = &quot;hellinger&quot;)
+m3 &lt;- rda(spph ~ ., data = env)
+lwr &lt;- rda(spph ~ 1, data = env)
+m4 &lt;- ordistep(lwr, scope = formula(m3), perm.max = 199, trace = FALSE)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Constrained ordination worked example </h2><h3> spring meadow vegetation</h3></hgroup><article  id="constrained-ordination-worked-example-spring-meadow-vegetation-7" class="smaller ">
+
+<img src='constrained-ordination_files/figure-html/meadows-rda-reduced-triplot.png' title='fig:'/><p class='caption'>plot of chunk meadows-rda-reduced-triplot</p>
+
+</article></slide><slide class=''><hgroup><h2>Constrained ordination worked example </h2><h3> spring meadow vegetation</h3></hgroup><article  id="constrained-ordination-worked-example-spring-meadow-vegetation-8" class="smaller ">
+
+<p>Stepwise using \(R^2_{adj}\)</p>
+
+<pre class = 'prettyprint lang-r'>m5 &lt;- ordiR2step(lwr, scope = formula(m3), perm.max = 199, trace = FALSE)
+m5$anova</pre>
+
+<pre >                R2.adj Df   AIC     F N.Perm Pr(&gt;F)   
++ Ca             0.126  1 -41.8 10.94    199  0.005 **
++ NH3            0.146  1 -42.5  2.62    199  0.005 **
++ conduct        0.163  1 -42.9  2.36    199  0.005 **
++ Si             0.177  1 -43.2  2.11    199  0.005 **
++ Corg           0.185  1 -42.9  1.64    199  0.010 **
++ NO3            0.193  1 -42.7  1.59    199  0.015 * 
++ pH             0.200  1 -42.4  1.56    199  0.020 * 
+&lt;All variables&gt;  0.203                                
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
 </article></slide><slide class=''><hgroup><h2>Diagnostics for constrained ordinations</h2></hgroup><article  id="diagnostics-for-constrained-ordinations" class="smaller ">
 
 <p><strong>vegan</strong> provides a series of diagnostics to help assess the model fit</p>
@@ -706,6 +803,8 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <li><code>statistic = &quot;explained</code> (default) gives the cumulative proportion of variance explained by each axis</li>
 <li><code>statistic = &quot;distance&quot;</code> gives the residual distance between the &quot;fitted&quot; location in constrained ordination space and the location in the full dimensional space</li>
 </ul>
+
+</article></slide><slide class=''><hgroup><h2>Diagnostics for constrained ordinations </h2><h3> goodness of fit</h3></hgroup><article  id="diagnostics-for-constrained-ordinations-goodness-of-fit-1" class="smaller ">
 
 <pre class = 'prettyprint lang-r'>head(goodness(mods))</pre>
 
@@ -730,8 +829,8 @@ Pin.syl 0.0009244 0.004802 0.00601</pre>
 
 <ul>
 <li><code>statistic = &quot;explained</code> (default) gives the decomposition in terms of variance</li>
-<li><p><code>statistic = &quot;distance&quot;</code> gives decomposition in terms of the the residual distance</p></li>
-<li><p>Can output as proportions of total via <code>proportion = TRUE</code></p></li>
+<li><code>statistic = &quot;distance&quot;</code> gives decomposition in terms of the the residual distance</li>
+<li>Can output as proportions of total via <code>proportion = TRUE</code></li>
 </ul>
 
 <pre class = 'prettyprint lang-r'>head(inertcomp(mods, proportional = TRUE))</pre>
@@ -785,6 +884,8 @@ P  -0.3590 -0.6111 0.4479
 K  -0.3768 -0.1339 0.7760</pre>
 
 </article></slide><slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Restricted permutation tests</h2></hgroup><article  id="restricted-permutation-tests" class="smaller ">
+
+</article></slide><slide class=''><hgroup><h2>Restricted permutation tests</h2></hgroup><article  id="restricted-permutation-tests-1" class="smaller ">
 
 <p>What <em>is</em> shuffled and <em>how</em> is of <strong>paramount</strong> importance for the test to be valid</p>
 
@@ -1029,7 +1130,96 @@ do.call(&quot;rbind&quot;, split(p, plt)) ## look at perms in context</pre>
 
 </article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> worked example with <strong>vegan</strong></h3></hgroup><article  id="restricted-permutations-with-permute-worked-example-with-vegan" class="smaller ">
 
-<p>To do</p>
+<p>Here by dragons</p>
+
+<pre class = 'prettyprint lang-r'>## Analyse the Ohraz data Case study 5 of Leps &amp; Smilauer
+
+## load vegan
+library(&quot;vegan&quot;)
+
+## load the data
+spp &lt;- read.csv(&quot;data/ohraz-spp.csv&quot;, header = TRUE, row.names = 1)
+env &lt;- read.csv(&quot;data/ohraz-env.csv&quot;, header = TRUE, row.names = 1)
+molinia &lt;- spp[, 1]
+spp &lt;- spp[, -1]
+
+## Year as numeric
+env &lt;- transform(env, year = as.numeric(as.character(year)))</pre>
+
+<pre class = 'prettyprint lang-r'>## hypothesis 1
+c1 &lt;- rda(spp ~ year + year:mowing + year:fertilizer +
+          year:removal + Condition(plotid), data = env)
+
+h &lt;- how(within = Within(type = &quot;none&quot;),
+         plots = Plots(strata = env$plotid, type = &quot;free&quot;))
+set.seed(42)
+perm &lt;- shuffleSet(nrow(env), nset = 499, control = h)
+
+anova(c1, permutations = h, model = &quot;reduced&quot;)</pre>
+
+<pre >Permutation test for rda under reduced model
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year + year:mowing + year:fertilizer + year:removal + Condition(plotid), data = env)
+         Df Variance    F Pr(&gt;F)   
+Model     4      159 6.42  0.005 **
+Residual 90      556               
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+<pre class = 'prettyprint lang-r'>anova(c1, permutations = h, model = &quot;reduced&quot;, by = &quot;axis&quot;)</pre>
+
+<pre >Permutation test for rda under reduced model
+Marginal tests for axes
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year + year:mowing + year:fertilizer + year:removal + Condition(plotid), data = env)
+         Df Variance     F Pr(&gt;F)   
+RDA1      1       89 14.42  0.005 **
+RDA2      1       34  5.55  0.005 **
+RDA3      1       27  4.29  0.010 **
+RDA4      1        9  1.45  0.600   
+Residual 90      556                
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+<pre class = 'prettyprint lang-r'>## hypothesis 2
+c2 &lt;- rda(spp ~ year:mowing + year:fertilizer + year:removal +
+          Condition(year + plotid), data = env)
+anova(c2, permutations = h, model = &quot;reduced&quot;)</pre>
+
+<pre >Permutation test for rda under reduced model
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year:mowing + year:fertilizer + year:removal + Condition(year + plotid), data = env)
+         Df Variance    F Pr(&gt;F)   
+Model     3       99 5.35  0.005 **
+Residual 90      556               
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+<pre class = 'prettyprint lang-r'>anova(c2, permutations = h, model = &quot;reduced&quot;, by = &quot;axis&quot;)</pre>
+
+<pre >Permutation test for rda under reduced model
+Marginal tests for axes
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year:mowing + year:fertilizer + year:removal + Condition(year + plotid), data = env)
+         Df Variance    F Pr(&gt;F)   
+RDA1      1       54 8.76  0.005 **
+RDA2      1       34 5.55  0.005 **
+RDA3      1       11 1.75  0.500   
+Residual 90      556               
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
 
 <div class="references">
 </article></slide><slide class=''><hgroup><h2>References</h2></hgroup><article  id="references" class="smaller unnumbered">

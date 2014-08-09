@@ -153,6 +153,26 @@ pcca <- cca(X = varespec,
 pcca <- cca(varespec ~ Ca + Condition(pH), data = varechem) ## easier!
 ```
 
+# Plotting constrained ordinations
+
+## Triplots
+
+Triplots will generally produce a mess; we can really only display a couple of bits approximately anyway
+
+Trying to cram three things in is a recipe for a mess...
+
+...but we can do it
+
+```{r triplot-1, fig.keep = "none"}
+plot(cca1)
+```
+
+## Triplots
+
+```{r triplot-2}
+plot(cca1)
+```
+
 # Model building
 
 ## Building constrained ordination models
@@ -273,7 +293,7 @@ where
 
 The problems with stepwise selection in regression models are myriad. Affects RDA, CCA, etc as well
 
-@Blanchet2008 proposed a two-step solution for models where $R2_{adj}$ makes sense
+@Blanchet2008 proposed a two-step solution for models where $R^2_{adj}$ makes sense
 
  * *Global test* of all constraints
      - Proceed **only** if this test is significant
@@ -292,6 +312,8 @@ Available in `ordiR2step()`
 RDA has lots of theory behind it, CCA not as much. However, ecological/environmental data invariably violate what little theory we have
 
 Instead we use permutation tests to assess the *importance* of fitted models --- the data are shuffled in some way and the model refitted to derive a Null distribution under some hypothesis of *no effect*
+
+## Permutation tests in vegan
 
 What *is* shuffled and *how* is of **paramount** importance for the test to be valid
 
@@ -424,7 +446,54 @@ anova(m1)
 ## Constrained ordination worked example | spring meadow vegetation
 
 ```{r meadows-cca-full-triplot, echo = FALSE}
-plot(m1) ## foo
+plot(m1)
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+```{r meadows-cca-stepwise}
+set.seed(67)
+lwr <- cca(spp ~ 1, data = env)
+m2 <- ordistep(lwr, scope = formula(m1), perm.max = 499, trace = FALSE)
+m2
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+```{r meadows-cca-reduced-triplot, echo = FALSE}
+plot(m2)
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+```{r meadows-cca-anova}
+m2$anova
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+Alternative is RDA with a transformation
+
+```{r meadows-rda}
+spph <- decostand(spp, method = "hellinger")
+m3 <- rda(spph ~ ., data = env)
+lwr <- rda(spph ~ 1, data = env)
+m4 <- ordistep(lwr, scope = formula(m3), perm.max = 199, trace = FALSE)
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+```{r meadows-rda-reduced-triplot, echo = FALSE}
+plot(m4)
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+Stepwise using $R^2_{adj}$
+
+```{r meadows-rda-adjrsquare}
+m5 <- ordiR2step(lwr, scope = formula(m3), perm.max = 199, trace = FALSE)
+m5$anova
 ```
 
 ## Diagnostics for constrained ordinations
@@ -446,6 +515,8 @@ Which goodness of fit measure is returned is controlled by argument `statistic`
  * `statistic = "explained` (default) gives the cumulative proportion of variance explained by each axis
  * `statistic = "distance"` gives the residual distance between the "fitted" location in constrained ordination space and the location in the full dimensional space
 
+## Diagnostics for constrained ordinations | goodness of fit
+
 ```{r goodness}
 head(goodness(mods))
 head(goodness(mods, summarize = TRUE))
@@ -459,8 +530,7 @@ Same two types of  measure available by argument `statistic`
 
  * `statistic = "explained` (default) gives the decomposition in terms of variance
  * `statistic = "distance"` gives decomposition in terms of the the residual distance
-
-* Can output as proportions of total via `proportion = TRUE`
+ * Can output as proportions of total via `proportion = TRUE`
 
 ```{r inertcomp}
 head(inertcomp(mods, proportional = TRUE))
@@ -499,6 +569,8 @@ intersetcor(mods)
 ```
 
 # Restricted permutation tests
+
+## Restricted permutation tests
 
 What *is* shuffled and *how* is of **paramount** importance for the test to be valid
 
@@ -716,6 +788,44 @@ do.call("rbind", split(p, plt)) ## look at perms in context
 
 ## Restricted permutations with **permute** | worked example with **vegan**
 
-To do
+Here by dragons
+
+```{r worked-example-devel-1}
+## Analyse the Ohraz data Case study 5 of Leps & Smilauer
+
+## load vegan
+library("vegan")
+
+## load the data
+spp <- read.csv("data/ohraz-spp.csv", header = TRUE, row.names = 1)
+env <- read.csv("data/ohraz-env.csv", header = TRUE, row.names = 1)
+molinia <- spp[, 1]
+spp <- spp[, -1]
+
+## Year as numeric
+env <- transform(env, year = as.numeric(as.character(year)))
+```
+
+```{r worked-example-devel-2}
+## hypothesis 1
+c1 <- rda(spp ~ year + year:mowing + year:fertilizer +
+          year:removal + Condition(plotid), data = env)
+
+h <- how(within = Within(type = "none"),
+         plots = Plots(strata = env$plotid, type = "free"))
+set.seed(42)
+perm <- shuffleSet(nrow(env), nset = 499, control = h)
+
+anova(c1, permutations = h, model = "reduced")
+anova(c1, permutations = h, model = "reduced", by = "axis")
+```
+
+```{r worked-example-devel-3}
+## hypothesis 2
+c2 <- rda(spp ~ year:mowing + year:fertilizer + year:removal +
+          Condition(year + plotid), data = env)
+anova(c2, permutations = h, model = "reduced")
+anova(c2, permutations = h, model = "reduced", by = "axis")
+```
 
 ## References
