@@ -2,7 +2,6 @@
 title: "Ordination with vegan"
 author: "Naupaka Zimmerman and Gavin Simpson"
 date: "August 9, 2014 • ESA 2014"
-bibliography: ordination.bib
 
 output:
   ioslides_presentation:
@@ -10,10 +9,12 @@ output:
     smaller: false
     keep_md: true
     highlight: tango
+    self_contained: false
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(comment = "", cache = TRUE)
+knitr::opts_chunk$set(comment = "", cache = TRUE, crop = TRUE)
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -40,6 +41,7 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
 
 **Examples of unconstrained ordination:**
 
+* Correspondance Analysis - CA
 * Principal Components Analysis - PCA
 * Nonmetric Multidimensional Scaling - NMDS
 
@@ -54,6 +56,7 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
 
 **Examples of unconstrained ordination:**
 
+* Correspondance Analysis - CA
 * Principal Components Analysis - PCA
 * **Nonmetric Multidimensional Scaling - NMDS**
 
@@ -62,7 +65,7 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
 ## Before we get started
 
 Housekeeping
-```{r, eval=FALSE}
+```{r housekeeping, eval=FALSE}
 setwd("your/working/dir")
 ```
 
@@ -167,7 +170,7 @@ plot(dune.bray.ord, display = "sites", cex=2)
 <!----------------------------slide boundary--------------------------------->
 
 ## Modifying the color of points {.smaller}
-```{r, fig.height=4.5, strip.white=TRUE}
+```{r, fig.height=4.5, crop = TRUE}
 colors.vec <- c("red", "blue", "orange", "grey")
 plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord, display = "sites", cex=2, pch = 21, 
@@ -179,8 +182,8 @@ legend("topright", legend = levels(dune.env$Management), bty = "n",
 
 <!----------------------------slide boundary--------------------------------->
 
-## Modifying the shape of points
-```{r, fig.width=10, echo=FALSE}
+## Modifying the shape of points | pch()
+```{r, fig.width=11, echo=FALSE}
 par(mar = rep(0,4))
 plot(c(-1, 26), 0:1, type = "n", axes = FALSE)
 text(0:25, 0.4, 0:25, cex = 1.5)
@@ -190,7 +193,7 @@ points(0:25, rep(0.3, 26), pch = 0:25, bg = "grey", cex = 2)
 <!----------------------------slide boundary--------------------------------->
 
 ## Modifying the shape of points {.smaller}
-```{r, fig.height=3.5}
+```{r, fig.height=4.5}
 shapes.vec <- c(21, 22, 24)
 plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord, display = "sites", cex=2, bg = "black", 
@@ -202,7 +205,7 @@ legend("topright", legend = levels(dune.env$Use), bty = "n",
 <!----------------------------slide boundary--------------------------------->
 
 ## Modifying the shape and color of points {.smaller}
-```{r, fig.height=3.5}
+```{r, fig.height=4}
 colors.vec <- c("red", "blue", "orange", "grey")
 shapes.vec <- c(21, 22, 24)
 plot(dune.bray.ord, display = "sites", type = "n")
@@ -212,7 +215,7 @@ points(dune.bray.ord, display = "sites", cex=2,
        bg = colors.vec[dune.env$Management])
 legend("topright", legend = levels(dune.env$Management), bty = "n",
                       col = colors.vec, pch = 21, pt.bg = colors.vec)
-legend(1.5,1.05, legend = levels(dune.env$Use), bty = "n",
+legend(1.4,1.05, legend = levels(dune.env$Use), bty = "n",
                       col = "black", pch = shapes.vec, pt.bg = "black")
 ```
 
@@ -357,4 +360,3 @@ ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
 
 <!----------------------------slide boundary--------------------------------->
 
-## References
