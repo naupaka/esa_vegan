@@ -25,6 +25,7 @@ August 9, 2014 • ESA 2014
 
 ```r
 install.packages("vegan", dependencies = TRUE)
+install.packages("BiodiversityR")
 install.packages("plyr")
 install.packages("reshape2")
 ```
@@ -37,14 +38,18 @@ install.packages("reshape2")
 * How does it differ from other alternatives?
 
 <!----------------------------slide boundary--------------------------------->
+
 # Cleaning and importing data
+
 <!----------------------------slide boundary--------------------------------->
+
 ## Digging in | Prepping your data for R and vegan
 
 ### “The purpose of computing is insight, not numbers” 
 ### - Richard Hamming 
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Digging in | Prepping your data for R and vegan
 
 ### “The purpose of computing is insight, not numbers” 
@@ -53,30 +58,73 @@ install.packages("reshape2")
 But you have to get through the numbers to get to the insight...
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Digging in | Prepping your data for R and vegan
 
 We've all heard data horror stories
 ![](img/otherpeoplesdata.png)
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Cleaning your data for R and vegan
 
-Cleaning spreadsheet example  
+### Loading dirty data and then cleaning
+
+```r
+#setwd("your/working/directory/")
+BCI.small.csv.in <- read.csv("data/BCI_small_fixed.csv", header = TRUE, row.names = 1)
+```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Cleaning your data for R and vegan
 
-Cleaning spreadsheet example
-<br /><br />
 Then...  
 
 ```r
-setwd("your/working/directory/data")
-varespec.csv.in <- read.csv("varespec.csv", header = TRUE, row.names = 1)
+head(BCI.small.csv.in, n=3)
 ```
 
+```
+  Abarema.macradenium Acacia.melanoceras Acalypha.diversifolia
+1                   0                  1                     0
+2                   1                  0                     0
+3                   0                  0                     0
+  Acalypha.macrostachya Adelia.triloba
+1                     0              0
+2                     0              0
+3                     1              0
+```
 
 <!----------------------------slide boundary--------------------------------->
+
+## Cleaning your data for R and vegan
+
+Then...  
+
+```r
+summary(BCI.small.csv.in)
+```
+
+```
+ Abarema.macradenium Acacia.melanoceras Acalypha.diversifolia
+ Min.   :0.0         Min.   :0.00       Min.   :0.0          
+ 1st Qu.:0.0         1st Qu.:0.00       1st Qu.:0.0          
+ Median :0.0         Median :0.00       Median :0.0          
+ Mean   :0.3         Mean   :0.25       Mean   :0.3          
+ 3rd Qu.:0.0         3rd Qu.:0.25       3rd Qu.:0.0          
+ Max.   :2.0         Max.   :1.00       Max.   :3.0          
+ Acalypha.macrostachya Adelia.triloba
+ Min.   :0.00          Min.   :0.0   
+ 1st Qu.:0.00          1st Qu.:0.0   
+ Median :0.00          Median :0.0   
+ Mean   :0.05          Mean   :0.8   
+ 3rd Qu.:0.00          3rd Qu.:1.0   
+ Max.   :1.00          Max.   :5.0   
+```
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Cleaning your data for R and vegan
 
 * We will use some of vegan's built-in datasets for species `varespec` and environmental variables `varechem`
@@ -90,6 +138,7 @@ data(varechem)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Cleaning your data for R and vegan
 
 * We will use built-in datasets for species `varespec` and environmental variables `varechem`
@@ -115,8 +164,11 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 # Basic data summarizing
+
 <!----------------------------slide boundary--------------------------------->
+
 ## Summarizing data with `apply()` | sums and sorting
 
 **Sum of rows**
@@ -132,6 +184,7 @@ sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Summarizing data with `apply()` | sums and sorting
 
 **Sum of rows**
@@ -158,6 +211,7 @@ Cla.ste Cla.ran Ple.sch Vac.vit Cla.arb Emp.nig Dic.fus Cla.unc
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Summarizing data with `apply()` | sums and sorting
 
 **Number of plots in which each spp. occurs**
@@ -175,8 +229,11 @@ Cla.gra Cla.def Cla.ste Cla.fim Pin.syl Pol.jun Poh.nut Cla.coc Pti.cil
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 # Data Transformation
+
 <!----------------------------slide boundary--------------------------------->
+
 ## Basic data transformation
 
 **Square root transformation**
@@ -193,6 +250,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Basic data transformation
 
 **Square root transformation**
@@ -221,6 +279,7 @@ head(spec.sqrt[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Total**
@@ -237,6 +296,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Total**
@@ -265,6 +325,7 @@ head(spec.total[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Maximum**
@@ -281,6 +342,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Maximum** 
@@ -309,6 +371,7 @@ head(spec.max[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
@@ -325,6 +388,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
@@ -353,6 +417,7 @@ head(spec.pa[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Hellinger (Legendre & Gallagher 2001)**
@@ -370,6 +435,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Hellinger (Legendre & Gallagher 2001)**
@@ -399,6 +465,7 @@ head(spec.hellinger[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
@@ -416,6 +483,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
@@ -598,6 +666,8 @@ sort(rank.Ca.wisc, decreasing = TRUE)
 
 # Diversity metrics
 
+<!----------------------------slide boundary--------------------------------->
+
 ## Alpha diversity
 
 Basic counts of richness for each plot or site
@@ -611,6 +681,40 @@ site.richness
 18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
 29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 
 ```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Alpha diversity | Other metrics
+
+Fisher's alpha
+
+```r
+# site.richness <- fisher.alpha(varespec)
+site.richness
+```
+
+```
+18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
+29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Alpha diversity | Other metrics
+
+Shannon diversity
+
+```r
+site.richness <- apply(varespec > 0, 1, sum)
+site.richness
+```
+
+```
+18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
+29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 
+```
+
+<!----------------------------slide boundary--------------------------------->
 
 ## Rarefaction
 

@@ -48,14 +48,18 @@ install.packages("reshape2")
 * How does it differ from other alternatives?
 
 <!----------------------------slide boundary--------------------------------->
+
 # Cleaning and importing data
+
 <!----------------------------slide boundary--------------------------------->
+
 ## Digging in | Prepping your data for R and vegan
 
 ### “The purpose of computing is insight, not numbers” 
 ### - Richard Hamming 
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Digging in | Prepping your data for R and vegan
 
 ### “The purpose of computing is insight, not numbers” 
@@ -64,41 +68,59 @@ install.packages("reshape2")
 But you have to get through the numbers to get to the insight...
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Digging in | Prepping your data for R and vegan
 
 We've all heard data horror stories
 ![](img/otherpeoplesdata.png)
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Cleaning your data for R and vegan
 
-Cleaning spreadsheet example  
-
-<!----------------------------slide boundary--------------------------------->
-## Cleaning your data for R and vegan
-
-Cleaning spreadsheet example
-<br /><br />
-Then...  
-```{r, eval=FALSE}
-setwd("your/working/directory/data")
-varespec.csv.in <- read.csv("varespec.csv", header = TRUE, row.names = 1)
+### Loading dirty data and then cleaning
+```{r, eval=TRUE}
+#setwd("your/working/directory/")
+BCI.small.csv.in <- read.csv("data/BCI_small_fixed.csv", header = TRUE, row.names = 1)
 ```
 
-
 <!----------------------------slide boundary--------------------------------->
+
 ## Cleaning your data for R and vegan
 
-* We will use some of vegan's built-in datasets for species `varespec` and environmental variables `varechem`
-    * from Väre, H., Ohtonen, R. and Oksanen, J. (1995)
+Then...  
+```{r}
+head(BCI.small.csv.in, n=3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Cleaning your data for R and vegan
+
+Then...  
+```{r}
+summary(BCI.small.csv.in)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Cleaning your data for R and vegan
+
+* We will use one of vegan's built-in datasets for species `BCI` and environmental variables the same paper, which we will load directly
+    * from Condit et al. 2002 *Science*
 
 ```{r, results='hide'}
 library("vegan")
-data(varespec)
-data(varechem)
+data(BCI)
+library("BiodiversityR")
+setwd("~/git/esa_vegan/01-intro-basics/data/")
+data(BCI.env)
+write.csv(BCI.env, "BCI.env.csv")
+BCI.env <- read.csv("BCI.env.csv", header = TRUE, row.names = 1)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Cleaning your data for R and vegan
 
 * We will use built-in datasets for species `varespec` and environmental variables `varechem`
@@ -115,8 +137,11 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 # Basic data summarizing
+
 <!----------------------------slide boundary--------------------------------->
+
 ## Summarizing data with `apply()` | sums and sorting
 
 **Sum of rows**
@@ -126,6 +151,7 @@ sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Summarizing data with `apply()` | sums and sorting
 
 **Sum of rows**
@@ -140,6 +166,7 @@ sort(sum.of.columns, decreasing = TRUE)[1:8] #top 8 columns (species)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Summarizing data with `apply()` | sums and sorting
 
 **Number of plots in which each spp. occurs**
@@ -149,8 +176,11 @@ sort(spec.pres, decreasing = TRUE)[1:18]
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 # Data Transformation
+
 <!----------------------------slide boundary--------------------------------->
+
 ## Basic data transformation
 
 **Square root transformation**
@@ -159,6 +189,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Basic data transformation
 
 **Square root transformation**
@@ -169,6 +200,7 @@ head(spec.sqrt[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Total**
@@ -177,6 +209,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Total**
@@ -187,6 +220,7 @@ head(spec.total[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Maximum**
@@ -195,6 +229,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Maximum** 
@@ -205,6 +240,7 @@ head(spec.max[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
@@ -213,6 +249,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
@@ -223,6 +260,7 @@ head(spec.pa[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Hellinger (Legendre & Gallagher 2001)**
@@ -232,6 +270,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Hellinger (Legendre & Gallagher 2001)**
@@ -243,6 +282,7 @@ head(spec.hellinger[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
@@ -252,6 +292,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
@@ -371,7 +412,7 @@ site.richness
 
 Fisher's alpha
 ```{r}
-site.richness <- fisher.alpha(varespec)
+# site.richness <- fisher.alpha(varespec)
 site.richness
 ```
 
