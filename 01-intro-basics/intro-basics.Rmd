@@ -4,7 +4,6 @@ author: "Naupaka Zimmerman and Gavin Simpson"
 date: "August 9, 2014 • ESA 2014"
 output:
   ioslides_presentation:
-    fig_caption: yes
     fig_height: 6
     fig_width: 7
     highlight: tango
@@ -17,11 +16,13 @@ bibliography: intro-basics.bib
 knitr::opts_chunk$set(comment = "", cache = TRUE)
 ```
 
+<!----------------------------slide boundary--------------------------------->
 ## Workshop logistics
 
 * Etherpad [[link here]]
 * Red and Green Stickies
 
+<!----------------------------slide boundary--------------------------------->
 ## Packages installed?
 
 ```{r, eval=FALSE}
@@ -30,26 +31,31 @@ install.packages("plyr")
 install.packages("reshape2")
 ```
 
+<!----------------------------slide boundary--------------------------------->
 ## Introduction to **vegan**
 
 * What is it?
 * Who developed it?
 * How does it differ from other alternatives?
 
+<!----------------------------slide boundary--------------------------------->
 ## Digging in | Prepping your data for R and vegan
 
 ### “The purpose of computing is insight, not numbers” 
 ### - Richard Hamming 
 
+<!----------------------------slide boundary--------------------------------->
 ## Digging in | Prepping your data for R and vegan
 
 We've all heard data horror stories
 ![](img/otherpeoplesdata.png)
 
+<!----------------------------slide boundary--------------------------------->
 ## Cleaning your data for import into R for use in vegan
 
 * Spreadsheet example
 
+<!----------------------------slide boundary--------------------------------->
 ## Cleaning your data for import into R for use in vegan
 
 * We will use built-in datasets for species `varespec` and environmental variables `varechem`
@@ -61,6 +67,7 @@ data(varespec)
 data(varechem)
 ```
 
+<!----------------------------slide boundary--------------------------------->
 ## Cleaning your data for import into R for use in vegan
 
 * We will use built-in datasets for species `varespec` and environmental variables `varechem`
@@ -76,7 +83,7 @@ data(varechem)
 head(varespec[,1:8], n = 3)
 ```
 
-
+<!----------------------------slide boundary--------------------------------->
 ## Summarizing data with `apply()` | sums and sorting
 
 **Sum of rows**
@@ -85,6 +92,7 @@ sum.of.rows <- apply(varespec, 1, sum)
 sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) 
 ```
 
+<!----------------------------slide boundary--------------------------------->
 ## Summarizing data with `apply()` | sums and sorting
 
 **Sum of rows**
@@ -98,17 +106,128 @@ sum.of.columns <- apply(varespec, 2, sum)
 sort(sum.of.columns, decreasing = TRUE)[1:8] #top 8 columns (species)
 ```
 
+<!----------------------------slide boundary--------------------------------->
+## Summarizing data with `apply()` | sums and sorting
 
+**Number of plots in which each spp. occurs**
+```{r}
+spec.pres <- apply(varespec > 0, 2, sum) 
+sort(spec.pres, decreasing = TRUE)[1:18]
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Basic data transformation
+
+**Square root transformation**
+```{r}
+head(varespec[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Basic data transformation
+
+**Square root transformation**
+```{r}
+head(varespec[,1:8], n = 3)
+spec.sqrt <- sqrt(varespec)
+head(spec.sqrt[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
 ## Data transformation with `decostand()`
 
-* total
-* max
-* pa
-* hellinger
-* `wisconsin()`
-    * this is the same as first standardizing species by `max` and sites by `total`
-* Etc
+**Total**
+```{r}
+head(varespec[,1:8], n = 3)
+```
 
+<!----------------------------slide boundary--------------------------------->
+## Data transformation with `decostand()`
+
+**Total**
+```{r}
+head(varespec[,1:8], n = 3)
+spec.total <- decostand(varespec, method = "total", MARGIN = 1) # by rows (sites)
+head(spec.total[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Data transformation with `decostand()`
+
+**Maximum**
+```{r}
+head(varespec[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Data transformation with `decostand()`
+
+**Maximum** 
+```{r}
+head(varespec[,1:8], n = 3)
+spec.max <- decostand(varespec, method = "max", MARGIN = 2) # by columns (species)
+head(spec.max[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Data transformation with `decostand()`
+
+**Presence-Absence**
+```{r}
+head(varespec[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Data transformation with `decostand()`
+
+**Presence-Absence**
+```{r}
+head(varespec[,1:8], n = 3)
+spec.pa <- decostand(varespec, method = "pa")
+head(spec.pa[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Data transformation with `decostand()`
+
+**Hellinger (Legendre & Gallagher 2001)**
+Square root of method "total"
+```{r}
+head(varespec[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Data transformation with `decostand()`
+
+**Hellinger (Legendre & Gallagher 2001)**
+Square root of method "total"
+```{r}
+head(varespec[,1:8], n = 3)
+spec.hellinger <- decostand(varespec, method = "hellinger", MARGIN = 1) # on rows (sites)
+head(spec.hellinger[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Data transformation with `decostand()`
+
+**Wisconsin double standardization**  
+Species standardized to maximum, then sites by totals.  
+```{r}
+head(varespec[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+## Data transformation with `decostand()`
+
+**Wisconsin double standardization**  
+Species standardized to maximum, then sites by totals.
+```{r}
+head(varespec[,1:8], n = 3)
+spec.wisc <- wisconsin(varespec)
+head(spec.wisc[,1:8], n = 3)
+```
+
+<!----------------------------slide boundary--------------------------------->
 ## Types of distance metrics | and why you might want to use one instead of another
 
 * Presence/absence
