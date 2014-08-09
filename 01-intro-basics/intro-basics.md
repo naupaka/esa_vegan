@@ -446,20 +446,74 @@ head(spec.wisc[,1:8], n = 3)
 
 <!----------------------------slide boundary--------------------------------->
 
+# Calculating community distances
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-How to choose a good one for your data set?  
-First step, read the help for vegdist
+### Many different community distance metrics are available in `vegdist()`    
+*manhattan, euclidean, canberra, bray, kulczynski, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao, or cao*
+
+<!----------------------------slide boundary--------------------------------->
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+### Many different community distance metrics are available in `vegdist()`   
+*manhattan, euclidean, canberra, bray, kulczynski, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao, or cao*
+
+
+```r
+spec.jaccpa <- vegdist(varespec, method = "jaccard", binary = TRUE)
+# returns an object of class 'dist'
+str(spec.jaccpa) 
+```
+
+```
+Class 'dist'  atomic [1:276] 0.333 0.471 0.5 0.333 0.417 ...
+  ..- attr(*, "Size")= int 24
+  ..- attr(*, "Labels")= chr [1:24] "18" "15" "24" "27" ...
+  ..- attr(*, "Diag")= logi FALSE
+  ..- attr(*, "Upper")= logi FALSE
+  ..- attr(*, "method")= chr "binary jaccard"
+  ..- attr(*, "call")= language vegdist(x = varespec, method = "jaccard", binary = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+
+```r
+as.matrix(spec.jaccpa)[1:4,1:4]
+```
+
+```
+       18     15     24     27
+18 0.0000 0.3333 0.4706 0.5000
+15 0.3333 0.0000 0.2500 0.5429
+24 0.4706 0.2500 0.0000 0.5882
+27 0.5000 0.5429 0.5882 0.0000
+```
+
+
+<!----------------------------slide boundary--------------------------------->
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+### How to choose a good one for your data set?  
+### First step, read the help for vegdist
 
 ```r
 ?vegdist
 ```
 
+<!----------------------------slide boundary--------------------------------->
+
 ## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-Second, try `rankindex()`    
-
-Higher rank correlations indicate better separation along a environmental gradients
+### Second, try `rankindex()`    
+Higher rank correlations indicate better separation along gradients
 
 ```r
 rank.all <- rankindex(varechem, varespec, indices = 
@@ -472,10 +526,11 @@ rank.all
    0.2241    0.1469    0.2262    0.1785 
 ```
 
+<!----------------------------slide boundary--------------------------------->
+
 ## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-Second, try `rankindex()`    
-
+### Second, try `rankindex()`    
 Or across a single, selected gradient
 
 ```r
@@ -489,22 +544,25 @@ rank.Ca
   0.12707   0.08922   0.14425   0.10210 
 ```
 
+<!----------------------------slide boundary--------------------------------->
+
 ## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-Second, try `rankindex()`    
-
+### Second, try `rankindex()`    
 Can also use on standardized data
 
 ```r
-rank.wisc <- rankindex(varechem$Ca, wisconsin(varespec), indices = 
+rank.Ca.wisc <- rankindex(varechem$Ca, wisconsin(varespec), indices = 
               c("bray", "euclid", "manhattan", "horn"), method = "spearman")
-rank.wisc
+rank.Ca.wisc
 ```
 
 ```
      bray    euclid manhattan      horn 
    0.2228    0.1745    0.2228    0.2058 
 ```
+
+<!----------------------------slide boundary--------------------------------->
 
 ## Calculating distances with `vegdist()` | comparison
 
@@ -528,7 +586,7 @@ manhattan      bray      horn    euclid
 ```
 
 ```r
-sort(rank.wisc, decreasing = TRUE)
+sort(rank.Ca.wisc, decreasing = TRUE)
 ```
 
 ```
@@ -536,10 +594,30 @@ sort(rank.wisc, decreasing = TRUE)
    0.2228    0.2228    0.2058    0.1745 
 ```
 
+<!----------------------------slide boundary--------------------------------->
+
+# Diversity metrics
+
+## Alpha diversity
+
+Basic counts of richness for each plot or site
+
+```r
+site.richness <- apply(varespec > 0, 1, sum)
+site.richness
+```
+
+```
+18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
+29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 
+```
 
 ## Rarefaction
 
-## Within vs between group similarities
+## Beta diversity
+
+E.g. distance metrics discussed earlier.
+### Within vs between group similarities
 
 * `betadisper()`
 

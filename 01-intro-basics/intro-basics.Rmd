@@ -264,10 +264,43 @@ head(spec.wisc[,1:8], n = 3)
 
 <!----------------------------slide boundary--------------------------------->
 
+# Calculating community distances
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-How to choose a good one for your data set?  
-First step, read the help for vegdist
+### Many different community distance metrics are available in `vegdist()`    
+*manhattan, euclidean, canberra, bray, kulczynski, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao, or cao*
+
+<!----------------------------slide boundary--------------------------------->
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+### Many different community distance metrics are available in `vegdist()`   
+*manhattan, euclidean, canberra, bray, kulczynski, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao, or cao*
+
+```{r}
+spec.jaccpa <- vegdist(varespec, method = "jaccard", binary = TRUE)
+# returns an object of class 'dist'
+str(spec.jaccpa) 
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+```{r}
+as.matrix(spec.jaccpa)[1:4,1:4]
+```
+
+
+<!----------------------------slide boundary--------------------------------->
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+### How to choose a good one for your data set?  
+### First step, read the help for vegdist
 ```{r}
 ?vegdist
 ```
@@ -276,9 +309,8 @@ First step, read the help for vegdist
 
 ## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-Second, try `rankindex()`    
-
-Higher rank correlations indicate better separation along a environmental gradients
+### Second, try `rankindex()`    
+Higher rank correlations indicate better separation along gradients
 ```{r}
 rank.all <- rankindex(varechem, varespec, indices = 
               c("bray", "euclid", "manhattan", "horn"), method = "spearman")
@@ -289,8 +321,7 @@ rank.all
 
 ## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-Second, try `rankindex()`    
-
+### Second, try `rankindex()`    
 Or across a single, selected gradient
 ```{r}
 rank.Ca <- rankindex(varechem$Ca, varespec, indices = 
@@ -302,13 +333,12 @@ rank.Ca
 
 ## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-Second, try `rankindex()`    
-
+### Second, try `rankindex()`    
 Can also use on standardized data
 ```{r}
-rank.wisc <- rankindex(varechem$Ca, wisconsin(varespec), indices = 
+rank.Ca.wisc <- rankindex(varechem$Ca, wisconsin(varespec), indices = 
               c("bray", "euclid", "manhattan", "horn"), method = "spearman")
-rank.wisc
+rank.Ca.wisc
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -318,14 +348,51 @@ rank.wisc
 ```{r}
 sort(rank.all, decreasing = TRUE)
 sort(rank.Ca, decreasing = TRUE)
-sort(rank.wisc, decreasing = TRUE)
+sort(rank.Ca.wisc, decreasing = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+# Diversity metrics
+
+<!----------------------------slide boundary--------------------------------->
+
+## Alpha diversity
+
+Basic counts of richness for each plot or site
+```{r}
+site.richness <- apply(varespec > 0, 1, sum)
+site.richness
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Alpha diversity | Other metrics
+
+Fisher's alpha
+```{r}
+site.richness <- fisher.alpha(varespec)
+site.richness
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Alpha diversity | Other metrics
+
+Shannon diversity
+```{r}
+site.richness <- apply(varespec > 0, 1, sum)
+site.richness
 ```
 
 <!----------------------------slide boundary--------------------------------->
 
 ## Rarefaction
 
-## Within vs between group similarities
+## Beta diversity
+
+E.g. distance metrics discussed earlier.
+### Within vs between group similarities
 
 * `betadisper()`
 
