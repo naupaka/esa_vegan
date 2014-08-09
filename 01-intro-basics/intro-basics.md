@@ -37,11 +37,26 @@ https://github.com/naupaka/esa_vegan
 
 <!----------------------------slide boundary--------------------------------->
 
-## Introduction to **vegan**
+## Introduction to **vegan** | a potted history
 
-* What is it?
-* Who developed it?
-* How does it differ from other alternatives?
+ * Jari Oksanen released first version of vegan to CRAN on September 5th 2001
+ * Limited scope; purpose was to have Peter Minchin's DECODA-like functions for NMDS available in R plus helper functions
+ * By version 1.4, vegan had DCA & CCA, with RDA following in 1.4.2. `ordisurf()` appeared in 1.4 also as did permutation tests.
+ * From version 1.6, vegan expanded into areas of theoretical ecology and diversity
+ * Version 1.6.5 brought the `metaMDS()` wrappers for NMDS
+ * Since then vegan has rapidly developed on the R-Forge website and expanded considerably
+ * Current development team: Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. Stevens, Helene Wagner
+
+## Introduction to **vegan** | vegan today
+
+ * The current stable release is version 2.0.10 which is available from CRAN
+ * [http://cran.r-project.org/web/packages/vegan]()
+ * Development is mainly conducted via [r-forge.r-project.org]() with a separate development version
+ * Development branch is 2.1.x will soon be released to CRAN as the 2.2 release branch
+ * R-forge also hosts our bug tracking, mailing lists \& forums which should be first port of call for getting help
+ * [http://r-forge.r-project.org/projects/vegan]()
+ * Also several vignettes (manuals/guides) containing R code to explain how vegan works
+ * The vegan tutorial is available at [http://vegan.r-forge.r-project.org]()
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -151,6 +166,15 @@ We will now switch to using one of vegan's built-in datasets for species (`BCI`)
 
 ```r
 library("vegan")
+```
+
+```
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.0-10
+```
+
+```r
 data(BCI)
 BCI.env <- read.csv("data/BCI.env.csv", header = TRUE, row.names = 1)
 ```
@@ -864,7 +888,7 @@ anosim(dat = BCI.bray, grouping = as.factor(BCI.env$UTM.NS))
 Dissimilarity: bray 
 
 ANOSIM statistic R: 0.102 
-      Significance: 0.003 
+      Significance: 0.004 
 
 Based on  999  permutations
 ```
