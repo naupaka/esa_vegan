@@ -1,4 +1,6 @@
 base
 lattice
+mgcv
+nlme
 permute
 vegan

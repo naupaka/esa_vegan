@@ -158,11 +158,60 @@ plot(dune.bray.ord, display = "sites", cex=2)
 ## Modifying the display of the points with environmental data 
 
 * Color
-    * Discrete
-    * Continuous
 * Shape
 * Size
 
+<!----------------------------slide boundary--------------------------------->
+
+## Modifying the color of points {.smaller}
+```{r, fig.height=4.5, strip.white=TRUE}
+colors.vec <- c("red", "blue", "orange", "grey")
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex=2, pch = 21, 
+       col = colors.vec[dune.env$Management], 
+       bg = colors.vec[dune.env$Management])
+legend("topright", legend = levels(dune.env$Management), bty = "n",
+                      col = colors.vec, pch = 21, pt.bg = colors.vec)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Modifying the shape of points
+```{r, fig.width=10, echo=FALSE}
+par(mar = rep(0,4))
+plot(c(-1, 26), 0:1, type = "n", axes = FALSE)
+text(0:25, 0.4, 0:25, cex = 1.5)
+points(0:25, rep(0.3, 26), pch = 0:25, bg = "grey", cex = 2)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Modifying the shape of points {.smaller}
+```{r, fig.height=3.5}
+shapes.vec <- c(21, 22, 24)
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex=2, bg = "black", 
+       pch = shapes.vec[dune.env$Use])
+legend("topright", legend = levels(dune.env$Use), bty = "n",
+                      col = "black", pch = shapes.vec, pt.bg = "black")
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Modifying the shape and color of points {.smaller}
+```{r, fig.height=3.5}
+colors.vec <- c("red", "blue", "orange", "grey")
+shapes.vec <- c(21, 22, 24)
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex=2, 
+       pch = shapes.vec[dune.env$Use], 
+       col = colors.vec[dune.env$Management], 
+       bg = colors.vec[dune.env$Management])
+legend("topright", legend = levels(dune.env$Management), bty = "n",
+                      col = colors.vec, pch = 21, pt.bg = colors.vec)
+legend(1.5,1.05, legend = levels(dune.env$Use), bty = "n",
+                      col = "black", pch = shapes.vec, pt.bg = "black")
+```
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -212,7 +261,7 @@ ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 
 <!----------------------------slide boundary--------------------------------->
 
-## Adding other layers
+## Adding other layers - axes scaling
 
 ```{r, fig.height=5}
 plot(dune.bray.ord, type = "n")
@@ -220,7 +269,7 @@ plot(dune.bray.ord, type = "n")
 
 <!----------------------------slide boundary--------------------------------->
 
-## Adding other layers
+## Adding other layers - axes scaling
 
 ```{r, fig.height=5}
 plot(dune.bray.ord, type = "n")
@@ -229,10 +278,27 @@ points(dune.bray.ord,display = "sites", cex = 2)
 
 <!----------------------------slide boundary--------------------------------->
 
+## Adding other layers - axes scaling
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites", type = "n")
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers - axes scaling
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex = 2)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Adding other layers
 
 ```{r, fig.height=5}
-plot(dune.bray.ord, type = "n")
+plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord,display = "sites", cex = 2)
 ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 ```
@@ -241,13 +307,40 @@ ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 
 ## Adding other layers
 
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex = 2)
+ordiellipse(dune.bray.ord,groups = dune.env$Management, label = TRUE)
+```
+
 <!----------------------------slide boundary--------------------------------->
 
-## Fitting environmental data to vectors in ordination space
+## Adding other layers
+```{r, fig.height=5, message=FALSE}
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord,display = "sites", cex = 2)
+ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
+```
 
 <!----------------------------slide boundary--------------------------------->
 
-## Fitting environmental data to vectors in ordination space
+## Vectors in ordination space
+
+```{r}
+dune.bray.ord.A1.fit <- envfit(dune.bray.ord,dune.env$A1, permutations = 1000)
+dune.bray.ord.A1.fit
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Vectors in ordination space
+
+```{r}
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord,display = "sites", cex = 2)
+plot(dune.bray.ord.A1.fit, add = TRUE)
+ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
+```
 
 
 <!----------------------------slide boundary--------------------------------->

@@ -180,11 +180,64 @@ plot(dune.bray.ord, display = "sites", cex=2)
 ## Modifying the display of the points with environmental data 
 
 * Color
-    * Discrete
-    * Continuous
 * Shape
 * Size
 
+<!----------------------------slide boundary--------------------------------->
+
+## Modifying the color of points {.smaller}
+
+```r
+colors.vec <- c("red", "blue", "orange", "grey")
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex=2, pch = 21, 
+       col = colors.vec[dune.env$Management], 
+       bg = colors.vec[dune.env$Management])
+legend("topright", legend = levels(dune.env$Management), bty = "n",
+                      col = colors.vec, pch = 21, pt.bg = colors.vec)
+```
+
+![plot of chunk unnamed-chunk-11](./ordination_files/figure-html/unnamed-chunk-11.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Modifying the shape of points
+![plot of chunk unnamed-chunk-12](./ordination_files/figure-html/unnamed-chunk-12.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Modifying the shape of points {.smaller}
+
+```r
+shapes.vec <- c(21, 22, 24)
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex=2, bg = "black", 
+       pch = shapes.vec[dune.env$Use])
+legend("topright", legend = levels(dune.env$Use), bty = "n",
+                      col = "black", pch = shapes.vec, pt.bg = "black")
+```
+
+![plot of chunk unnamed-chunk-13](./ordination_files/figure-html/unnamed-chunk-13.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Modifying the shape and color of points {.smaller}
+
+```r
+colors.vec <- c("red", "blue", "orange", "grey")
+shapes.vec <- c(21, 22, 24)
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex=2, 
+       pch = shapes.vec[dune.env$Use], 
+       col = colors.vec[dune.env$Management], 
+       bg = colors.vec[dune.env$Management])
+legend("topright", legend = levels(dune.env$Management), bty = "n",
+                      col = colors.vec, pch = 21, pt.bg = colors.vec)
+legend(1.5,1.05, legend = levels(dune.env$Use), bty = "n",
+                      col = "black", pch = shapes.vec, pt.bg = "black")
+```
+
+![plot of chunk unnamed-chunk-14](./ordination_files/figure-html/unnamed-chunk-14.png) 
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -196,7 +249,7 @@ plot(dune.bray.ord, display = "sites", cex=2)
 plot(dune.bray.ord, display = "sites", cex=2)
 ```
 
-![plot of chunk unnamed-chunk-11](./ordination_files/figure-html/unnamed-chunk-11.png) 
+![plot of chunk unnamed-chunk-15](./ordination_files/figure-html/unnamed-chunk-15.png) 
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -208,54 +261,6 @@ plot(dune.bray.ord, display = "sites", cex=2)
 ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 ```
 
-![plot of chunk unnamed-chunk-12](./ordination_files/figure-html/unnamed-chunk-12.png) 
-
-<!----------------------------slide boundary--------------------------------->
-
-## Adding other layers
-
-
-```r
-plot(dune.bray.ord, display = "sites", cex=2)
-ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
-```
-
-![plot of chunk unnamed-chunk-13](./ordination_files/figure-html/unnamed-chunk-13.png) 
-
-<!----------------------------slide boundary--------------------------------->
-
-## Adding other layers
-
-
-```r
-plot(dune.bray.ord, display = "sites", cex=2)
-ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
-ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
-```
-
-![plot of chunk unnamed-chunk-14](./ordination_files/figure-html/unnamed-chunk-14.png) 
-
-<!----------------------------slide boundary--------------------------------->
-
-## Adding other layers
-
-
-```r
-plot(dune.bray.ord, display = "sites", cex=2)
-ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
-```
-
-![plot of chunk unnamed-chunk-15](./ordination_files/figure-html/unnamed-chunk-15.png) 
-
-<!----------------------------slide boundary--------------------------------->
-
-## Adding other layers
-
-
-```r
-plot(dune.bray.ord, type = "n")
-```
-
 ![plot of chunk unnamed-chunk-16](./ordination_files/figure-html/unnamed-chunk-16.png) 
 
 <!----------------------------slide boundary--------------------------------->
@@ -264,8 +269,8 @@ plot(dune.bray.ord, type = "n")
 
 
 ```r
-plot(dune.bray.ord, type = "n")
-points(dune.bray.ord,display = "sites", cex = 2)
+plot(dune.bray.ord, display = "sites", cex=2)
+ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
 ```
 
 ![plot of chunk unnamed-chunk-17](./ordination_files/figure-html/unnamed-chunk-17.png) 
@@ -276,8 +281,8 @@ points(dune.bray.ord,display = "sites", cex = 2)
 
 
 ```r
-plot(dune.bray.ord, type = "n")
-points(dune.bray.ord,display = "sites", cex = 2)
+plot(dune.bray.ord, display = "sites", cex=2)
+ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
 ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 ```
 
@@ -287,13 +292,162 @@ ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 
 ## Adding other layers
 
+
+```r
+plot(dune.bray.ord, display = "sites", cex=2)
+ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
+```
+
+![plot of chunk unnamed-chunk-19](./ordination_files/figure-html/unnamed-chunk-19.png) 
+
 <!----------------------------slide boundary--------------------------------->
 
-## Fitting environmental data to vectors in ordination space
+## Adding other layers - axes scaling
+
+
+```r
+plot(dune.bray.ord, type = "n")
+```
+
+![plot of chunk unnamed-chunk-20](./ordination_files/figure-html/unnamed-chunk-20.png) 
 
 <!----------------------------slide boundary--------------------------------->
 
-## Fitting environmental data to vectors in ordination space
+## Adding other layers - axes scaling
+
+
+```r
+plot(dune.bray.ord, type = "n")
+points(dune.bray.ord,display = "sites", cex = 2)
+```
+
+![plot of chunk unnamed-chunk-21](./ordination_files/figure-html/unnamed-chunk-21.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers - axes scaling
+
+
+```r
+plot(dune.bray.ord, display = "sites", type = "n")
+```
+
+![plot of chunk unnamed-chunk-22](./ordination_files/figure-html/unnamed-chunk-22.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers - axes scaling
+
+
+```r
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex = 2)
+```
+
+![plot of chunk unnamed-chunk-23](./ordination_files/figure-html/unnamed-chunk-23.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+
+```r
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord,display = "sites", cex = 2)
+ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
+```
+
+![plot of chunk unnamed-chunk-24](./ordination_files/figure-html/unnamed-chunk-24.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+
+```r
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord, display = "sites", cex = 2)
+ordiellipse(dune.bray.ord,groups = dune.env$Management, label = TRUE)
+```
+
+![plot of chunk unnamed-chunk-25](./ordination_files/figure-html/unnamed-chunk-25.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```r
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord,display = "sites", cex = 2)
+ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
+```
+
+![plot of chunk unnamed-chunk-26](./ordination_files/figure-html/unnamed-chunk-26.png) 
+
+```
+
+Family: gaussian 
+Link function: identity 
+
+Formula:
+y ~ s(x1, x2, k = 10, bs = "tp", fx = FALSE)
+<environment: 0x7fae16f1aa68>
+
+Estimated degrees of freedom:
+1.62  total = 2.62 
+
+REML score: 41.43     
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Vectors in ordination space
+
+
+```r
+dune.bray.ord.A1.fit <- envfit(dune.bray.ord,dune.env$A1, permutations = 1000)
+dune.bray.ord.A1.fit
+```
+
+```
+
+***VECTORS
+
+     NMDS1 NMDS2   r2 Pr(>r)  
+[1,]  0.99  0.14 0.38   0.02 *
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+P values based on 1000 permutations.
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Vectors in ordination space
+
+
+```r
+plot(dune.bray.ord, display = "sites", type = "n")
+points(dune.bray.ord,display = "sites", cex = 2)
+plot(dune.bray.ord.A1.fit, add = TRUE)
+ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
+```
+
+![plot of chunk unnamed-chunk-28](./ordination_files/figure-html/unnamed-chunk-28.png) 
+
+```
+
+Family: gaussian 
+Link function: identity 
+
+Formula:
+y ~ s(x1, x2, k = 10, bs = "tp", fx = FALSE)
+<environment: 0x7fae13bb2fc0>
+
+Estimated degrees of freedom:
+1.62  total = 2.62 
+
+REML score: 41.43     
+```
 
 
 <!----------------------------slide boundary--------------------------------->
