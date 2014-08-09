@@ -8,9 +8,6 @@ output:
   ioslides_presentation:
     widescreen: true
     smaller: false
-    fig_width: 7
-    fig_height: 6
-    fig_caption: true
     keep_md: true
     highlight: tango
 ---
@@ -62,21 +59,101 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
 
 <!----------------------------slide boundary--------------------------------->
 
-## Plotting in R | Examples using NMDS
+## Before we get started
+
+Housekeeping
+```{r, eval=FALSE}
+setwd("your/working/dir")
+```
+
+```{r, results='hide'}
+library("vegan")
+data(dune)
+data(dune.env)
+```
+Data from : Jongman, R.H.G, ter Braak, C.J.F & van Tongeren, O.F.R. (1987). Data Analysis in Community and Landscape Ecology. Pudoc, Wageningen.
+
+<!----------------------------slide boundary--------------------------------->
+
+## Before we get started
+
+```{r}
+head(dune[,1:10], n=3)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Before we get started
+
+```{r}
+head(dune.env, n=3)
+```
+
+<!----------------------------slide boundary--------------------------------->
 
 ## Basic ordination and plotting
 
-## Adding species info
+There are two more basic NMDS ordination functions:
 
-## Adding other layers | Ordihull
+* `isoMDS()` from the MASS package
+* `monoMDS()` in vegan
 
-## Adding other layers | Ordispider
+Vegan also has a wrapper function for doing NMDS ordinations using best practices:
 
-## Adding other layers | Ordisurf
+* `metaMDS()`
 
-## Fitting environmental data to vectors in ordination space | envfit
+<!----------------------------slide boundary--------------------------------->
 
-## Fitting environmental data to vectors in ordination space | Plotting
+## Basic ordination and plotting
+
+```{r, results='hide'}
+dune.bray.ord <- metaMDS(dune, distance = "bray", k = 2, trymax = 50)
+```
+
+**Show in RStudio**
+
+<!----------------------------slide boundary--------------------------------->
+
+## Basic ordination and plotting (using all defaults)
+
+```{r, fig.height=5}
+plot(dune.bray.ord)
+```
+
+
+<!----------------------------slide boundary--------------------------------->
+
+## Basic ordination and plotting (just plots)
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites")
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Basic ordination and plotting (just species)
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "species")
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Site names instead of points
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites", type = "t")
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Larger points
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites", cex=2)
+```
+
+<!----------------------------slide boundary--------------------------------->
 
 ## Modifying the display of the points with environmental data 
 
@@ -85,5 +162,94 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
     * Continuous
 * Shape
 * Size
+
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```{r, fig.height=5}
+# Just points
+plot(dune.bray.ord, display = "sites", cex=2)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites", cex=2)
+ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites", cex=2)
+ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites", cex=2)
+ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
+ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```{r, fig.height=5}
+plot(dune.bray.ord, display = "sites", cex=2)
+ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```{r, fig.height=5}
+plot(dune.bray.ord, type = "n")
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```{r, fig.height=5}
+plot(dune.bray.ord, type = "n")
+points(dune.bray.ord,display = "sites", cex = 2)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+```{r, fig.height=5}
+plot(dune.bray.ord, type = "n")
+points(dune.bray.ord,display = "sites", cex = 2)
+ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Adding other layers
+
+<!----------------------------slide boundary--------------------------------->
+
+## Fitting environmental data to vectors in ordination space
+
+<!----------------------------slide boundary--------------------------------->
+
+## Fitting environmental data to vectors in ordination space
+
+
+<!----------------------------slide boundary--------------------------------->
 
 ## References
