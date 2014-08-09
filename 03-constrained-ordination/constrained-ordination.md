@@ -1152,6 +1152,116 @@ do.call("rbind", split(p, plt)) ## look at perms in context
 
 ## Restricted permutations with **permute** | worked example with **vegan**
 
-To do
+Here by dragons
+
+
+```r
+## Analyse the Ohraz data Case study 5 of Leps & Smilauer
+
+## load vegan
+library("vegan")
+
+## load the data
+spp <- read.csv("data/ohraz-spp.csv", header = TRUE, row.names = 1)
+env <- read.csv("data/ohraz-env.csv", header = TRUE, row.names = 1)
+molinia <- spp[, 1]
+spp <- spp[, -1]
+
+## Year as numeric
+env <- transform(env, year = as.numeric(as.character(year)))
+```
+
+
+```r
+## hypothesis 1
+c1 <- rda(spp ~ year + year:mowing + year:fertilizer +
+          year:removal + Condition(plotid), data = env)
+
+h <- how(within = Within(type = "none"),
+         plots = Plots(strata = env$plotid, type = "free"))
+set.seed(42)
+perm <- shuffleSet(nrow(env), nset = 499, control = h)
+
+anova(c1, permutations = h, model = "reduced")
+```
+
+```
+Permutation test for rda under reduced model
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year + year:mowing + year:fertilizer + year:removal + Condition(plotid), data = env)
+         Df Variance    F Pr(>F)   
+Model     4      159 6.42  0.005 **
+Residual 90      556               
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+```r
+anova(c1, permutations = h, model = "reduced", by = "axis")
+```
+
+```
+Permutation test for rda under reduced model
+Marginal tests for axes
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year + year:mowing + year:fertilizer + year:removal + Condition(plotid), data = env)
+         Df Variance     F Pr(>F)   
+RDA1      1       89 14.42  0.005 **
+RDA2      1       34  5.55  0.005 **
+RDA3      1       27  4.29  0.010 **
+RDA4      1        9  1.45  0.600   
+Residual 90      556                
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
+```r
+## hypothesis 2
+c2 <- rda(spp ~ year:mowing + year:fertilizer + year:removal +
+          Condition(year + plotid), data = env)
+anova(c2, permutations = h, model = "reduced")
+```
+
+```
+Permutation test for rda under reduced model
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year:mowing + year:fertilizer + year:removal + Condition(year + plotid), data = env)
+         Df Variance    F Pr(>F)   
+Model     3       99 5.35  0.005 **
+Residual 90      556               
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+```r
+anova(c2, permutations = h, model = "reduced", by = "axis")
+```
+
+```
+Permutation test for rda under reduced model
+Marginal tests for axes
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year:mowing + year:fertilizer + year:removal + Condition(year + plotid), data = env)
+         Df Variance    F Pr(>F)   
+RDA1      1       54 8.76  0.005 **
+RDA2      1       34 5.55  0.005 **
+RDA3      1       11 1.75  0.500   
+Residual 90      556               
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
 
 ## References

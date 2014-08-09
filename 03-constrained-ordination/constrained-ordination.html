@@ -1130,7 +1130,96 @@ do.call(&quot;rbind&quot;, split(p, plt)) ## look at perms in context</pre>
 
 </article></slide><slide class=''><hgroup><h2>Restricted permutations with <strong>permute</strong> </h2><h3> worked example with <strong>vegan</strong></h3></hgroup><article  id="restricted-permutations-with-permute-worked-example-with-vegan" class="smaller ">
 
-<p>To do</p>
+<p>Here by dragons</p>
+
+<pre class = 'prettyprint lang-r'>## Analyse the Ohraz data Case study 5 of Leps &amp; Smilauer
+
+## load vegan
+library(&quot;vegan&quot;)
+
+## load the data
+spp &lt;- read.csv(&quot;data/ohraz-spp.csv&quot;, header = TRUE, row.names = 1)
+env &lt;- read.csv(&quot;data/ohraz-env.csv&quot;, header = TRUE, row.names = 1)
+molinia &lt;- spp[, 1]
+spp &lt;- spp[, -1]
+
+## Year as numeric
+env &lt;- transform(env, year = as.numeric(as.character(year)))</pre>
+
+<pre class = 'prettyprint lang-r'>## hypothesis 1
+c1 &lt;- rda(spp ~ year + year:mowing + year:fertilizer +
+          year:removal + Condition(plotid), data = env)
+
+h &lt;- how(within = Within(type = &quot;none&quot;),
+         plots = Plots(strata = env$plotid, type = &quot;free&quot;))
+set.seed(42)
+perm &lt;- shuffleSet(nrow(env), nset = 499, control = h)
+
+anova(c1, permutations = h, model = &quot;reduced&quot;)</pre>
+
+<pre >Permutation test for rda under reduced model
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year + year:mowing + year:fertilizer + year:removal + Condition(plotid), data = env)
+         Df Variance    F Pr(&gt;F)   
+Model     4      159 6.42  0.005 **
+Residual 90      556               
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+<pre class = 'prettyprint lang-r'>anova(c1, permutations = h, model = &quot;reduced&quot;, by = &quot;axis&quot;)</pre>
+
+<pre >Permutation test for rda under reduced model
+Marginal tests for axes
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year + year:mowing + year:fertilizer + year:removal + Condition(plotid), data = env)
+         Df Variance     F Pr(&gt;F)   
+RDA1      1       89 14.42  0.005 **
+RDA2      1       34  5.55  0.005 **
+RDA3      1       27  4.29  0.010 **
+RDA4      1        9  1.45  0.600   
+Residual 90      556                
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+<pre class = 'prettyprint lang-r'>## hypothesis 2
+c2 &lt;- rda(spp ~ year:mowing + year:fertilizer + year:removal +
+          Condition(year + plotid), data = env)
+anova(c2, permutations = h, model = &quot;reduced&quot;)</pre>
+
+<pre >Permutation test for rda under reduced model
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year:mowing + year:fertilizer + year:removal + Condition(year + plotid), data = env)
+         Df Variance    F Pr(&gt;F)   
+Model     3       99 5.35  0.005 **
+Residual 90      556               
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
+
+<pre class = 'prettyprint lang-r'>anova(c2, permutations = h, model = &quot;reduced&quot;, by = &quot;axis&quot;)</pre>
+
+<pre >Permutation test for rda under reduced model
+Marginal tests for axes
+Plots: env$plotid, plot permutation: free
+Permutation: none
+Number of permutations: 199
+
+Model: rda(formula = spp ~ year:mowing + year:fertilizer + year:removal + Condition(year + plotid), data = env)
+         Df Variance    F Pr(&gt;F)   
+RDA1      1       54 8.76  0.005 **
+RDA2      1       34 5.55  0.005 **
+RDA3      1       11 1.75  0.500   
+Residual 90      556               
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</pre>
 
 <div class="references">
 </article></slide><slide class=''><hgroup><h2>References</h2></hgroup><article  id="references" class="smaller unnumbered">

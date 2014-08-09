@@ -788,6 +788,44 @@ do.call("rbind", split(p, plt)) ## look at perms in context
 
 ## Restricted permutations with **permute** | worked example with **vegan**
 
-To do
+Here by dragons
+
+```{r worked-example-devel-1}
+## Analyse the Ohraz data Case study 5 of Leps & Smilauer
+
+## load vegan
+library("vegan")
+
+## load the data
+spp <- read.csv("data/ohraz-spp.csv", header = TRUE, row.names = 1)
+env <- read.csv("data/ohraz-env.csv", header = TRUE, row.names = 1)
+molinia <- spp[, 1]
+spp <- spp[, -1]
+
+## Year as numeric
+env <- transform(env, year = as.numeric(as.character(year)))
+```
+
+```{r worked-example-devel-2}
+## hypothesis 1
+c1 <- rda(spp ~ year + year:mowing + year:fertilizer +
+          year:removal + Condition(plotid), data = env)
+
+h <- how(within = Within(type = "none"),
+         plots = Plots(strata = env$plotid, type = "free"))
+set.seed(42)
+perm <- shuffleSet(nrow(env), nset = 499, control = h)
+
+anova(c1, permutations = h, model = "reduced")
+anova(c1, permutations = h, model = "reduced", by = "axis")
+```
+
+```{r worked-example-devel-3}
+## hypothesis 2
+c2 <- rda(spp ~ year:mowing + year:fertilizer + year:removal +
+          Condition(year + plotid), data = env)
+anova(c2, permutations = h, model = "reduced")
+anova(c2, permutations = h, model = "reduced", by = "axis")
+```
 
 ## References
