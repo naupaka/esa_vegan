@@ -17,12 +17,14 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
 ```
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Workshop logistics
 
 * Etherpad 
     * https://etherpad.mozilla.org/ESA2014-vegan
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Workshop logistics
 
 * Etherpad 
@@ -32,6 +34,7 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
 ![](img/Green_post_it.png)&nbsp;&nbsp;&nbsp;&nbsp;![](img/Red_post_it.png)
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Packages installed?
 
 ```{r, eval=FALSE}
@@ -40,7 +43,11 @@ install.packages("plyr")
 install.packages("reshape2")
 ```
 
+### Data downloaded from github?  
+https://github.com/naupaka/esa_vegan
+
 <!----------------------------slide boundary--------------------------------->
+
 ## Introduction to **vegan**
 
 * What is it?
@@ -79,8 +86,17 @@ We've all heard data horror stories
 ## Cleaning your data for R and vegan
 
 ### Loading dirty data and then cleaning
+```{r, eval=FALSE}
+setwd("your/working/directory/")
+BCI.small.csv.in <- read.csv("data/BCI_small.csv", header = TRUE, row.names = 1)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Cleaning your data for R and vegan
+
+### Loading dirty data and then cleaning
 ```{r, eval=TRUE}
-#setwd("your/working/directory/")
 BCI.small.csv.in <- read.csv("data/BCI_small_fixed.csv", header = TRUE, row.names = 1)
 ```
 
@@ -106,34 +122,32 @@ summary(BCI.small.csv.in)
 
 ## Cleaning your data for R and vegan
 
-* We will use one of vegan's built-in datasets for species `BCI` and environmental variables the same paper, which we will load directly
-    * from Condit et al. 2002 *Science*
+We will now switch to using one of vegan's built-in datasets for species (`BCI`) and environmental variables from the same paper, which we will load directly
+    
+* from Condit et al. 2002 *Science*
 
 ```{r, results='hide'}
 library("vegan")
 data(BCI)
-library("BiodiversityR")
-setwd("~/git/esa_vegan/01-intro-basics/data/")
-data(BCI.env)
-write.csv(BCI.env, "BCI.env.csv")
-BCI.env <- read.csv("BCI.env.csv", header = TRUE, row.names = 1)
+BCI.env <- read.csv("data/BCI.env.csv", header = TRUE, row.names = 1)
 ```
 
 <!----------------------------slide boundary--------------------------------->
 
 ## Cleaning your data for R and vegan
 
-* We will use built-in datasets for species `varespec` and environmental variables `varechem`
-    * from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)
+We will now switch to using one of vegan's built-in datasets for species (`BCI`) and environmental variables from the same paper, which we will load directly
+    
+* from Condit et al. 2002 *Science*
 
 ```{r, results='hide'}
 library("vegan")
-data(varespec)
-data(varechem)
+data(BCI)
+BCI.env <- read.csv("data/BCI.env.csv", header = TRUE, row.names = 1)
 ```
 
 ```{r}
-head(varespec[,1:8], n = 3)
+head(BCI[,1:3], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -146,8 +160,8 @@ head(varespec[,1:8], n = 3)
 
 **Sum of rows**
 ```{r}
-sum.of.rows <- apply(varespec, 1, sum)
-sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) 
+sum.of.rows <- apply(BCI, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (plots) 
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -156,13 +170,13 @@ sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites)
 
 **Sum of rows**
 ```{r}
-sum.of.rows <- apply(varespec, 1, sum)
-sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) 
+sum.of.rows <- apply(BCI, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (plots) 
 ```
 **Sum of columns**
 ```{r}
-sum.of.columns <- apply(varespec, 2, sum)
-sort(sum.of.columns, decreasing = TRUE)[1:8] #top 8 columns (species)
+sum.of.columns <- apply(BCI, 2, sum)
+sort(sum.of.columns, decreasing = TRUE)[1:3] #top 3 columns (species)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -171,7 +185,7 @@ sort(sum.of.columns, decreasing = TRUE)[1:8] #top 8 columns (species)
 
 **Number of plots in which each spp. occurs**
 ```{r}
-spec.pres <- apply(varespec > 0, 2, sum) 
+spec.pres <- apply(BCI > 0, 2, sum) 
 sort(spec.pres, decreasing = TRUE)[1:18]
 ```
 
@@ -185,7 +199,7 @@ sort(spec.pres, decreasing = TRUE)[1:18]
 
 **Square root transformation**
 ```{r}
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -194,9 +208,9 @@ head(varespec[,1:8], n = 3)
 
 **Square root transformation**
 ```{r}
-head(varespec[,1:8], n = 3)
-spec.sqrt <- sqrt(varespec)
-head(spec.sqrt[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
+spec.sqrt <- sqrt(BCI)
+head(spec.sqrt[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -205,7 +219,7 @@ head(spec.sqrt[,1:8], n = 3)
 
 **Total**
 ```{r}
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -214,9 +228,9 @@ head(varespec[,1:8], n = 3)
 
 **Total**
 ```{r}
-head(varespec[,1:8], n = 3)
-spec.total <- decostand(varespec, method = "total", MARGIN = 1) # by rows (sites)
-head(spec.total[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
+spec.total <- decostand(BCI, method = "total", MARGIN = 1) # by rows (sites)
+head(spec.total[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -225,7 +239,7 @@ head(spec.total[,1:8], n = 3)
 
 **Maximum**
 ```{r}
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -234,9 +248,9 @@ head(varespec[,1:8], n = 3)
 
 **Maximum** 
 ```{r}
-head(varespec[,1:8], n = 3)
-spec.max <- decostand(varespec, method = "max", MARGIN = 2) # by columns (species)
-head(spec.max[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
+spec.max <- decostand(BCI, method = "max", MARGIN = 2) # by columns (species)
+head(spec.max[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -245,7 +259,7 @@ head(spec.max[,1:8], n = 3)
 
 **Presence-Absence**
 ```{r}
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -254,9 +268,9 @@ head(varespec[,1:8], n = 3)
 
 **Presence-Absence**
 ```{r}
-head(varespec[,1:8], n = 3)
-spec.pa <- decostand(varespec, method = "pa")
-head(spec.pa[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
+spec.pa <- decostand(BCI, method = "pa")
+head(spec.pa[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -266,7 +280,7 @@ head(spec.pa[,1:8], n = 3)
 **Hellinger (Legendre & Gallagher 2001)**
 Square root of method "total"
 ```{r}
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -276,9 +290,9 @@ head(varespec[,1:8], n = 3)
 **Hellinger (Legendre & Gallagher 2001)**
 Square root of method "total"
 ```{r}
-head(varespec[,1:8], n = 3)
-spec.hellinger <- decostand(varespec, method = "hellinger", MARGIN = 1) # on rows (sites)
-head(spec.hellinger[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
+spec.hellinger <- decostand(BCI, method = "hellinger", MARGIN = 1) # on rows (sites)
+head(spec.hellinger[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -288,7 +302,7 @@ head(spec.hellinger[,1:8], n = 3)
 **Wisconsin double standardization**  
 Shortcut function for standardizing species to maximum, then sites by totals.  
 ```{r}
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -298,9 +312,9 @@ head(varespec[,1:8], n = 3)
 **Wisconsin double standardization**  
 Shortcut function for standardizing species to maximum, then sites by totals.
 ```{r}
-head(varespec[,1:8], n = 3)
-spec.wisc <- wisconsin(varespec)
-head(spec.wisc[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
+spec.wisc <- wisconsin(BCI)
+head(spec.wisc[,162:164], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -322,7 +336,7 @@ head(spec.wisc[,1:8], n = 3)
 *manhattan, euclidean, canberra, bray, kulczynski, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao, or cao*
 
 ```{r}
-spec.jaccpa <- vegdist(varespec, method = "jaccard", binary = TRUE)
+spec.jaccpa <- vegdist(BCI, method = "jaccard", binary = TRUE)
 # returns an object of class 'dist'
 str(spec.jaccpa) 
 ```
@@ -353,21 +367,9 @@ as.matrix(spec.jaccpa)[1:4,1:4]
 ### Second, try `rankindex()`    
 Higher rank correlations indicate better separation along gradients
 ```{r}
-rank.all <- rankindex(varechem, varespec, indices = 
+rank.UTM.NS <- rankindex(BCI.env$UTM.NS, BCI, indices = 
               c("bray", "euclid", "manhattan", "horn"), method = "spearman")
-rank.all
-```
-
-<!----------------------------slide boundary--------------------------------->
-
-## Calculating distances with `vegdist()` | so many distance metrics, so little time!
-
-### Second, try `rankindex()`    
-Or across a single, selected gradient
-```{r}
-rank.Ca <- rankindex(varechem$Ca, varespec, indices = 
-              c("bray", "euclid", "manhattan", "horn"), method = "spearman")
-rank.Ca
+rank.UTM.NS
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -377,9 +379,9 @@ rank.Ca
 ### Second, try `rankindex()`    
 Can also use on standardized data
 ```{r}
-rank.Ca.wisc <- rankindex(varechem$Ca, wisconsin(varespec), indices = 
+rank.UTM.NS.wisc <- rankindex(BCI.env$UTM.NS, wisconsin(BCI), indices = 
               c("bray", "euclid", "manhattan", "horn"), method = "spearman")
-rank.Ca.wisc
+rank.UTM.NS.wisc
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -387,9 +389,8 @@ rank.Ca.wisc
 ## Calculating distances with `vegdist()` | comparison
 
 ```{r}
-sort(rank.all, decreasing = TRUE)
-sort(rank.Ca, decreasing = TRUE)
-sort(rank.Ca.wisc, decreasing = TRUE)
+sort(rank.UTM.NS, decreasing = TRUE)
+sort(rank.UTM.NS.wisc, decreasing = TRUE)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -402,8 +403,8 @@ sort(rank.Ca.wisc, decreasing = TRUE)
 
 Basic counts of richness for each plot or site
 ```{r}
-site.richness <- apply(varespec > 0, 1, sum)
-site.richness
+site.richness <- apply(BCI > 0, 1, sum)
+site.richness[1:18]
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -412,8 +413,8 @@ site.richness
 
 Fisher's alpha
 ```{r}
-# site.richness <- fisher.alpha(varespec)
-site.richness
+site.fisher <- fisher.alpha(BCI)
+site.fisher[1:12]
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -422,8 +423,8 @@ site.richness
 
 Shannon diversity
 ```{r}
-site.richness <- apply(varespec > 0, 1, sum)
-site.richness
+site.shannon <- diversity(BCI, index = "shannon", MARGIN = 1)
+site.shannon[1:12]
 ```
 
 <!----------------------------slide boundary--------------------------------->

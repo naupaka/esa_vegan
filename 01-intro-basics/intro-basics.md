@@ -5,12 +5,14 @@ August 9, 2014 • ESA 2014
 
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Workshop logistics
 
 * Etherpad 
     * https://etherpad.mozilla.org/ESA2014-vegan
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Workshop logistics
 
 * Etherpad 
@@ -20,17 +22,21 @@ August 9, 2014 • ESA 2014
 ![](img/Green_post_it.png)&nbsp;&nbsp;&nbsp;&nbsp;![](img/Red_post_it.png)
 
 <!----------------------------slide boundary--------------------------------->
+
 ## Packages installed?
 
 
 ```r
 install.packages("vegan", dependencies = TRUE)
-install.packages("BiodiversityR")
 install.packages("plyr")
 install.packages("reshape2")
 ```
 
+### Data downloaded from github?  
+https://github.com/naupaka/esa_vegan
+
 <!----------------------------slide boundary--------------------------------->
+
 ## Introduction to **vegan**
 
 * What is it?
@@ -71,7 +77,17 @@ We've all heard data horror stories
 ### Loading dirty data and then cleaning
 
 ```r
-#setwd("your/working/directory/")
+setwd("your/working/directory/")
+BCI.small.csv.in <- read.csv("data/BCI_small.csv", header = TRUE, row.names = 1)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Cleaning your data for R and vegan
+
+### Loading dirty data and then cleaning
+
+```r
 BCI.small.csv.in <- read.csv("data/BCI_small_fixed.csv", header = TRUE, row.names = 1)
 ```
 
@@ -127,40 +143,42 @@ summary(BCI.small.csv.in)
 
 ## Cleaning your data for R and vegan
 
-* We will use some of vegan's built-in datasets for species `varespec` and environmental variables `varechem`
-    * from Väre, H., Ohtonen, R. and Oksanen, J. (1995)
+We will now switch to using one of vegan's built-in datasets for species (`BCI`) and environmental variables from the same paper, which we will load directly
+    
+* from Condit et al. 2002 *Science*
 
 
 ```r
 library("vegan")
-data(varespec)
-data(varechem)
+data(BCI)
+BCI.env <- read.csv("data/BCI.env.csv", header = TRUE, row.names = 1)
 ```
 
 <!----------------------------slide boundary--------------------------------->
 
 ## Cleaning your data for R and vegan
 
-* We will use built-in datasets for species `varespec` and environmental variables `varechem`
-    * from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)
+We will now switch to using one of vegan's built-in datasets for species (`BCI`) and environmental variables from the same paper, which we will load directly
+    
+* from Condit et al. 2002 *Science*
 
 
 ```r
 library("vegan")
-data(varespec)
-data(varechem)
+data(BCI)
+BCI.env <- read.csv("data/BCI.env.csv", header = TRUE, row.names = 1)
 ```
 
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,1:3], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Abarema.macradenium Acacia.melanoceras Acalypha.diversifolia
+1                   0                  0                     0
+2                   0                  0                     0
+3                   0                  0                     0
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -174,13 +192,13 @@ head(varespec[,1:8], n = 3)
 **Sum of rows**
 
 ```r
-sum.of.rows <- apply(varespec, 1, sum)
-sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) 
+sum.of.rows <- apply(BCI, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (plots) 
 ```
 
 ```
-   27     9    10    12     2    11     6    28 
-125.6 122.6 122.4 119.8 119.1 112.8 110.9 110.7 
+ 35   4   5  40  10  30   3  15 
+601 508 505 489 483 475 463 462 
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -190,24 +208,24 @@ sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites)
 **Sum of rows**
 
 ```r
-sum.of.rows <- apply(varespec, 1, sum)
-sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) 
+sum.of.rows <- apply(BCI, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (plots) 
 ```
 
 ```
-   27     9    10    12     2    11     6    28 
-125.6 122.6 122.4 119.8 119.1 112.8 110.9 110.7 
+ 35   4   5  40  10  30   3  15 
+601 508 505 489 483 475 463 462 
 ```
 **Sum of columns**
 
 ```r
-sum.of.columns <- apply(varespec, 2, sum)
-sort(sum.of.columns, decreasing = TRUE)[1:8] #top 8 columns (species)
+sum.of.columns <- apply(BCI, 2, sum)
+sort(sum.of.columns, decreasing = TRUE)[1:3] #top 3 columns (species)
 ```
 
 ```
-Cla.ste Cla.ran Ple.sch Vac.vit Cla.arb Emp.nig Dic.fus Cla.unc 
- 486.71  388.71  377.97  275.03  255.05  151.99  113.52   56.28 
+ Faramea.occidentalis Trichilia.tuberculata      Alseis.blackiana 
+                 1717                  1681                   983 
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -217,15 +235,23 @@ Cla.ste Cla.ran Ple.sch Vac.vit Cla.arb Emp.nig Dic.fus Cla.unc
 **Number of plots in which each spp. occurs**
 
 ```r
-spec.pres <- apply(varespec > 0, 2, sum) 
+spec.pres <- apply(BCI > 0, 2, sum) 
 sort(spec.pres, decreasing = TRUE)[1:18]
 ```
 
 ```
-Emp.nig Vac.vit Ple.sch Cla.arb Cla.ran Cla.unc Cla.cor Cla.cri Dic.fus 
-     24      24      24      24      24      24      24      24      23 
-Cla.gra Cla.def Cla.ste Cla.fim Pin.syl Pol.jun Poh.nut Cla.coc Pti.cil 
-     23      23      22      22      21      20      20      19      17 
+       Alseis.blackiana    Faramea.occidentalis       Hirtella.triandra 
+                     50                      50                      50 
+      Oenocarpus.mapora     Protium.tenuifolium Tetragastris.panamensis 
+                     50                      50                      50 
+  Trichilia.tuberculata           Apeiba.aspera        Gustavia.superba 
+                     50                      49                      49 
+    Pouteria.reticulata  Quararibea.asterolepis           Randia.armata 
+                     49                      49                      49 
+    Brosimum.alicastrum       Cordia.lasiocalyx     Eugenia.oerstedeana 
+                     48                      48                      48 
+        Guarea.guidonia    Hasseltia.floribunda      Heisteria.concinna 
+                     48                      48                      48 
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -239,14 +265,14 @@ Cla.gra Cla.def Cla.ste Cla.fim Pin.syl Pol.jun Poh.nut Cla.coc Pti.cil
 **Square root transformation**
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -256,26 +282,26 @@ head(varespec[,1:8], n = 3)
 **Square root transformation**
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 ```r
-spec.sqrt <- sqrt(varespec)
-head(spec.sqrt[,1:8], n = 3)
+spec.sqrt <- sqrt(BCI)
+head(spec.sqrt[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18  0.7416  3.3362       0  0.0000   4.219  0.2646       0       0
-15  0.8185  0.4123       0  0.5916   3.483  0.3464       0       0
-24  0.3162  1.2450       0  0.0000   3.670  0.5000       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1             3.606                2.236             1.414
+2             3.464                2.000             0.000
+3             3.464                1.000             1.414
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -285,14 +311,14 @@ head(spec.sqrt[,1:8], n = 3)
 **Total**
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -302,26 +328,26 @@ head(varespec[,1:8], n = 3)
 **Total**
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 ```r
-spec.total <- decostand(varespec, method = "total", MARGIN = 1) # by rows (sites)
-head(spec.total[,1:8], n = 3)
+spec.total <- decostand(BCI, method = "total", MARGIN = 1) # by rows (sites)
+head(spec.total[,162:164], n = 3)
 ```
 
 ```
-    Cal.vul  Emp.nig Led.pal  Vac.myr Vac.vit   Pin.syl Des.fle Bet.pub
-18 0.006166 0.124776       0 0.000000  0.1996 0.0007848       0       0
-15 0.007459 0.001893       0 0.003897  0.1350 0.0013360       0       0
-24 0.001061 0.016453       0 0.000000  0.1430 0.0026536       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1           0.02902             0.011161          0.004464
+2           0.02759             0.009195          0.000000
+3           0.02592             0.002160          0.004320
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -331,14 +357,14 @@ head(spec.total[,1:8], n = 3)
 **Maximum**
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -348,26 +374,26 @@ head(varespec[,1:8], n = 3)
 **Maximum** 
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 ```r
-spec.max <- decostand(varespec, method = "max", MARGIN = 2) # by columns (species)
-head(spec.max[,1:8], n = 3)
+spec.max <- decostand(BCI, method = "max", MARGIN = 2) # by columns (species)
+head(spec.max[,162:164], n = 3)
 ```
 
 ```
-    Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18 0.022793 0.69563       0 0.00000  0.7120 0.05833       0       0
-15 0.027766 0.01063       0 0.01916  0.4852 0.10000       0       0
-24 0.004144 0.09688       0 0.00000  0.5388 0.20833       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1            0.5000               0.7143               0.5
+2            0.4615               0.5714               0.0
+3            0.4615               0.1429               0.5
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -377,14 +403,14 @@ head(spec.max[,1:8], n = 3)
 **Presence-Absence**
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -394,26 +420,26 @@ head(varespec[,1:8], n = 3)
 **Presence-Absence**
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 ```r
-spec.pa <- decostand(varespec, method = "pa")
-head(spec.pa[,1:8], n = 3)
+spec.pa <- decostand(BCI, method = "pa")
+head(spec.pa[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18       1       1       0       0       1       1       0       0
-15       1       1       0       1       1       1       0       0
-24       1       1       0       0       1       1       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                 1                    1                 1
+2                 1                    1                 0
+3                 1                    1                 1
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -424,14 +450,14 @@ head(spec.pa[,1:8], n = 3)
 Square root of method "total"
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -442,26 +468,26 @@ head(varespec[,1:8], n = 3)
 Square root of method "total"
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 ```r
-spec.hellinger <- decostand(varespec, method = "hellinger", MARGIN = 1) # on rows (sites)
-head(spec.hellinger[,1:8], n = 3)
+spec.hellinger <- decostand(BCI, method = "hellinger", MARGIN = 1) # on rows (sites)
+head(spec.hellinger[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18 0.07852  0.3532       0 0.00000  0.4467 0.02801       0       0
-15 0.08637  0.0435       0 0.06242  0.3675 0.03655       0       0
-24 0.03258  0.1283       0 0.00000  0.3781 0.05151       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1            0.1703              0.10564           0.06682
+2            0.1661              0.09589           0.00000
+3            0.1610              0.04647           0.06572
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -472,14 +498,14 @@ head(spec.hellinger[,1:8], n = 3)
 Shortcut function for standardizing species to maximum, then sites by totals.  
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -490,26 +516,26 @@ head(varespec[,1:8], n = 3)
 Shortcut function for standardizing species to maximum, then sites by totals.
 
 ```r
-head(varespec[,1:8], n = 3)
+head(BCI[,162:164], n = 3)
 ```
 
 ```
-   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2
 ```
 
 ```r
-spec.wisc <- wisconsin(varespec)
-head(spec.wisc[,1:8], n = 3)
+spec.wisc <- wisconsin(BCI)
+head(spec.wisc[,162:164], n = 3)
 ```
 
 ```
-     Cal.vul  Emp.nig Led.pal  Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18 0.0027900 0.085149       0 0.000000 0.08715 0.00714       0       0
-15 0.0047127 0.001803       0 0.003251 0.08235 0.01697       0       0
-24 0.0005565 0.013008       0 0.000000 0.07235 0.02797       0       0
+  Prioria.copaifera Protium.costaricense Protium.panamense
+1           0.01316             0.018798           0.01316
+2           0.01532             0.018973           0.00000
+3           0.01411             0.004367           0.01528
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -532,19 +558,19 @@ head(spec.wisc[,1:8], n = 3)
 
 
 ```r
-spec.jaccpa <- vegdist(varespec, method = "jaccard", binary = TRUE)
+spec.jaccpa <- vegdist(BCI, method = "jaccard", binary = TRUE)
 # returns an object of class 'dist'
 str(spec.jaccpa) 
 ```
 
 ```
-Class 'dist'  atomic [1:276] 0.333 0.471 0.5 0.333 0.417 ...
-  ..- attr(*, "Size")= int 24
-  ..- attr(*, "Labels")= chr [1:24] "18" "15" "24" "27" ...
+Class 'dist'  atomic [1:1225] 0.434 0.462 0.442 0.46 0.425 ...
+  ..- attr(*, "Size")= int 50
+  ..- attr(*, "Labels")= chr [1:50] "1" "2" "3" "4" ...
   ..- attr(*, "Diag")= logi FALSE
   ..- attr(*, "Upper")= logi FALSE
   ..- attr(*, "method")= chr "binary jaccard"
-  ..- attr(*, "call")= language vegdist(x = varespec, method = "jaccard", binary = TRUE)
+  ..- attr(*, "call")= language vegdist(x = BCI, method = "jaccard", binary = TRUE)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -557,11 +583,11 @@ as.matrix(spec.jaccpa)[1:4,1:4]
 ```
 
 ```
-       18     15     24     27
-18 0.0000 0.3333 0.4706 0.5000
-15 0.3333 0.0000 0.2500 0.5429
-24 0.4706 0.2500 0.0000 0.5882
-27 0.5000 0.5429 0.5882 0.0000
+       1      2      3      4
+1 0.0000 0.4336 0.4622 0.4417
+2 0.4336 0.0000 0.4464 0.4386
+3 0.4622 0.4464 0.0000 0.4274
+4 0.4417 0.4386 0.4274 0.0000
 ```
 
 
@@ -584,32 +610,14 @@ as.matrix(spec.jaccpa)[1:4,1:4]
 Higher rank correlations indicate better separation along gradients
 
 ```r
-rank.all <- rankindex(varechem, varespec, indices = 
+rank.UTM.NS <- rankindex(BCI.env$UTM.NS, BCI, indices = 
               c("bray", "euclid", "manhattan", "horn"), method = "spearman")
-rank.all
+rank.UTM.NS
 ```
 
 ```
      bray    euclid manhattan      horn 
-   0.2241    0.1469    0.2262    0.1785 
-```
-
-<!----------------------------slide boundary--------------------------------->
-
-## Calculating distances with `vegdist()` | so many distance metrics, so little time!
-
-### Second, try `rankindex()`    
-Or across a single, selected gradient
-
-```r
-rank.Ca <- rankindex(varechem$Ca, varespec, indices = 
-              c("bray", "euclid", "manhattan", "horn"), method = "spearman")
-rank.Ca
-```
-
-```
-     bray    euclid manhattan      horn 
-  0.12707   0.08922   0.14425   0.10210 
+   0.1344    0.1521    0.1727    0.1687 
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -620,14 +628,14 @@ rank.Ca
 Can also use on standardized data
 
 ```r
-rank.Ca.wisc <- rankindex(varechem$Ca, wisconsin(varespec), indices = 
+rank.UTM.NS.wisc <- rankindex(BCI.env$UTM.NS, wisconsin(BCI), indices = 
               c("bray", "euclid", "manhattan", "horn"), method = "spearman")
-rank.Ca.wisc
+rank.UTM.NS.wisc
 ```
 
 ```
      bray    euclid manhattan      horn 
-   0.2228    0.1745    0.2228    0.2058 
+  0.12053   0.07631   0.12053   0.12799 
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -636,30 +644,21 @@ rank.Ca.wisc
 
 
 ```r
-sort(rank.all, decreasing = TRUE)
+sort(rank.UTM.NS, decreasing = TRUE)
 ```
 
 ```
-manhattan      bray      horn    euclid 
-   0.2262    0.2241    0.1785    0.1469 
-```
-
-```r
-sort(rank.Ca, decreasing = TRUE)
-```
-
-```
-manhattan      bray      horn    euclid 
-  0.14425   0.12707   0.10210   0.08922 
+manhattan      horn    euclid      bray 
+   0.1727    0.1687    0.1521    0.1344 
 ```
 
 ```r
-sort(rank.Ca.wisc, decreasing = TRUE)
+sort(rank.UTM.NS.wisc, decreasing = TRUE)
 ```
 
 ```
-     bray manhattan      horn    euclid 
-   0.2228    0.2228    0.2058    0.1745 
+     horn      bray manhattan    euclid 
+  0.12799   0.12053   0.12053   0.07631 
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -673,13 +672,13 @@ sort(rank.Ca.wisc, decreasing = TRUE)
 Basic counts of richness for each plot or site
 
 ```r
-site.richness <- apply(varespec > 0, 1, sum)
-site.richness
+site.richness <- apply(BCI > 0, 1, sum)
+site.richness[1:18]
 ```
 
 ```
-18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
-29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 
+  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18 
+ 93  84  90  94 101  85  82  88  90  94  87  84  93  98  93  93  93  89 
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -689,13 +688,13 @@ site.richness
 Fisher's alpha
 
 ```r
-# site.richness <- fisher.alpha(varespec)
-site.richness
+site.fisher <- fisher.alpha(BCI)
+site.fisher[1:12]
 ```
 
 ```
-18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
-29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 
+    1     2     3     4     5     6     7     8     9    10    11    12 
+35.67 30.99 33.32 33.92 37.96 32.49 30.58 33.45 35.67 34.82 34.21 34.12 
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -705,13 +704,13 @@ site.richness
 Shannon diversity
 
 ```r
-site.richness <- apply(varespec > 0, 1, sum)
-site.richness
+site.shannon <- diversity(BCI, index = "shannon", MARGIN = 1)
+site.shannon[1:12]
 ```
 
 ```
-18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
-29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 
+    1     2     3     4     5     6     7     8     9    10    11    12 
+4.018 3.848 3.814 3.977 3.970 3.777 3.837 3.908 3.761 3.890 3.860 3.698 
 ```
 
 <!----------------------------slide boundary--------------------------------->

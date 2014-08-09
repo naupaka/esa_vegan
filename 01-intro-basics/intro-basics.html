@@ -90,6 +90,7 @@
 
 <!----------------------------slide boundary--------------------------------->
 
+
 <slide class=''><hgroup><h2>Workshop logistics</h2></hgroup><article  id="workshop-logistics">
 
 <ul>
@@ -101,6 +102,7 @@
 </ul>
 
 <!----------------------------slide boundary--------------------------------->
+
 
 </article></slide><slide class=''><hgroup><h2>Workshop logistics</h2></hgroup><article  id="workshop-logistics-1">
 
@@ -117,14 +119,19 @@
 
 <!----------------------------slide boundary--------------------------------->
 
+
 </article></slide><slide class=''><hgroup><h2>Packages installed?</h2></hgroup><article  id="packages-installed">
 
 <pre class = 'prettyprint lang-r'>install.packages(&quot;vegan&quot;, dependencies = TRUE)
-install.packages(&quot;BiodiversityR&quot;)
 install.packages(&quot;plyr&quot;)
 install.packages(&quot;reshape2&quot;)</pre>
 
+<h3>Data downloaded from github?</h3>
+
+<p><a href='https://github.com/naupaka/esa_vegan' title=''>https://github.com/naupaka/esa_vegan</a></p>
+
 <!----------------------------slide boundary--------------------------------->
+
 
 </article></slide><slide class=''><hgroup><h2>Introduction to <strong>vegan</strong></h2></hgroup><article  id="introduction-to-vegan">
 
@@ -173,13 +180,22 @@ install.packages(&quot;reshape2&quot;)</pre>
 
 <h3>Loading dirty data and then cleaning</h3>
 
-<pre class = 'prettyprint lang-r'>#setwd(&quot;your/working/directory/&quot;)
-BCI.small.csv.in &lt;- read.csv(&quot;data/BCI_small_fixed.csv&quot;, header = TRUE, row.names = 1)</pre>
+<pre class = 'prettyprint lang-r'>setwd(&quot;your/working/directory/&quot;)
+BCI.small.csv.in &lt;- read.csv(&quot;data/BCI_small.csv&quot;, header = TRUE, row.names = 1)</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
 
 </article></slide><slide class=''><hgroup><h2>Cleaning your data for R and vegan</h2></hgroup><article  id="cleaning-your-data-for-r-and-vegan-1">
+
+<h3>Loading dirty data and then cleaning</h3>
+
+<pre class = 'prettyprint lang-r'>BCI.small.csv.in &lt;- read.csv(&quot;data/BCI_small_fixed.csv&quot;, header = TRUE, row.names = 1)</pre>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Cleaning your data for R and vegan</h2></hgroup><article  id="cleaning-your-data-for-r-and-vegan-2">
 
 <p>Then&#8230;</p>
 
@@ -197,7 +213,7 @@ BCI.small.csv.in &lt;- read.csv(&quot;data/BCI_small_fixed.csv&quot;, header = T
 <!----------------------------slide boundary--------------------------------->
 
 
-</article></slide><slide class=''><hgroup><h2>Cleaning your data for R and vegan</h2></hgroup><article  id="cleaning-your-data-for-r-and-vegan-2">
+</article></slide><slide class=''><hgroup><h2>Cleaning your data for R and vegan</h2></hgroup><article  id="cleaning-your-data-for-r-and-vegan-3">
 
 <p>Then&#8230;</p>
 
@@ -221,43 +237,39 @@ BCI.small.csv.in &lt;- read.csv(&quot;data/BCI_small_fixed.csv&quot;, header = T
 <!----------------------------slide boundary--------------------------------->
 
 
-</article></slide><slide class=''><hgroup><h2>Cleaning your data for R and vegan</h2></hgroup><article  id="cleaning-your-data-for-r-and-vegan-3">
+</article></slide><slide class=''><hgroup><h2>Cleaning your data for R and vegan</h2></hgroup><article  id="cleaning-your-data-for-r-and-vegan-4">
+
+<p>We will now switch to using one of vegan&#39;s built-in datasets for species (<code>BCI</code>) and environmental variables from the same paper, which we will load directly</p>
 
 <ul>
-<li>We will use some of vegan&#39;s built-in datasets for species <code>varespec</code> and environmental variables <code>varechem</code>
-
-<ul>
-<li>from Väre, H., Ohtonen, R. and Oksanen, J. (1995)</li>
-</ul></li>
+<li>from Condit et al. 2002 <em>Science</em></li>
 </ul>
 
 <pre class = 'prettyprint lang-r'>library(&quot;vegan&quot;)
-data(varespec)
-data(varechem)</pre>
+data(BCI)
+BCI.env &lt;- read.csv(&quot;data/BCI.env.csv&quot;, header = TRUE, row.names = 1)</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
 
-</article></slide><slide class=''><hgroup><h2>Cleaning your data for R and vegan</h2></hgroup><article  id="cleaning-your-data-for-r-and-vegan-4">
+</article></slide><slide class=''><hgroup><h2>Cleaning your data for R and vegan</h2></hgroup><article  id="cleaning-your-data-for-r-and-vegan-5">
+
+<p>We will now switch to using one of vegan&#39;s built-in datasets for species (<code>BCI</code>) and environmental variables from the same paper, which we will load directly</p>
 
 <ul>
-<li>We will use built-in datasets for species <code>varespec</code> and environmental variables <code>varechem</code>
-
-<ul>
-<li>from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)</li>
-</ul></li>
+<li>from Condit et al. 2002 <em>Science</em></li>
 </ul>
 
 <pre class = 'prettyprint lang-r'>library(&quot;vegan&quot;)
-data(varespec)
-data(varechem)</pre>
+data(BCI)
+BCI.env &lt;- read.csv(&quot;data/BCI.env.csv&quot;, header = TRUE, row.names = 1)</pre>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,1:3], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Abarema.macradenium Acacia.melanoceras Acalypha.diversifolia
+1                   0                  0                     0
+2                   0                  0                     0
+3                   0                  0                     0</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -271,11 +283,11 @@ data(varechem)</pre>
 
 <p><strong>Sum of rows</strong></p>
 
-<pre class = 'prettyprint lang-r'>sum.of.rows &lt;- apply(varespec, 1, sum)
-sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) </pre>
+<pre class = 'prettyprint lang-r'>sum.of.rows &lt;- apply(BCI, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (plots) </pre>
 
-<pre >   27     9    10    12     2    11     6    28 
-125.6 122.6 122.4 119.8 119.1 112.8 110.9 110.7 </pre>
+<pre > 35   4   5  40  10  30   3  15 
+601 508 505 489 483 475 463 462 </pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -284,19 +296,19 @@ sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) </pre>
 
 <p><strong>Sum of rows</strong></p>
 
-<pre class = 'prettyprint lang-r'>sum.of.rows &lt;- apply(varespec, 1, sum)
-sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) </pre>
+<pre class = 'prettyprint lang-r'>sum.of.rows &lt;- apply(BCI, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (plots) </pre>
 
-<pre >   27     9    10    12     2    11     6    28 
-125.6 122.6 122.4 119.8 119.1 112.8 110.9 110.7 </pre>
+<pre > 35   4   5  40  10  30   3  15 
+601 508 505 489 483 475 463 462 </pre>
 
 <p><strong>Sum of columns</strong></p>
 
-<pre class = 'prettyprint lang-r'>sum.of.columns &lt;- apply(varespec, 2, sum)
-sort(sum.of.columns, decreasing = TRUE)[1:8] #top 8 columns (species)</pre>
+<pre class = 'prettyprint lang-r'>sum.of.columns &lt;- apply(BCI, 2, sum)
+sort(sum.of.columns, decreasing = TRUE)[1:3] #top 3 columns (species)</pre>
 
-<pre >Cla.ste Cla.ran Ple.sch Vac.vit Cla.arb Emp.nig Dic.fus Cla.unc 
- 486.71  388.71  377.97  275.03  255.05  151.99  113.52   56.28 </pre>
+<pre > Faramea.occidentalis Trichilia.tuberculata      Alseis.blackiana 
+                 1717                  1681                   983 </pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -305,13 +317,21 @@ sort(sum.of.columns, decreasing = TRUE)[1:8] #top 8 columns (species)</pre>
 
 <p><strong>Number of plots in which each spp. occurs</strong></p>
 
-<pre class = 'prettyprint lang-r'>spec.pres &lt;- apply(varespec &gt; 0, 2, sum) 
+<pre class = 'prettyprint lang-r'>spec.pres &lt;- apply(BCI &gt; 0, 2, sum) 
 sort(spec.pres, decreasing = TRUE)[1:18]</pre>
 
-<pre >Emp.nig Vac.vit Ple.sch Cla.arb Cla.ran Cla.unc Cla.cor Cla.cri Dic.fus 
-     24      24      24      24      24      24      24      24      23 
-Cla.gra Cla.def Cla.ste Cla.fim Pin.syl Pol.jun Poh.nut Cla.coc Pti.cil 
-     23      23      22      22      21      20      20      19      17 </pre>
+<pre >       Alseis.blackiana    Faramea.occidentalis       Hirtella.triandra 
+                     50                      50                      50 
+      Oenocarpus.mapora     Protium.tenuifolium Tetragastris.panamensis 
+                     50                      50                      50 
+  Trichilia.tuberculata           Apeiba.aspera        Gustavia.superba 
+                     50                      49                      49 
+    Pouteria.reticulata  Quararibea.asterolepis           Randia.armata 
+                     49                      49                      49 
+    Brosimum.alicastrum       Cordia.lasiocalyx     Eugenia.oerstedeana 
+                     48                      48                      48 
+        Guarea.guidonia    Hasseltia.floribunda      Heisteria.concinna 
+                     48                      48                      48 </pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -325,12 +345,12 @@ Cla.gra Cla.def Cla.ste Cla.fim Pin.syl Pol.jun Poh.nut Cla.coc Pti.cil
 
 <p><strong>Square root transformation</strong></p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -339,20 +359,20 @@ Cla.gra Cla.def Cla.ste Cla.fim Pin.syl Pol.jun Poh.nut Cla.coc Pti.cil
 
 <p><strong>Square root transformation</strong></p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
-<pre class = 'prettyprint lang-r'>spec.sqrt &lt;- sqrt(varespec)
-head(spec.sqrt[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>spec.sqrt &lt;- sqrt(BCI)
+head(spec.sqrt[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18  0.7416  3.3362       0  0.0000   4.219  0.2646       0       0
-15  0.8185  0.4123       0  0.5916   3.483  0.3464       0       0
-24  0.3162  1.2450       0  0.0000   3.670  0.5000       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1             3.606                2.236             1.414
+2             3.464                2.000             0.000
+3             3.464                1.000             1.414</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -361,12 +381,12 @@ head(spec.sqrt[,1:8], n = 3)</pre>
 
 <p><strong>Total</strong></p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -375,20 +395,20 @@ head(spec.sqrt[,1:8], n = 3)</pre>
 
 <p><strong>Total</strong></p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
-<pre class = 'prettyprint lang-r'>spec.total &lt;- decostand(varespec, method = &quot;total&quot;, MARGIN = 1) # by rows (sites)
-head(spec.total[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>spec.total &lt;- decostand(BCI, method = &quot;total&quot;, MARGIN = 1) # by rows (sites)
+head(spec.total[,162:164], n = 3)</pre>
 
-<pre >    Cal.vul  Emp.nig Led.pal  Vac.myr Vac.vit   Pin.syl Des.fle Bet.pub
-18 0.006166 0.124776       0 0.000000  0.1996 0.0007848       0       0
-15 0.007459 0.001893       0 0.003897  0.1350 0.0013360       0       0
-24 0.001061 0.016453       0 0.000000  0.1430 0.0026536       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1           0.02902             0.011161          0.004464
+2           0.02759             0.009195          0.000000
+3           0.02592             0.002160          0.004320</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -397,12 +417,12 @@ head(spec.total[,1:8], n = 3)</pre>
 
 <p><strong>Maximum</strong></p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -411,20 +431,20 @@ head(spec.total[,1:8], n = 3)</pre>
 
 <p><strong>Maximum</strong></p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
-<pre class = 'prettyprint lang-r'>spec.max &lt;- decostand(varespec, method = &quot;max&quot;, MARGIN = 2) # by columns (species)
-head(spec.max[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>spec.max &lt;- decostand(BCI, method = &quot;max&quot;, MARGIN = 2) # by columns (species)
+head(spec.max[,162:164], n = 3)</pre>
 
-<pre >    Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18 0.022793 0.69563       0 0.00000  0.7120 0.05833       0       0
-15 0.027766 0.01063       0 0.01916  0.4852 0.10000       0       0
-24 0.004144 0.09688       0 0.00000  0.5388 0.20833       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1            0.5000               0.7143               0.5
+2            0.4615               0.5714               0.0
+3            0.4615               0.1429               0.5</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -433,12 +453,12 @@ head(spec.max[,1:8], n = 3)</pre>
 
 <p><strong>Presence-Absence</strong></p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -447,20 +467,20 @@ head(spec.max[,1:8], n = 3)</pre>
 
 <p><strong>Presence-Absence</strong></p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
-<pre class = 'prettyprint lang-r'>spec.pa &lt;- decostand(varespec, method = &quot;pa&quot;)
-head(spec.pa[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>spec.pa &lt;- decostand(BCI, method = &quot;pa&quot;)
+head(spec.pa[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18       1       1       0       0       1       1       0       0
-15       1       1       0       1       1       1       0       0
-24       1       1       0       0       1       1       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                 1                    1                 1
+2                 1                    1                 0
+3                 1                    1                 1</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -469,12 +489,12 @@ head(spec.pa[,1:8], n = 3)</pre>
 
 <p><strong>Hellinger (Legendre &amp; Gallagher 2001)</strong> Square root of method &quot;total&quot;</p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -483,20 +503,20 @@ head(spec.pa[,1:8], n = 3)</pre>
 
 <p><strong>Hellinger (Legendre &amp; Gallagher 2001)</strong> Square root of method &quot;total&quot;</p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
-<pre class = 'prettyprint lang-r'>spec.hellinger &lt;- decostand(varespec, method = &quot;hellinger&quot;, MARGIN = 1) # on rows (sites)
-head(spec.hellinger[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>spec.hellinger &lt;- decostand(BCI, method = &quot;hellinger&quot;, MARGIN = 1) # on rows (sites)
+head(spec.hellinger[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18 0.07852  0.3532       0 0.00000  0.4467 0.02801       0       0
-15 0.08637  0.0435       0 0.06242  0.3675 0.03655       0       0
-24 0.03258  0.1283       0 0.00000  0.3781 0.05151       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1            0.1703              0.10564           0.06682
+2            0.1661              0.09589           0.00000
+3            0.1610              0.04647           0.06572</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -505,12 +525,12 @@ head(spec.hellinger[,1:8], n = 3)</pre>
 
 <p><strong>Wisconsin double standardization</strong><br/>Shortcut function for standardizing species to maximum, then sites by totals.</p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -519,20 +539,20 @@ head(spec.hellinger[,1:8], n = 3)</pre>
 
 <p><strong>Wisconsin double standardization</strong><br/>Shortcut function for standardizing species to maximum, then sites by totals.</p>
 
-<pre class = 'prettyprint lang-r'>head(varespec[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>head(BCI[,162:164], n = 3)</pre>
 
-<pre >   Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18    0.55   11.13       0    0.00   17.80    0.07       0       0
-15    0.67    0.17       0    0.35   12.13    0.12       0       0
-24    0.10    1.55       0    0.00   13.47    0.25       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1                13                    5                 2
+2                12                    4                 0
+3                12                    1                 2</pre>
 
-<pre class = 'prettyprint lang-r'>spec.wisc &lt;- wisconsin(varespec)
-head(spec.wisc[,1:8], n = 3)</pre>
+<pre class = 'prettyprint lang-r'>spec.wisc &lt;- wisconsin(BCI)
+head(spec.wisc[,162:164], n = 3)</pre>
 
-<pre >     Cal.vul  Emp.nig Led.pal  Vac.myr Vac.vit Pin.syl Des.fle Bet.pub
-18 0.0027900 0.085149       0 0.000000 0.08715 0.00714       0       0
-15 0.0047127 0.001803       0 0.003251 0.08235 0.01697       0       0
-24 0.0005565 0.013008       0 0.000000 0.07235 0.02797       0       0</pre>
+<pre >  Prioria.copaifera Protium.costaricense Protium.panamense
+1           0.01316             0.018798           0.01316
+2           0.01532             0.018973           0.00000
+3           0.01411             0.004367           0.01528</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -557,17 +577,17 @@ head(spec.wisc[,1:8], n = 3)</pre>
 
 <p><em>manhattan, euclidean, canberra, bray, kulczynski, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao, or cao</em></p>
 
-<pre class = 'prettyprint lang-r'>spec.jaccpa &lt;- vegdist(varespec, method = &quot;jaccard&quot;, binary = TRUE)
+<pre class = 'prettyprint lang-r'>spec.jaccpa &lt;- vegdist(BCI, method = &quot;jaccard&quot;, binary = TRUE)
 # returns an object of class &#39;dist&#39;
 str(spec.jaccpa) </pre>
 
-<pre >Class &#39;dist&#39;  atomic [1:276] 0.333 0.471 0.5 0.333 0.417 ...
-  ..- attr(*, &quot;Size&quot;)= int 24
-  ..- attr(*, &quot;Labels&quot;)= chr [1:24] &quot;18&quot; &quot;15&quot; &quot;24&quot; &quot;27&quot; ...
+<pre >Class &#39;dist&#39;  atomic [1:1225] 0.434 0.462 0.442 0.46 0.425 ...
+  ..- attr(*, &quot;Size&quot;)= int 50
+  ..- attr(*, &quot;Labels&quot;)= chr [1:50] &quot;1&quot; &quot;2&quot; &quot;3&quot; &quot;4&quot; ...
   ..- attr(*, &quot;Diag&quot;)= logi FALSE
   ..- attr(*, &quot;Upper&quot;)= logi FALSE
   ..- attr(*, &quot;method&quot;)= chr &quot;binary jaccard&quot;
-  ..- attr(*, &quot;call&quot;)= language vegdist(x = varespec, method = &quot;jaccard&quot;, binary = TRUE)</pre>
+  ..- attr(*, &quot;call&quot;)= language vegdist(x = BCI, method = &quot;jaccard&quot;, binary = TRUE)</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -576,11 +596,11 @@ str(spec.jaccpa) </pre>
 
 <pre class = 'prettyprint lang-r'>as.matrix(spec.jaccpa)[1:4,1:4]</pre>
 
-<pre >       18     15     24     27
-18 0.0000 0.3333 0.4706 0.5000
-15 0.3333 0.0000 0.2500 0.5429
-24 0.4706 0.2500 0.0000 0.5882
-27 0.5000 0.5429 0.5882 0.0000</pre>
+<pre >       1      2      3      4
+1 0.0000 0.4336 0.4622 0.4417
+2 0.4336 0.0000 0.4464 0.4386
+3 0.4622 0.4464 0.0000 0.4274
+4 0.4417 0.4386 0.4274 0.0000</pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -602,12 +622,12 @@ str(spec.jaccpa) </pre>
 
 <p>Higher rank correlations indicate better separation along gradients</p>
 
-<pre class = 'prettyprint lang-r'>rank.all &lt;- rankindex(varechem, varespec, indices = 
+<pre class = 'prettyprint lang-r'>rank.UTM.NS &lt;- rankindex(BCI.env$UTM.NS, BCI, indices = 
               c(&quot;bray&quot;, &quot;euclid&quot;, &quot;manhattan&quot;, &quot;horn&quot;), method = &quot;spearman&quot;)
-rank.all</pre>
+rank.UTM.NS</pre>
 
 <pre >     bray    euclid manhattan      horn 
-   0.2241    0.1469    0.2262    0.1785 </pre>
+   0.1344    0.1521    0.1727    0.1687 </pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -616,50 +636,29 @@ rank.all</pre>
 
 <h3>Second, try <code>rankindex()</code></h3>
 
-<p>Or across a single, selected gradient</p>
-
-<pre class = 'prettyprint lang-r'>rank.Ca &lt;- rankindex(varechem$Ca, varespec, indices = 
-              c(&quot;bray&quot;, &quot;euclid&quot;, &quot;manhattan&quot;, &quot;horn&quot;), method = &quot;spearman&quot;)
-rank.Ca</pre>
-
-<pre >     bray    euclid manhattan      horn 
-  0.12707   0.08922   0.14425   0.10210 </pre>
-
-<!----------------------------slide boundary--------------------------------->
-
-
-</article></slide><slide class=''><hgroup><h2>Calculating distances with <code>vegdist()</code> </h2><h3> so many distance metrics, so little time!</h3></hgroup><article  id="calculating-distances-with-vegdist-so-many-distance-metrics-so-little-time-6">
-
-<h3>Second, try <code>rankindex()</code></h3>
-
 <p>Can also use on standardized data</p>
 
-<pre class = 'prettyprint lang-r'>rank.Ca.wisc &lt;- rankindex(varechem$Ca, wisconsin(varespec), indices = 
+<pre class = 'prettyprint lang-r'>rank.UTM.NS.wisc &lt;- rankindex(BCI.env$UTM.NS, wisconsin(BCI), indices = 
               c(&quot;bray&quot;, &quot;euclid&quot;, &quot;manhattan&quot;, &quot;horn&quot;), method = &quot;spearman&quot;)
-rank.Ca.wisc</pre>
+rank.UTM.NS.wisc</pre>
 
 <pre >     bray    euclid manhattan      horn 
-   0.2228    0.1745    0.2228    0.2058 </pre>
+  0.12053   0.07631   0.12053   0.12799 </pre>
 
 <!----------------------------slide boundary--------------------------------->
 
 
 </article></slide><slide class=''><hgroup><h2>Calculating distances with <code>vegdist()</code> </h2><h3> comparison</h3></hgroup><article  id="calculating-distances-with-vegdist-comparison">
 
-<pre class = 'prettyprint lang-r'>sort(rank.all, decreasing = TRUE)</pre>
+<pre class = 'prettyprint lang-r'>sort(rank.UTM.NS, decreasing = TRUE)</pre>
 
-<pre >manhattan      bray      horn    euclid 
-   0.2262    0.2241    0.1785    0.1469 </pre>
+<pre >manhattan      horn    euclid      bray 
+   0.1727    0.1687    0.1521    0.1344 </pre>
 
-<pre class = 'prettyprint lang-r'>sort(rank.Ca, decreasing = TRUE)</pre>
+<pre class = 'prettyprint lang-r'>sort(rank.UTM.NS.wisc, decreasing = TRUE)</pre>
 
-<pre >manhattan      bray      horn    euclid 
-  0.14425   0.12707   0.10210   0.08922 </pre>
-
-<pre class = 'prettyprint lang-r'>sort(rank.Ca.wisc, decreasing = TRUE)</pre>
-
-<pre >     bray manhattan      horn    euclid 
-   0.2228    0.2228    0.2058    0.1745 </pre>
+<pre >     horn      bray manhattan    euclid 
+  0.12799   0.12053   0.12053   0.07631 </pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -673,11 +672,11 @@ rank.Ca.wisc</pre>
 
 <p>Basic counts of richness for each plot or site</p>
 
-<pre class = 'prettyprint lang-r'>site.richness &lt;- apply(varespec &gt; 0, 1, sum)
-site.richness</pre>
+<pre class = 'prettyprint lang-r'>site.richness &lt;- apply(BCI &gt; 0, 1, sum)
+site.richness[1:18]</pre>
 
-<pre >18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
-29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 </pre>
+<pre >  1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18 
+ 93  84  90  94 101  85  82  88  90  94  87  84  93  98  93  93  93  89 </pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -686,11 +685,11 @@ site.richness</pre>
 
 <p>Fisher&#39;s alpha</p>
 
-<pre class = 'prettyprint lang-r'># site.richness &lt;- fisher.alpha(varespec)
-site.richness</pre>
+<pre class = 'prettyprint lang-r'>site.fisher &lt;- fisher.alpha(BCI)
+site.fisher[1:12]</pre>
 
-<pre >18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
-29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 </pre>
+<pre >    1     2     3     4     5     6     7     8     9    10    11    12 
+35.67 30.99 33.32 33.92 37.96 32.49 30.58 33.45 35.67 34.82 34.21 34.12 </pre>
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -699,11 +698,11 @@ site.richness</pre>
 
 <p>Shannon diversity</p>
 
-<pre class = 'prettyprint lang-r'>site.richness &lt;- apply(varespec &gt; 0, 1, sum)
-site.richness</pre>
+<pre class = 'prettyprint lang-r'>site.shannon &lt;- diversity(BCI, index = &quot;shannon&quot;, MARGIN = 1)
+site.shannon[1:12]</pre>
 
-<pre >18 15 24 27 23 19 22 16 28 13 14 20 25  7  5  6  3  4  2  9 12 10 11 21 
-29 26 23 25 26 28 27 27 27 31 25 27 30 26 23 24 25 26 19 27 18 24 23 28 </pre>
+<pre >    1     2     3     4     5     6     7     8     9    10    11    12 
+4.018 3.848 3.814 3.977 3.970 3.777 3.837 3.908 3.761 3.890 3.860 3.698 </pre>
 
 <!----------------------------slide boundary--------------------------------->
 
