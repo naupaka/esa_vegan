@@ -151,6 +151,15 @@ We will now switch to using one of vegan's built-in datasets for species (`BCI`)
 
 ```r
 library("vegan")
+```
+
+```
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.0-10
+```
+
+```r
 data(BCI)
 BCI.env <- read.csv("data/BCI.env.csv", header = TRUE, row.names = 1)
 ```
@@ -818,7 +827,7 @@ Permutation details:
   Evaluate all permutations?: No.  Activation limit: 99
 Response: Distances
           Df Sum Sq Mean Sq   F N.Perm Pr(>F)
-Groups     4 0.0283 0.00708 1.8    999   0.15
+Groups     4 0.0283 0.00708 1.8    999   0.14
 Residuals 45 0.1766 0.00392                  
 ```
 

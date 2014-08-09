@@ -69,26 +69,27 @@ Housekeeping
 setwd("your/working/dir")
 ```
 
-```{r, results='hide'}
+```{r loading 1, results='hide'}
 library("vegan")
 data(dune)
 data(dune.env)
 ```
-Data from : Jongman, R.H.G, ter Braak, C.J.F & van Tongeren, O.F.R. (1987). Data Analysis in Community and Landscape Ecology. Pudoc, Wageningen.
+Data from: Jongman, R.H.G, ter Braak, C.J.F & van Tongeren, O.F.R. (1987). Data Analysis in Community and Landscape Ecology. Pudoc, Wageningen.
 
 <!----------------------------slide boundary--------------------------------->
 
-## Before we get started
+## Before we get started | species
 
-```{r}
+```{r loading 2}
+dim(dune)
 head(dune[,1:10], n=3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
 
-## Before we get started
+## Before we get started | environment
 
-```{r}
+```{r loading 3}
 head(dune.env, n=3)
 summary(dune.env)
 ```
@@ -112,7 +113,7 @@ This will do handy things like try to standardize your data if necessary and per
 
 ## Basic ordination and plotting
 
-```{r, results='hide'}
+```{r NMDS 1, results='hide'}
 dune.bray.ord <- metaMDS(dune, distance = "bray", k = 2, trymax = 50)
 ```
 
@@ -122,7 +123,7 @@ dune.bray.ord <- metaMDS(dune, distance = "bray", k = 2, trymax = 50)
 
 ## Basic ordination and plotting (using all defaults)
 
-```{r, fig.height=5}
+```{r NMDS 2, fig.height=5}
 plot(dune.bray.ord)
 ```
 
@@ -131,7 +132,7 @@ plot(dune.bray.ord)
 
 ## Basic ordination and plotting (just plots)
 
-```{r, fig.height=5}
+```{r NMDS 3, fig.height=5}
 plot(dune.bray.ord, display = "sites")
 ```
 
@@ -139,7 +140,7 @@ plot(dune.bray.ord, display = "sites")
 
 ## Basic ordination and plotting (just species)
 
-```{r, fig.height=5}
+```{r NMDS 4, fig.height=5}
 plot(dune.bray.ord, display = "species")
 ```
 
@@ -147,15 +148,46 @@ plot(dune.bray.ord, display = "species")
 
 ## Site names instead of points
 
-```{r, fig.height=5}
+```{r NMDS 5, fig.height=5}
 plot(dune.bray.ord, display = "sites", type = "t")
 ```
 
 <!----------------------------slide boundary--------------------------------->
 
+## Site names instead of points
+
+```{r NMDS 5.2, fig.height=5}
+plot(dune.bray.ord, display = "sites")
+set.seed(314) ## make reproducible
+ordipointlabel(dune.bray.ord, display = "sites", scaling = 3, add = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Site names instead of points
+
+```{r NMDS 5.5, fig.height=5}
+plot(dune.bray.ord, display = "species")
+set.seed(314) ## make reproducible
+ordipointlabel(dune.bray.ord, display = "species", scaling = 3, add = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Site names instead of points
+
+```{r NMDS 5.6, fig.height=5}
+plot(dune.bray.ord)
+set.seed(314) ## make reproducible
+ordipointlabel(dune.bray.ord, scaling = 3, add = TRUE)
+```
+
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Larger points
 
-```{r, fig.height=5}
+```{r NMDS 6, fig.height=5}
 plot(dune.bray.ord, display = "sites", cex=2)
 ```
 
@@ -170,7 +202,7 @@ plot(dune.bray.ord, display = "sites", cex=2)
 <!----------------------------slide boundary--------------------------------->
 
 ## Modifying the color of points {.smaller}
-```{r, fig.height=4.5, crop = TRUE}
+```{r NMDS 7, fig.height=4.5, crop = TRUE}
 colors.vec <- c("red", "blue", "orange", "grey")
 plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord, display = "sites", cex=2, pch = 21, 
@@ -183,7 +215,7 @@ legend("topright", legend = levels(dune.env$Management), bty = "n",
 <!----------------------------slide boundary--------------------------------->
 
 ## Modifying the shape of points | pch()
-```{r, fig.width=11, echo=FALSE}
+```{r NMDS 8, fig.width=11, echo=FALSE}
 par(mar = rep(0,4))
 plot(c(-1, 26), 0:1, type = "n", axes = FALSE)
 text(0:25, 0.4, 0:25, cex = 1.5)
@@ -193,7 +225,7 @@ points(0:25, rep(0.3, 26), pch = 0:25, bg = "grey", cex = 2)
 <!----------------------------slide boundary--------------------------------->
 
 ## Modifying the shape of points {.smaller}
-```{r, fig.height=4.5}
+```{r NMDS 9, fig.height=4.5}
 shapes.vec <- c(21, 22, 24)
 plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord, display = "sites", cex=2, bg = "black", 
@@ -205,7 +237,7 @@ legend("topright", legend = levels(dune.env$Use), bty = "n",
 <!----------------------------slide boundary--------------------------------->
 
 ## Modifying the shape and color of points {.smaller}
-```{r, fig.height=4}
+```{r NMDS 10, fig.height=4}
 colors.vec <- c("red", "blue", "orange", "grey")
 shapes.vec <- c(21, 22, 24)
 plot(dune.bray.ord, display = "sites", type = "n")
@@ -223,7 +255,7 @@ legend(1.4,1.05, legend = levels(dune.env$Use), bty = "n",
 
 ## Adding other layers
 
-```{r, fig.height=5}
+```{r NMDS 11, fig.height=5}
 # Just points
 plot(dune.bray.ord, display = "sites", cex=2)
 ```
@@ -232,7 +264,7 @@ plot(dune.bray.ord, display = "sites", cex=2)
 
 ## Adding other layers
 
-```{r, fig.height=5}
+```{r NMDS 12, fig.height=5}
 plot(dune.bray.ord, display = "sites", cex=2)
 ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 ```
@@ -241,7 +273,7 @@ ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 
 ## Adding other layers
 
-```{r, fig.height=5}
+```{r NMDS 13, fig.height=5}
 plot(dune.bray.ord, display = "sites", cex=2)
 ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
 ```
@@ -250,7 +282,7 @@ ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
 
 ## Adding other layers
 
-```{r, fig.height=5}
+```{r NMDS 14, fig.height=5}
 plot(dune.bray.ord, display = "sites", cex=2)
 ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = "blue")
 ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
@@ -260,7 +292,7 @@ ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 
 ## Adding other layers
 
-```{r, fig.height=5}
+```{r NMDS 15, fig.height=5}
 # Plot first, then add layers
 plot(dune.bray.ord, display = "sites", cex=2)
 ```
@@ -269,7 +301,7 @@ plot(dune.bray.ord, display = "sites", cex=2)
 
 ## Adding other layers
 
-```{r, fig.height=5}
+```{r NMDS 16, fig.height=5}
 plot(dune.bray.ord, display = "sites", cex=2)
 ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 ```
@@ -278,7 +310,7 @@ ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 
 ## Adding other layers - axes scaling
 
-```{r, fig.height=5}
+```{r NMDS 17, fig.height=5}
 plot(dune.bray.ord, type = "n")
 ```
 
@@ -286,7 +318,7 @@ plot(dune.bray.ord, type = "n")
 
 ## Adding other layers - axes scaling
 
-```{r, fig.height=5}
+```{r NMDS 18, fig.height=5}
 plot(dune.bray.ord, type = "n")
 points(dune.bray.ord,display = "sites", cex = 2)
 ```
@@ -295,7 +327,7 @@ points(dune.bray.ord,display = "sites", cex = 2)
 
 ## Adding other layers - axes scaling
 
-```{r, fig.height=5}
+```{r NMDS 19, fig.height=5}
 plot(dune.bray.ord, display = "sites", type = "n")
 ```
 
@@ -303,7 +335,7 @@ plot(dune.bray.ord, display = "sites", type = "n")
 
 ## Adding other layers - axes scaling
 
-```{r, fig.height=5}
+```{r NMDS 20, fig.height=5}
 plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord, display = "sites", cex = 2)
 ```
@@ -312,7 +344,7 @@ points(dune.bray.ord, display = "sites", cex = 2)
 
 ## Adding other layers
 
-```{r, fig.height=5}
+```{r NMDS 21, fig.height=5}
 plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord,display = "sites", cex = 2)
 ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
@@ -322,7 +354,7 @@ ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 
 ## Adding other layers
 
-```{r, fig.height=5}
+```{r NMDS 22, fig.height=5}
 plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord, display = "sites", cex = 2)
 ordiellipse(dune.bray.ord,groups = dune.env$Management, label = TRUE)
@@ -331,7 +363,7 @@ ordiellipse(dune.bray.ord,groups = dune.env$Management, label = TRUE)
 <!----------------------------slide boundary--------------------------------->
 
 ## Adding other layers
-```{r, fig.height=5, message=FALSE}
+```{r NMDS 23, fig.height=5, message=FALSE, results='hide'}
 plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord,display = "sites", cex = 2)
 ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
@@ -341,7 +373,7 @@ ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
 
 ## Vectors in ordination space
 
-```{r}
+```{r NMDS 24}
 dune.bray.ord.A1.fit <- envfit(dune.bray.ord,dune.env$A1, permutations = 1000)
 dune.bray.ord.A1.fit
 ```
@@ -350,7 +382,7 @@ dune.bray.ord.A1.fit
 
 ## Vectors in ordination space
 
-```{r}
+```{r NMDS 25,fig.height=5, results='hide'}
 plot(dune.bray.ord, display = "sites", type = "n")
 points(dune.bray.ord,display = "sites", cex = 2)
 plot(dune.bray.ord.A1.fit, add = TRUE)
@@ -360,3 +392,15 @@ ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)
 
 <!----------------------------slide boundary--------------------------------->
 
+## Activity
+
+Using the cleaned `varespec` data from the last exercise, and based on your finding of an appropriate distance metric:
+
+1. Load the data
+2. Create an NMDS plot using `metaMDS()`
+    * use the distance metric you chose earlier
+        * if this doesn't work, `bray` is a decent fallback
+    * Plot only the sites (not the species)
+    * Make the points blue squares, size (cex = 2)
+    * Add an `ordispider`
+    * add a title with `main = "title"`
