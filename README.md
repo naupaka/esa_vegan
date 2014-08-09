@@ -25,6 +25,7 @@ If you don't already have R set up with a suitable code editor, we recommend dow
 
 ```r
 install.packages("vegan", dependencies = TRUE)
+install.packages("BiodiversityR", dependencies = TRUE)
 install.packages("plyr")
 install.packages("reshape2")
 ```
