@@ -80,6 +80,7 @@ We've all heard data horror stories
 setwd("your/working/directory/")
 BCI.small.csv.in <- read.csv("data/BCI_small.csv", header = TRUE, row.names = 1)
 ```
+RStudio example
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -743,7 +744,7 @@ plot(BCI.S, BCI.Srare, xlab = "Observed No. of Species", ylab = "Rarefied No. of
 abline(0, 1)
 ```
 
-![plot of chunk unnamed-chunk-36](./intro-basics_files/figure-html/unnamed-chunk-36.png) 
+![plot of chunk rarefac 3](./intro-basics_files/figure-html/rarefac 3.png) 
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -755,7 +756,7 @@ Put it all together
 rarecurve(BCI, step = 20, sample = BCI.raremax, col = "blue", cex = 0.6)
 ```
 
-![plot of chunk unnamed-chunk-37](./intro-basics_files/figure-html/unnamed-chunk-37.png) 
+![plot of chunk rarefac 4](./intro-basics_files/figure-html/rarefac 4.png) 
 
 <!----------------------------slide boundary--------------------------------->
 
@@ -765,7 +766,7 @@ Multivariate homogeneity of groups dispersions
 
 ```r
 BCI.bray <- vegdist(BCI, method = "bray")
-betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS))
+(BCI.bray.bdisp <- betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS)))
 ```
 
 ```
@@ -788,19 +789,98 @@ PCoA1 PCoA2 PCoA3 PCoA4 PCoA5 PCoA6 PCoA7 PCoA8
 
 <!----------------------------slide boundary--------------------------------->
 
+## Beta diversity {.smaller}
+
+Multivariate homogeneity of groups dispersions
+
+```r
+permutest(BCI.bray.bdisp)
+```
+
+```
+
+Permutation test for homogeneity of multivariate dispersions
+
+Permutation Design:
+
+Blocks:
+  Defined by: none
+
+Plots:
+  Defined by: none
+
+Within Plots:
+  Permutation type: free
+
+Permutation details:
+  Number of permutations requested: 999
+  Max. number of permutations allowed: 9999
+  Evaluate all permutations?: No.  Activation limit: 99
+Response: Distances
+          Df Sum Sq Mean Sq   F N.Perm Pr(>F)
+Groups     4 0.0283 0.00708 1.8    999   0.15
+Residuals 45 0.1766 0.00392                  
+```
+
+
+<!----------------------------slide boundary--------------------------------->
+
+## Beta diversity
+
+Plot of within-group multivariate dispersion
+
+```r
+plot(BCI.bray.bdisp)
+```
+
+![plot of chunk beta 3](./intro-basics_files/figure-html/beta 3.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Beta diversity
 
 Boxplot of within-group multivariate dispersion
 
 ```r
-boxplot(betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS)))
+boxplot(BCI.bray.bdisp)
 ```
 
-![plot of chunk unnamed-chunk-39](./intro-basics_files/figure-html/unnamed-chunk-39.png) 
+![plot of chunk beta 4](./intro-basics_files/figure-html/beta 4.png) 
 
+<!----------------------------slide boundary--------------------------------->
+
+## Beta diversity | ANOSIM
+
+Analysis of similarities 
+
+```r
+(BCI.bray.anosim <- anosim(BCI.bray, as.factor(BCI.env$UTM.NS)))
+```
+
+```
+
+Call:
+anosim(dat = BCI.bray, grouping = as.factor(BCI.env$UTM.NS)) 
+Dissimilarity: bray 
+
+ANOSIM statistic R: 0.102 
+      Significance: 0.003 
+
+Based on  999  permutations
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Beta diversity | ANOSIM
+
+Analysis of similarities 
+
+```r
+plot(BCI.bray.anosim)
+```
+
+![plot of chunk beta 6](./intro-basics_files/figure-html/beta 6.png) 
 
 
 <!----------------------------slide boundary--------------------------------->
 
-
-## References

@@ -217,7 +217,7 @@ legend("topright", legend = levels(dune.env$Management), bty = "n",
 
 <!----------------------------slide boundary--------------------------------->
 
-## Modifying the shape of points
+## Modifying the shape of points | pch()
 ![plot of chunk unnamed-chunk-12](./ordination_files/figure-html/unnamed-chunk-12.png) 
 
 <!----------------------------slide boundary--------------------------------->
@@ -249,7 +249,7 @@ points(dune.bray.ord, display = "sites", cex=2,
        bg = colors.vec[dune.env$Management])
 legend("topright", legend = levels(dune.env$Management), bty = "n",
                       col = colors.vec, pch = 21, pt.bg = colors.vec)
-legend(1.5,1.05, legend = levels(dune.env$Use), bty = "n",
+legend(1.4,1.05, legend = levels(dune.env$Use), bty = "n",
                       col = "black", pch = shapes.vec, pt.bg = "black")
 ```
 
@@ -419,12 +419,12 @@ Link function: identity
 
 Formula:
 y ~ s(x1, x2, k = 10, bs = "tp", fx = FALSE)
-<environment: 0x7fb629a14268>
+<environment: 0x7fb78a672ed8>
 
 Estimated degrees of freedom:
-1.62  total = 2.62 
+1.59  total = 2.59 
 
-REML score: 41.43     
+REML score: 41.59     
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -442,7 +442,7 @@ dune.bray.ord.A1.fit
 ***VECTORS
 
      NMDS1 NMDS2   r2 Pr(>r)  
-[1,]  0.99  0.14 0.38   0.02 *
+[1,] 0.965 0.263 0.36  0.024 *
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 P values based on 1000 permutations.
@@ -469,12 +469,12 @@ Link function: identity
 
 Formula:
 y ~ s(x1, x2, k = 10, bs = "tp", fx = FALSE)
-<environment: 0x7fb629c34e78>
+<environment: 0x7fb7832f4f50>
 
 Estimated degrees of freedom:
-1.62  total = 2.62 
+1.59  total = 2.59 
 
-REML score: 41.43     
+REML score: 41.59     
 ```
 
 

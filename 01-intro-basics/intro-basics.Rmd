@@ -9,11 +9,12 @@ output:
     highlight: tango
     keep_md: yes
     widescreen: yes
-bibliography: intro-basics.bib
+    self_contained: false
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(comment = "", cache = TRUE)
+knitr::opts_chunk$set(comment = "", cache = TRUE, crop = TRUE)
+knitr::knit_hooks$set(crop = knitr::hook_pdfcrop)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -37,7 +38,7 @@ knitr::opts_chunk$set(comment = "", cache = TRUE)
 
 ## Packages installed?
 
-```{r, eval=FALSE}
+```{r load libraries, eval=FALSE}
 install.packages("vegan", dependencies = TRUE)
 install.packages("plyr")
 install.packages("reshape2")
@@ -86,17 +87,18 @@ We've all heard data horror stories
 ## Cleaning your data for R and vegan
 
 ### Loading dirty data and then cleaning
-```{r, eval=FALSE}
+```{r dirty data 1, eval=FALSE}
 setwd("your/working/directory/")
 BCI.small.csv.in <- read.csv("data/BCI_small.csv", header = TRUE, row.names = 1)
 ```
+RStudio example
 
 <!----------------------------slide boundary--------------------------------->
 
 ## Cleaning your data for R and vegan
 
 ### Loading dirty data and then cleaning
-```{r, eval=TRUE}
+```{r dirty data 2, eval=TRUE}
 BCI.small.csv.in <- read.csv("data/BCI_small_fixed.csv", header = TRUE, row.names = 1)
 ```
 
@@ -105,7 +107,7 @@ BCI.small.csv.in <- read.csv("data/BCI_small_fixed.csv", header = TRUE, row.name
 ## Cleaning your data for R and vegan
 
 Then...  
-```{r}
+```{r dirty data 3}
 head(BCI.small.csv.in, n=3)
 ```
 
@@ -114,7 +116,7 @@ head(BCI.small.csv.in, n=3)
 ## Cleaning your data for R and vegan
 
 Then...  
-```{r}
+```{r dirty data 4}
 summary(BCI.small.csv.in)
 ```
 
@@ -126,7 +128,7 @@ We will now switch to using one of vegan's built-in datasets for species (`BCI`)
     
 * from Condit et al. 2002 *Science*
 
-```{r, results='hide'}
+```{r loading BCI, results='hide'}
 library("vegan")
 data(BCI)
 BCI.env <- read.csv("data/BCI.env.csv", header = TRUE, row.names = 1)
@@ -140,13 +142,13 @@ We will now switch to using one of vegan's built-in datasets for species (`BCI`)
     
 * from Condit et al. 2002 *Science*
 
-```{r, results='hide'}
+```{r loading BCI 2, results='hide'}
 library("vegan")
 data(BCI)
 BCI.env <- read.csv("data/BCI.env.csv", header = TRUE, row.names = 1)
 ```
 
-```{r}
+```{r head BCI}
 head(BCI[,1:3], n = 3)
 ```
 
@@ -159,7 +161,7 @@ head(BCI[,1:3], n = 3)
 ## Summarizing data with `apply()` | sums and sorting
 
 **Sum of rows**
-```{r}
+```{r BCI apply 1}
 sum.of.rows <- apply(BCI, 1, sum)
 sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (plots) 
 ```
@@ -169,12 +171,12 @@ sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (plots)
 ## Summarizing data with `apply()` | sums and sorting
 
 **Sum of rows**
-```{r}
+```{r BCI apply 2}
 sum.of.rows <- apply(BCI, 1, sum)
 sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (plots) 
 ```
 **Sum of columns**
-```{r}
+```{r BCI apply 3}
 sum.of.columns <- apply(BCI, 2, sum)
 sort(sum.of.columns, decreasing = TRUE)[1:3] #top 3 columns (species)
 ```
@@ -184,7 +186,7 @@ sort(sum.of.columns, decreasing = TRUE)[1:3] #top 3 columns (species)
 ## Summarizing data with `apply()` | sums and sorting
 
 **Number of plots in which each spp. occurs**
-```{r}
+```{r BCI apply 4}
 spec.pres <- apply(BCI > 0, 2, sum) 
 sort(spec.pres, decreasing = TRUE)[1:18]
 ```
@@ -198,7 +200,7 @@ sort(spec.pres, decreasing = TRUE)[1:18]
 ## Basic data transformation
 
 **Square root transformation**
-```{r}
+```{r BCI sqrt}
 head(BCI[,162:164], n = 3)
 ```
 
@@ -207,7 +209,7 @@ head(BCI[,162:164], n = 3)
 ## Basic data transformation
 
 **Square root transformation**
-```{r}
+```{r BCI sqrt 2}
 head(BCI[,162:164], n = 3)
 spec.sqrt <- sqrt(BCI)
 head(spec.sqrt[,162:164], n = 3)
@@ -218,7 +220,7 @@ head(spec.sqrt[,162:164], n = 3)
 ## Data transformation in vegan with `decostand()`
 
 **Total**
-```{r}
+```{r BCI decostand total}
 head(BCI[,162:164], n = 3)
 ```
 
@@ -227,7 +229,7 @@ head(BCI[,162:164], n = 3)
 ## Data transformation in vegan with `decostand()`
 
 **Total**
-```{r}
+```{r decostand total 2}
 head(BCI[,162:164], n = 3)
 spec.total <- decostand(BCI, method = "total", MARGIN = 1) # by rows (sites)
 head(spec.total[,162:164], n = 3)
@@ -238,7 +240,7 @@ head(spec.total[,162:164], n = 3)
 ## Data transformation in vegan with `decostand()`
 
 **Maximum**
-```{r}
+```{r decostand max 1}
 head(BCI[,162:164], n = 3)
 ```
 
@@ -247,7 +249,7 @@ head(BCI[,162:164], n = 3)
 ## Data transformation in vegan with `decostand()`
 
 **Maximum** 
-```{r}
+```{r decostand max 2}
 head(BCI[,162:164], n = 3)
 spec.max <- decostand(BCI, method = "max", MARGIN = 2) # by columns (species)
 head(spec.max[,162:164], n = 3)
@@ -258,7 +260,7 @@ head(spec.max[,162:164], n = 3)
 ## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
-```{r}
+```{r decostand pa 1}
 head(BCI[,162:164], n = 3)
 ```
 
@@ -267,7 +269,7 @@ head(BCI[,162:164], n = 3)
 ## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
-```{r}
+```{r decostand pa 2}
 head(BCI[,162:164], n = 3)
 spec.pa <- decostand(BCI, method = "pa")
 head(spec.pa[,162:164], n = 3)
@@ -279,7 +281,7 @@ head(spec.pa[,162:164], n = 3)
 
 **Hellinger (Legendre & Gallagher 2001)**
 Square root of method "total"
-```{r}
+```{r decostand hellinger 1}
 head(BCI[,162:164], n = 3)
 ```
 
@@ -289,7 +291,7 @@ head(BCI[,162:164], n = 3)
 
 **Hellinger (Legendre & Gallagher 2001)**
 Square root of method "total"
-```{r}
+```{r decostand hellinger 2}
 head(BCI[,162:164], n = 3)
 spec.hellinger <- decostand(BCI, method = "hellinger", MARGIN = 1) # on rows (sites)
 head(spec.hellinger[,162:164], n = 3)
@@ -301,7 +303,7 @@ head(spec.hellinger[,162:164], n = 3)
 
 **Wisconsin double standardization**  
 Shortcut function for standardizing species to maximum, then sites by totals.  
-```{r}
+```{r wisconsin 1}
 head(BCI[,162:164], n = 3)
 ```
 
@@ -311,7 +313,7 @@ head(BCI[,162:164], n = 3)
 
 **Wisconsin double standardization**  
 Shortcut function for standardizing species to maximum, then sites by totals.
-```{r}
+```{r wisconsin 2}
 head(BCI[,162:164], n = 3)
 spec.wisc <- wisconsin(BCI)
 head(spec.wisc[,162:164], n = 3)
@@ -335,7 +337,7 @@ head(spec.wisc[,162:164], n = 3)
 ### Many different community distance metrics are available in `vegdist()`   
 *manhattan, euclidean, canberra, bray, kulczynski, jaccard, gower, altGower, morisita, horn, mountford, raup, binomial, chao, or cao*
 
-```{r}
+```{r dist jacc 1}
 spec.jaccpa <- vegdist(BCI, method = "jaccard", binary = TRUE)
 # returns an object of class 'dist'
 str(spec.jaccpa) 
@@ -345,7 +347,7 @@ str(spec.jaccpa)
 
 ## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-```{r}
+```{r dist jacc 2}
 as.matrix(spec.jaccpa)[1:4,1:4]
 ```
 
@@ -356,7 +358,7 @@ as.matrix(spec.jaccpa)[1:4,1:4]
 
 ### How to choose a good one for your data set?  
 ### First step, read the help for vegdist
-```{r}
+```{r vegdist help}
 ?vegdist
 ```
 
@@ -366,7 +368,7 @@ as.matrix(spec.jaccpa)[1:4,1:4]
 
 ### Second, try `rankindex()`    
 Higher rank correlations indicate better separation along gradients
-```{r}
+```{r rankindex 1}
 rank.UTM.NS <- rankindex(BCI.env$UTM.NS, BCI, indices = 
               c("bray", "euclid", "manhattan", "horn"), method = "spearman")
 rank.UTM.NS
@@ -378,7 +380,7 @@ rank.UTM.NS
 
 ### Second, try `rankindex()`    
 Can also use on standardized data
-```{r}
+```{r rankindex 2}
 rank.UTM.NS.wisc <- rankindex(BCI.env$UTM.NS, wisconsin(BCI), indices = 
               c("bray", "euclid", "manhattan", "horn"), method = "spearman")
 rank.UTM.NS.wisc
@@ -388,7 +390,7 @@ rank.UTM.NS.wisc
 
 ## Calculating distances with `vegdist()` | comparison
 
-```{r}
+```{r rankindex 3}
 sort(rank.UTM.NS, decreasing = TRUE)
 sort(rank.UTM.NS.wisc, decreasing = TRUE)
 ```
@@ -402,7 +404,7 @@ sort(rank.UTM.NS.wisc, decreasing = TRUE)
 ## Alpha diversity
 
 Basic counts of richness for each plot or site
-```{r}
+```{r alpha 1}
 site.richness <- apply(BCI > 0, 1, sum)
 site.richness[1:18]
 ```
@@ -412,7 +414,7 @@ site.richness[1:18]
 ## Alpha diversity | Other metrics
 
 Fisher's alpha
-```{r}
+```{r alpha 2}
 site.fisher <- fisher.alpha(BCI)
 site.fisher[1:12]
 ```
@@ -422,7 +424,7 @@ site.fisher[1:12]
 ## Alpha diversity | Other metrics
 
 Shannon diversity
-```{r}
+```{r alpha 3}
 site.shannon <- diversity(BCI, index = "shannon", MARGIN = 1)
 site.shannon[1:12]
 ```
@@ -433,11 +435,11 @@ site.shannon[1:12]
 
 This is the same as `apply(BCI > 0, MARGIN = 1, sum)`    
 it gives the species count for each plot
-```{r}
+```{r rarefac 1}
 BCI.S <- specnumber(BCI)
 ```
 This finds the plot with the least number of individuals
-```{r}
+```{r rarefac 2}
 # could also use rowsums() instead of apply()
 BCI.raremax <- min(apply(BCI, 1, sum))
 ```
@@ -448,7 +450,7 @@ BCI.raremax <- min(apply(BCI, 1, sum))
 
 Rarefy BCI species matrix to the minimum number of individuals in any plot    
 and plot the relationship between observed and rarefied counts (plus add 1-1 line)
-```{r, fig.height=3.5}
+```{r rarefac 3, fig.height=4}
 BCI.Srare <- rarefy(BCI, BCI.raremax)
 plot(BCI.S, BCI.Srare, xlab = "Observed No. of Species", ylab = "Rarefied No. of Species")
 abline(0, 1)
@@ -459,7 +461,7 @@ abline(0, 1)
 ## Rarefaction
 
 Put it all together
-```{r, fig.height=4.5}
+```{r rarefac 4, fig.height=5.5}
 rarecurve(BCI, step = 20, sample = BCI.raremax, col = "blue", cex = 0.6)
 ```
 
@@ -468,9 +470,28 @@ rarecurve(BCI, step = 20, sample = BCI.raremax, col = "blue", cex = 0.6)
 ## Beta diversity
 
 Multivariate homogeneity of groups dispersions
-```{r}
+```{r beta 1}
 BCI.bray <- vegdist(BCI, method = "bray")
-betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS))
+(BCI.bray.bdisp <- betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS)))
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Beta diversity {.smaller}
+
+Multivariate homogeneity of groups dispersions
+```{r beta 2}
+permutest(BCI.bray.bdisp)
+```
+
+
+<!----------------------------slide boundary--------------------------------->
+
+## Beta diversity
+
+Plot of within-group multivariate dispersion
+```{r beta 3, fig.height=4.5}
+plot(BCI.bray.bdisp)
 ```
 
 <!----------------------------slide boundary--------------------------------->
@@ -478,13 +499,28 @@ betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS))
 ## Beta diversity
 
 Boxplot of within-group multivariate dispersion
-```{r, fig.height=4.5}
-boxplot(betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS)))
+```{r beta 4, fig.height=5.5}
+boxplot(BCI.bray.bdisp)
 ```
 
+<!----------------------------slide boundary--------------------------------->
+
+## Beta diversity | ANOSIM
+
+Analysis of similarities 
+```{r beta 5, fig.height=4.5}
+(BCI.bray.anosim <- anosim(BCI.bray, as.factor(BCI.env$UTM.NS)))
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Beta diversity | ANOSIM
+
+Analysis of similarities 
+```{r beta 6, fig.height=4.5}
+plot(BCI.bray.anosim)
+```
 
 
 <!----------------------------slide boundary--------------------------------->
 
-
-## References
