@@ -498,7 +498,7 @@ Vector fitting (`envfit()`) or biplot scores (`scores(model, display = "bp")`) a
 intersetcor(mods)
 ```
 
-## Restricted permutation tests
+# Restricted permutation tests
 
 What *is* shuffled and *how* is of **paramount** importance for the test to be valid
 

@@ -758,7 +758,7 @@ P  -0.3590 -0.6111 0.4479
 K  -0.3768 -0.1339 0.7760
 ```
 
-## Restricted permutation tests
+# Restricted permutation tests
 
 What *is* shuffled and *how* is of **paramount** importance for the test to be valid
 
