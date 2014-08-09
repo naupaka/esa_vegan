@@ -358,7 +358,7 @@ as.matrix(spec.jaccpa)[1:4,1:4]
 
 ### How to choose a good one for your data set?  
 ### First step, read the help for vegdist
-```{r vegdist help}
+```{r vegdist help, eval=FALSE}
 ?vegdist
 ```
 
