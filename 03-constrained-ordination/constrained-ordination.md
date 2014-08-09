@@ -269,6 +269,19 @@ The standard `step()` function can be used as **vegan** provides two helper meth
 
 Vegan also provides methods for class `"cca"` for `add1()` and `drop1()`
 
+## Variance inflation factors
+
+*Linear* dependencies between constraints can be investigated via the *variance inflation factor* or VIF
+
+VIF is a measure of how much the variance of $\hat{\beta}_j$ is inflated by presence of other covariates
+
+Lots of rules of thumb
+
+ * VIF >= 20 indicates *strong collinearity* in constraints
+ * VIF >= 10 potnetially of concern & should be looked at
+
+Computed via `vif.cca()`
+
 ## Stepwise selection in CCA
 
 `step()` uses AIC which is a fudge for RDA/CCA. Alternatively use function `ordistep()`
@@ -387,19 +400,6 @@ where
  * Can be used up to $\sim M > n/2$ before becomes too conservative
  * Can be negative
  * Compute using `RsquareAdj()`
-
-## Variance inflation factors
-
-*Linear* dependencies between constraints can be investigated via the *variance inflation factor* or VIF
-
-VIF is a measure of how much the variance of $\hat{\beta}_j$ is inflated by presence of other covariates
-
-Lots of rules of thumb
-
- * VIF >= 20 indicates *strong collinearity* in constraints
- * VIF >= 10 potnetially of concern & should be looked at
-
-Computed via `vif.cca()`
 
 ## Stepwise selection via adjusted $R^2$
 
@@ -643,7 +643,122 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ![plot of chunk meadows-cca-full-triplot](./constrained-ordination_files/figure-html/meadows-cca-full-triplot.png) 
 
-## Restricted permutation tests
+## Diagnostics for constrained ordinations
+
+**vegan** provides a series of diagnostics to help assess the model fit
+
+ * `goodness()`
+ * `inertcomp()`
+ * `spenvcor()`
+ * `intersetcor()`
+ * `vif.caa()`
+ 
+## Diagnostics for constrained ordinations | goodness of fit
+
+`goodness()` computes two goodness of fit statistics for species or sites
+
+Which goodness of fit measure is returned is controlled by argument `statistic`
+
+ * `statistic = "explained` (default) gives the cumulative proportion of variance explained by each axis
+ * `statistic = "distance"` gives the residual distance between the "fitted" location in constrained ordination space and the location in the full dimensional space
+
+
+```r
+head(goodness(mods))
+```
+
+```
+             CCA1     CCA2    CCA3
+Cal.vul 0.0062472 0.318908 0.82547
+Emp.nig 0.1164702 0.137605 0.19532
+Led.pal 0.0999090 0.169698 0.18242
+Vac.myr 0.2361483 0.240516 0.24067
+Vac.vit 0.1523705 0.156502 0.21105
+Pin.syl 0.0009244 0.004802 0.00601
+```
+
+```r
+head(goodness(mods, summarize = TRUE))
+```
+
+```
+Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl 
+0.82547 0.19532 0.18242 0.24067 0.21105 0.00601 
+```
+
+## Diagnostics for constrained ordinations | inertia decomposition
+
+`inertcomp()` decomposes the variance in samples or species in partial, constrained, and unconstrained components
+
+Same two types of  measure available by argument `statistic`
+
+ * `statistic = "explained` (default) gives the decomposition in terms of variance
+ * `statistic = "distance"` gives decomposition in terms of the the residual distance
+
+* Can output as proportions of total via `proportion = TRUE`
+
+
+```r
+head(inertcomp(mods, proportional = TRUE))
+```
+
+```
+            CCA     CA
+Cal.vul 0.82547 0.1745
+Emp.nig 0.19532 0.8047
+Led.pal 0.18242 0.8176
+Vac.myr 0.24067 0.7593
+Vac.vit 0.21105 0.7889
+Pin.syl 0.00601 0.9940
+```
+
+## Diagnostics for constrained ordinations | species-environment correlations
+
+`spenvcor()` returns the species-environment correlation
+
+The (weighted) correlation between the weighted average-based and the linear combination-based sets of site scores
+
+A *poor* measure of goodness of fit. Sensitive to
+
+ * outliers (like all correlations)
+ * overfitting (using too many constraints)
+
+Better models can have poorer species-environment correlations
+
+
+```r
+spenvcor(mods)
+```
+
+```
+  CCA1   CCA2   CCA3 
+0.8555 0.8133 0.8793 
+```
+
+## Diagnostics for constrained ordinations | interset correlations
+
+`intersetcor()` returns the interset correlations; the (weighted) correlation between the weighted average-based site scores and each constraint variable
+
+Another *poor* diagnostic
+
+ * correlation based
+ * focuses on a single constraint--axis combination at a time
+
+Vector fitting (`envfit()`) or biplot scores (`scores(model, display = "bp")`) are better alternatives
+
+
+```r
+intersetcor(mods)
+```
+
+```
+      CCA1    CCA2   CCA3
+Al  0.7356 -0.1302 0.4260
+P  -0.3590 -0.6111 0.4479
+K  -0.3768 -0.1339 0.7760
+```
+
+# Restricted permutation tests
 
 What *is* shuffled and *how* is of **paramount** importance for the test to be valid
 
@@ -912,120 +1027,5 @@ do.call("rbind", split(p, plt)) ## look at perms in context
 ## Restricted permutations with **permute** | worked example with **vegan**
 
 To do
-
-## Diagnostics for constrained ordinations
-
-**vegan** provides a series of diagnostics to help assess the model fit
-
- * `goodness()`
- * `inertcomp()`
- * `spenvcor()`
- * `intersetcor()`
- * `vif.caa()`
- 
-## Diagnostics for constrained ordinations | goodness of fit
-
-`goodness()` computes two goodness of fit statistics for species or sites
-
-Which goodness of fit measure is returned is controlled by argument `statistic`
-
- * `statistic = "explained` (default) gives the cumulative proportion of variance explained by each axis
- * `statistic = "distance"` gives the residual distance between the "fitted" location in constrained ordination space and the location in the full dimensional space
-
-
-```r
-head(goodness(mods))
-```
-
-```
-             CCA1     CCA2    CCA3
-Cal.vul 0.0062472 0.318908 0.82547
-Emp.nig 0.1164702 0.137605 0.19532
-Led.pal 0.0999090 0.169698 0.18242
-Vac.myr 0.2361483 0.240516 0.24067
-Vac.vit 0.1523705 0.156502 0.21105
-Pin.syl 0.0009244 0.004802 0.00601
-```
-
-```r
-head(goodness(mods, summarize = TRUE))
-```
-
-```
-Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl 
-0.82547 0.19532 0.18242 0.24067 0.21105 0.00601 
-```
-
-## Diagnostics for constrained ordinations | inertia decomposition
-
-`inertcomp()` decomposes the variance in samples or species in partial, constrained, and unconstrained components
-
-Same two types of  measure available by argument `statistic`
-
- * `statistic = "explained` (default) gives the decomposition in terms of variance
- * `statistic = "distance"` gives decomposition in terms of the the residual distance
-
-* Can output as proportions of total via `proportion = TRUE`
-
-
-```r
-head(inertcomp(mods, proportional = TRUE))
-```
-
-```
-            CCA     CA
-Cal.vul 0.82547 0.1745
-Emp.nig 0.19532 0.8047
-Led.pal 0.18242 0.8176
-Vac.myr 0.24067 0.7593
-Vac.vit 0.21105 0.7889
-Pin.syl 0.00601 0.9940
-```
-
-## Diagnostics for constrained ordinations | species-environment correlations
-
-`spenvcor()` returns the species-environment correlation
-
-The (weighted) correlation between the weighted average-based and the linear combination-based sets of site scores
-
-A *poor* measure of goodness of fit. Sensitive to
-
- * outliers (like all correlations)
- * overfitting (using too many constraints)
-
-Better models can have poorer species-environment correlations
-
-
-```r
-spenvcor(mods)
-```
-
-```
-  CCA1   CCA2   CCA3 
-0.8555 0.8133 0.8793 
-```
-
-## Diagnostics for constrained ordinations | interset correlations
-
-`intersetcor()` returns the interset correlations; the (weighted) correlation between the weighted average-based site scores and each constraint variable
-
-Another *poor* diagnostic
-
- * correlation based
- * focuses on a single constraint--axis combination at a time
-
-Vector fitting (`envfit()`) or biplot scores (`scores(model, display = "bp")`) are better alternatives
-
-
-```r
-intersetcor(mods)
-```
-
-```
-      CCA1    CCA2   CCA3
-Al  0.7356 -0.1302 0.4260
-P  -0.3590 -0.6111 0.4479
-K  -0.3768 -0.1339 0.7760
-```
 
 ## References
