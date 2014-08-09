@@ -133,12 +133,29 @@ install.packages(&quot;reshape2&quot;)</pre>
 <!----------------------------slide boundary--------------------------------->
 
 
-</article></slide><slide class=''><hgroup><h2>Introduction to <strong>vegan</strong></h2></hgroup><article  id="introduction-to-vegan">
+</article></slide><slide class=''><hgroup><h2>Introduction to <strong>vegan</strong> </h2><h3> a potted history</h3></hgroup><article  id="introduction-to-vegan-a-potted-history">
 
 <ul>
-<li>What is it?</li>
-<li>Who developed it?</li>
-<li>How does it differ from other alternatives?</li>
+<li>Jari Oksanen released first version of vegan to CRAN on September 5th 2001</li>
+<li>Limited scope; purpose was to have Peter Minchin&#39;s DECODA-like functions for NMDS available in R plus helper functions</li>
+<li>By version 1.4, vegan had DCA &amp; CCA, with RDA following in 1.4.2. <code>ordisurf()</code> appeared in 1.4 also as did permutation tests.</li>
+<li>From version 1.6, vegan expanded into areas of theoretical ecology and diversity</li>
+<li>Version 1.6.5 brought the <code>metaMDS()</code> wrappers for NMDS</li>
+<li>Since then vegan has rapidly developed on the R-Forge website and expanded considerably</li>
+<li>Current development team: Jari Oksanen, F. Guillaume Blanchet, Roeland Kindt, Pierre Legendre, Peter R. Minchin, R. B. O&#39;Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. Stevens, Helene Wagner</li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Introduction to <strong>vegan</strong> </h2><h3> vegan today</h3></hgroup><article  id="introduction-to-vegan-vegan-today">
+
+<ul>
+<li>The current stable release is version 2.0.10 which is available from CRAN</li>
+<li><a href='' title=''><a href='http://cran.r-project.org/web/packages/vegan' title=''>http://cran.r-project.org/web/packages/vegan</a></a></li>
+<li>Development is mainly conducted via <a href='' title=''>r-forge.r-project.org</a> with a separate development version</li>
+<li>Development branch is 2.1.x will soon be released to CRAN as the 2.2 release branch</li>
+<li>R-forge also hosts our bug tracking, mailing lists &amp; forums which should be first port of call for getting help</li>
+<li><a href='' title=''><a href='http://r-forge.r-project.org/projects/vegan' title=''>http://r-forge.r-project.org/projects/vegan</a></a></li>
+<li>Also several vignettes (manuals/guides) containing R code to explain how vegan works</li>
+<li>The vegan tutorial is available at <a href='' title=''><a href='http://vegan.r-forge.r-project.org' title=''>http://vegan.r-forge.r-project.org</a></a></li>
 </ul>
 
 <!----------------------------slide boundary--------------------------------->
@@ -804,7 +821,7 @@ Permutation details:
   Evaluate all permutations?: No.  Activation limit: 99
 Response: Distances
           Df Sum Sq Mean Sq   F N.Perm Pr(&gt;F)
-Groups     4 0.0283 0.00708 1.8    999   0.14
+Groups     4 0.0283 0.00708 1.8    999   0.15
 Residuals 45 0.1766 0.00392                  </pre>
 
 <!----------------------------slide boundary--------------------------------->
@@ -844,7 +861,7 @@ anosim(dat = BCI.bray, grouping = as.factor(BCI.env$UTM.NS))
 Dissimilarity: bray 
 
 ANOSIM statistic R: 0.102 
-      Significance: 0.003 
+      Significance: 0.004 
 
 Based on  999  permutations</pre>
 
@@ -877,7 +894,7 @@ Based on  999  permutations</pre>
 <script src="intro-basics_files/ioslides-13.5.1/js/slide-controller.js"></script>
 <script src="intro-basics_files/ioslides-13.5.1/js/slide-deck.js"></script>
 
-<!-- dynamically load mathjax for compatibility with --self-contained -->
+<!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
   (function () {
     var script = document.createElement("script");

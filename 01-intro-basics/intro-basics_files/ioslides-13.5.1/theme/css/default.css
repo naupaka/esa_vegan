@@ -4,7 +4,11 @@ html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
+<<<<<<< HEAD
 small, strike, strong, sub, tt, var,
+=======
+small, strike, strong, tt, var,
+>>>>>>> a47a7ad60b0de9b6b273ad6dd463c8574bfee0fd
 b, u, i, center,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
@@ -23,7 +27,11 @@ time, mark, audio, video {
 
 /* line 22, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 html {
+<<<<<<< HEAD
   line-height: 1;
+=======
+  line-height: 1.2;
+>>>>>>> a47a7ad60b0de9b6b273ad6dd463c8574bfee0fd
 }
 
 /* line 24, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
@@ -39,7 +47,10 @@ table {
 
 /* line 28, ../../../../../../Library/Ruby/Gems/1.8/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/reset/_utilities.scss */
 caption, th, td {
+<<<<<<< HEAD
   text-align: left;
+=======
+>>>>>>> a47a7ad60b0de9b6b273ad6dd463c8574bfee0fd
   font-weight: normal;
   vertical-align: middle;
 }
@@ -450,7 +461,11 @@ h1, h2, h3 {
 /* line 280, ../scss/default.scss */
 h2 {
   font-size: 45px;
+<<<<<<< HEAD
   line-height: 45px;
+=======
+  line-height: 65px;
+>>>>>>> a47a7ad60b0de9b6b273ad6dd463c8574bfee0fd
   letter-spacing: -2px;
   color: #515151;
 }
