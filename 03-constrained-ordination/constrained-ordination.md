@@ -211,6 +211,30 @@ pcca <- cca(X = varespec,
 pcca <- cca(varespec ~ Ca + Condition(pH), data = varechem) ## easier!
 ```
 
+# Plotting constrained ordinations
+
+## Triplots
+
+Triplots will generally produce a mess; we can really only display a couple of bits approximately anyway
+
+Trying to cram three things in is a recipe for a mess...
+
+...but we can do it
+
+
+```r
+plot(cca1)
+```
+
+## Triplots
+
+
+```r
+plot(cca1)
+```
+
+![plot of chunk triplot-2](./constrained-ordination_files/figure-html/triplot-2.png) 
+
 # Model building
 
 ## Building constrained ordination models
@@ -405,7 +429,7 @@ where
 
 The problems with stepwise selection in regression models are myriad. Affects RDA, CCA, etc as well
 
-@Blanchet2008 proposed a two-step solution for models where $R2_{adj}$ makes sense
+@Blanchet2008 proposed a two-step solution for models where $R^2_{adj}$ makes sense
 
  * *Global test* of all constraints
      - Proceed **only** if this test is significant
@@ -424,6 +448,8 @@ Available in `ordiR2step()`
 RDA has lots of theory behind it, CCA not as much. However, ecological/environmental data invariably violate what little theory we have
 
 Instead we use permutation tests to assess the *importance* of fitted models --- the data are shuffled in some way and the model refitted to derive a Null distribution under some hypothesis of *no effect*
+
+## Permutation tests in vegan
 
 What *is* shuffled and *how* is of **paramount** importance for the test to be valid
 
@@ -643,6 +669,103 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 ![plot of chunk meadows-cca-full-triplot](./constrained-ordination_files/figure-html/meadows-cca-full-triplot.png) 
 
+## Constrained ordination worked example | spring meadow vegetation
+
+
+```r
+set.seed(67)
+lwr <- cca(spp ~ 1, data = env)
+m2 <- ordistep(lwr, scope = formula(m1), perm.max = 499, trace = FALSE)
+```
+
+```r
+m2
+```
+
+```
+Call: cca(formula = spp ~ Ca + conduct + Corg + Na + NH3 + Fe +
+pH, data = env)
+
+              Inertia Proportion Rank
+Total           5.310      1.000     
+Constrained     0.990      0.186    7
+Unconstrained   4.320      0.814   62
+Inertia is mean squared contingency coefficient 
+
+Eigenvalues for constrained axes:
+  CCA1   CCA2   CCA3   CCA4   CCA5   CCA6   CCA7 
+0.4268 0.1447 0.1116 0.0936 0.0760 0.0719 0.0652 
+
+Eigenvalues for unconstrained axes:
+  CA1   CA2   CA3   CA4   CA5   CA6   CA7   CA8 
+0.273 0.195 0.167 0.150 0.146 0.142 0.133 0.122 
+(Showed only 8 of all 62 unconstrained eigenvalues)
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+![plot of chunk meadows-cca-reduced-triplot](./constrained-ordination_files/figure-html/meadows-cca-reduced-triplot.png) 
+
+## Constrained ordination worked example | spring meadow vegetation
+
+
+```r
+m2$anova
+```
+
+```
+          Df AIC    F N.Perm Pr(>F)   
++ Ca       1 453 4.79    199  0.005 **
++ conduct  1 453 1.79    199  0.005 **
++ Corg     1 454 1.60    199  0.005 **
++ Na       1 454 1.58    199  0.005 **
++ NH3      1 454 1.45    199  0.015 * 
++ Fe       1 455 1.34    299  0.013 * 
++ pH       1 455 1.28    499  0.026 * 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+Alternative is RDA with a transformation
+
+
+```r
+spph <- decostand(spp, method = "hellinger")
+m3 <- rda(spph ~ ., data = env)
+lwr <- rda(spph ~ 1, data = env)
+m4 <- ordistep(lwr, scope = formula(m3), perm.max = 199, trace = FALSE)
+```
+
+## Constrained ordination worked example | spring meadow vegetation
+
+![plot of chunk meadows-rda-reduced-triplot](./constrained-ordination_files/figure-html/meadows-rda-reduced-triplot.png) 
+
+## Constrained ordination worked example | spring meadow vegetation
+
+Stepwise using $R^2_{adj}$
+
+
+```r
+m5 <- ordiR2step(lwr, scope = formula(m3), perm.max = 199, trace = FALSE)
+m5$anova
+```
+
+```
+                R2.adj Df   AIC     F N.Perm Pr(>F)   
++ Ca             0.126  1 -41.8 10.94    199  0.005 **
++ NH3            0.146  1 -42.5  2.62    199  0.005 **
++ conduct        0.163  1 -42.9  2.36    199  0.005 **
++ Si             0.177  1 -43.2  2.11    199  0.005 **
++ Corg           0.185  1 -42.9  1.64    199  0.010 **
++ NO3            0.193  1 -42.7  1.59    199  0.015 * 
++ pH             0.200  1 -42.4  1.56    199  0.020 * 
+<All variables>  0.203                                
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
 ## Diagnostics for constrained ordinations
 
 **vegan** provides a series of diagnostics to help assess the model fit
@@ -661,6 +784,8 @@ Which goodness of fit measure is returned is controlled by argument `statistic`
 
  * `statistic = "explained` (default) gives the cumulative proportion of variance explained by each axis
  * `statistic = "distance"` gives the residual distance between the "fitted" location in constrained ordination space and the location in the full dimensional space
+
+## Diagnostics for constrained ordinations | goodness of fit
 
 
 ```r
@@ -694,8 +819,7 @@ Same two types of  measure available by argument `statistic`
 
  * `statistic = "explained` (default) gives the decomposition in terms of variance
  * `statistic = "distance"` gives decomposition in terms of the the residual distance
-
-* Can output as proportions of total via `proportion = TRUE`
+ * Can output as proportions of total via `proportion = TRUE`
 
 
 ```r
@@ -759,6 +883,8 @@ K  -0.3768 -0.1339 0.7760
 ```
 
 # Restricted permutation tests
+
+## Restricted permutation tests
 
 What *is* shuffled and *how* is of **paramount** importance for the test to be valid
 
