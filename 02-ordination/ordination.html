@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ordination with vegan</title>
+
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="generator" content="pandoc" />
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+
+  <link rel="stylesheet" media="all" href="ordination_files/ioslides-13.5.1/fonts/fonts.css">
+
+  <link rel="stylesheet" media="all" href="ordination_files/ioslides-13.5.1/theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="ordination_files/ioslides-13.5.1/theme/css/phone.css">
+
+  <base target="_blank">
+
+  <script type="text/javascript">
+    var SLIDE_CONFIG = {
+      // Slide settings
+      settings: {
+                title: 'Ordination with vegan',
+                        useBuilds: true,
+        usePrettify: true,
+        enableSlideAreas: true,
+        enableTouch: true,
+              },
+
+      // Author information
+      presenters: [
+            {
+        name: 'Naupaka Zimmerman and Gavin Simpson'
+      },
+            ]
+    };
+  </script>
+
+  <style type="text/css">
+
+    b, strong {
+      font-weight: bold;
+    }
+
+    em {
+      font-style: italic;
+    }
+
+    slides > slide {
+      -webkit-transition: all 0.4s ease-in-out;
+      -moz-transition: all 0.4s ease-in-out;
+      -o-transition: all 0.4s ease-in-out;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .auto-fadein {
+      -webkit-transition: opacity 0.6s ease-in;
+      -webkit-transition-delay: 0.4s;
+      -moz-transition: opacity 0.6s ease-in 0.4s;
+      -o-transition: opacity 0.6s ease-in 0.4s;
+      transition: opacity 0.6s ease-in 0.4s;
+      opacity: 0;
+    }
+
+  </style>
+
+
+
+</head>
+
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+        <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+            <p style="margin-top: 6px; margin-left: -2px;">August 9, 2014 • ESA 2014</p>
+          </hgroup>
+  </slide>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+<slide class='segue dark nobackground'><hgroup class = 'auto-fadein'><h2>Ordination plots</h2></hgroup><article  id="ordination-plots">
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Unconstrained ordination</h2></hgroup><article  id="unconstrained-ordination">
+
+<p><strong>What does it mean?</strong></p>
+
+<ul>
+<li>First we look for major variation, then try to attribute it to environmental variation</li>
+<li>vs. constrained ordination, where we only want to see what can be explained by environmental variables of interest</li>
+</ul>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Unconstrained ordination</h2></hgroup><article  id="unconstrained-ordination-1">
+
+<p><strong>What does it mean?</strong></p>
+
+<ul>
+<li>First we look for major variation, then try to attribute it to environmental variation</li>
+<li>vs. constrained ordination, where we only want to see what can be explained by environmental variables of interest</li>
+</ul>
+
+<p><strong>Examples of unconstrained ordination:</strong></p>
+
+<ul>
+<li>Correspondance Analysis - CA</li>
+<li>Principal Components Analysis - PCA</li>
+<li>Nonmetric Multidimensional Scaling - NMDS</li>
+</ul>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Unconstrained ordination</h2></hgroup><article  id="unconstrained-ordination-2">
+
+<p><strong>What does it mean?</strong></p>
+
+<ul>
+<li>First we look for major variation, then try to attribute it to environmental variation</li>
+<li>vs. constrained ordination, where we only want to see what can be explained by environmental variables of interest</li>
+</ul>
+
+<p><strong>Examples of unconstrained ordination:</strong></p>
+
+<ul>
+<li>Correspondance Analysis - CA</li>
+<li>Principal Components Analysis - PCA</li>
+<li><strong>Nonmetric Multidimensional Scaling - NMDS</strong></li>
+</ul>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Before we get started</h2></hgroup><article  id="before-we-get-started">
+
+<p>Housekeeping</p>
+
+<pre class = 'prettyprint lang-r'>setwd(&quot;your/working/dir&quot;)</pre>
+
+<pre class = 'prettyprint lang-r'>library(&quot;vegan&quot;)</pre>
+
+<pre >Loading required package: permute
+Loading required package: lattice
+This is vegan 2.0-10</pre>
+
+<pre class = 'prettyprint lang-r'>data(dune)
+data(dune.env)</pre>
+
+<p>Data from: Jongman, R.H.G, ter Braak, C.J.F &amp; van Tongeren, O.F.R. (1987). Data Analysis in Community and Landscape Ecology. Pudoc, Wageningen.</p>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Before we get started </h2><h3> species</h3></hgroup><article  id="before-we-get-started-species">
+
+<pre class = 'prettyprint lang-r'>dim(dune)</pre>
+
+<pre >[1] 20 30</pre>
+
+<pre class = 'prettyprint lang-r'>head(dune[,1:10], n=3)</pre>
+
+<pre >   Belper Empnig Junbuf Junart Airpra Elepal Rumace Viclat Brarut Ranfla
+2       3      0      0      0      0      0      0      0      0      0
+13      0      0      3      0      0      0      0      0      0      2
+4       2      0      0      0      0      0      0      0      2      0</pre>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Before we get started </h2><h3> environment</h3></hgroup><article  id="before-we-get-started-environment">
+
+<pre class = 'prettyprint lang-r'>head(dune.env, n=3)</pre>
+
+<pre >    A1 Moisture Management      Use Manure
+2  3.5        1         BF Haypastu      2
+13 6.0        5         SF Haypastu      3
+4  4.2        2         SF Haypastu      4</pre>
+
+<pre class = 'prettyprint lang-r'>summary(dune.env)</pre>
+
+<pre >       A1        Moisture Management       Use    Manure
+ Min.   : 2.80   1:7      BF:3       Hayfield:7   0:6   
+ 1st Qu.: 3.50   2:4      HF:5       Haypastu:8   1:3   
+ Median : 4.20   4:2      NM:6       Pasture :5   2:4   
+ Mean   : 4.85   5:7      SF:6                    3:4   
+ 3rd Qu.: 5.72                                    4:3   
+ Max.   :11.50                                          </pre>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Basic ordination and plotting</h2></hgroup><article  id="basic-ordination-and-plotting">
+
+<p>There are two more basic NMDS ordination functions:</p>
+
+<ul>
+<li><code>isoMDS()</code> from the MASS package</li>
+<li><code>monoMDS()</code> in vegan</li>
+</ul>
+
+<p>Vegan also has a wrapper function for doing NMDS ordinations using best practices:</p>
+
+<ul>
+<li><code>metaMDS()</code></li>
+</ul>
+
+<p>This will do handy things like try to standardize your data if necessary and perform rotation, among other things.</p>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Basic ordination and plotting</h2></hgroup><article  id="basic-ordination-and-plotting-1">
+
+<pre class = 'prettyprint lang-r'>dune.bray.ord &lt;- metaMDS(dune, distance = &quot;bray&quot;, k = 2, trymax = 50)</pre>
+
+<p><strong>Show in RStudio</strong></p>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Basic ordination and plotting (using all defaults)</h2></hgroup><article  id="basic-ordination-and-plotting-using-all-defaults">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord)</pre>
+
+<img src='ordination_files/figure-html/NMDS%202.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Basic ordination and plotting (just plots)</h2></hgroup><article  id="basic-ordination-and-plotting-just-plots">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;)</pre>
+
+<img src='ordination_files/figure-html/NMDS%203.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Basic ordination and plotting (just species)</h2></hgroup><article  id="basic-ordination-and-plotting-just-species">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;species&quot;)</pre>
+
+<img src='ordination_files/figure-html/NMDS%204.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Site names instead of points</h2></hgroup><article  id="site-names-instead-of-points">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;t&quot;)</pre>
+
+<img src='ordination_files/figure-html/NMDS%205.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Site names instead of points</h2></hgroup><article  id="site-names-instead-of-points-1">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;)
+set.seed(314) ## make reproducible
+ordipointlabel(dune.bray.ord, display = &quot;sites&quot;, scaling = 3, add = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%205.2.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Site names instead of points</h2></hgroup><article  id="site-names-instead-of-points-2">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;species&quot;)
+set.seed(314) ## make reproducible
+ordipointlabel(dune.bray.ord, display = &quot;species&quot;, scaling = 3, add = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%205.5.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Site names instead of points</h2></hgroup><article  id="site-names-instead-of-points-3">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord)
+set.seed(314) ## make reproducible
+ordipointlabel(dune.bray.ord, scaling = 3, add = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%205.6.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Larger points</h2></hgroup><article  id="larger-points">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, cex=2)</pre>
+
+<img src='ordination_files/figure-html/NMDS%206.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Modifying the display of the points with environmental data</h2></hgroup><article  id="modifying-the-display-of-the-points-with-environmental-data">
+
+<ul>
+<li>Color</li>
+<li>Shape</li>
+<li>Size</li>
+</ul>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Modifying the color of points</h2></hgroup><article  id="modifying-the-color-of-points" class="smaller">
+
+<pre class = 'prettyprint lang-r'>colors.vec &lt;- c(&quot;red&quot;, &quot;blue&quot;, &quot;orange&quot;, &quot;grey&quot;)
+plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;n&quot;)
+points(dune.bray.ord, display = &quot;sites&quot;, cex=2, pch = 21, 
+       col = colors.vec[dune.env$Management], 
+       bg = colors.vec[dune.env$Management])
+legend(&quot;topright&quot;, legend = levels(dune.env$Management), bty = &quot;n&quot;,
+                      col = colors.vec, pch = 21, pt.bg = colors.vec)</pre>
+
+<img src='ordination_files/figure-html/NMDS%207.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Modifying the shape of points </h2><h3> pch()</h3></hgroup><article  id="modifying-the-shape-of-points-pch">
+
+<img src='ordination_files/figure-html/NMDS%208.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Modifying the shape of points</h2></hgroup><article  id="modifying-the-shape-of-points" class="smaller">
+
+<pre class = 'prettyprint lang-r'>shapes.vec &lt;- c(21, 22, 24)
+plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;n&quot;)
+points(dune.bray.ord, display = &quot;sites&quot;, cex=2, bg = &quot;black&quot;, 
+       pch = shapes.vec[dune.env$Use])
+legend(&quot;topright&quot;, legend = levels(dune.env$Use), bty = &quot;n&quot;,
+                      col = &quot;black&quot;, pch = shapes.vec, pt.bg = &quot;black&quot;)</pre>
+
+<img src='ordination_files/figure-html/NMDS%209.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Modifying the shape and color of points</h2></hgroup><article  id="modifying-the-shape-and-color-of-points" class="smaller">
+
+<pre class = 'prettyprint lang-r'>colors.vec &lt;- c(&quot;red&quot;, &quot;blue&quot;, &quot;orange&quot;, &quot;grey&quot;)
+shapes.vec &lt;- c(21, 22, 24)
+plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;n&quot;)
+points(dune.bray.ord, display = &quot;sites&quot;, cex=2, 
+       pch = shapes.vec[dune.env$Use], 
+       col = colors.vec[dune.env$Management], 
+       bg = colors.vec[dune.env$Management])
+legend(&quot;topright&quot;, legend = levels(dune.env$Management), bty = &quot;n&quot;,
+                      col = colors.vec, pch = 21, pt.bg = colors.vec)
+legend(1.4,1.05, legend = levels(dune.env$Use), bty = &quot;n&quot;,
+                      col = &quot;black&quot;, pch = shapes.vec, pt.bg = &quot;black&quot;)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2010.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers</h2></hgroup><article  id="adding-other-layers">
+
+<pre class = 'prettyprint lang-r'># Just points
+plot(dune.bray.ord, display = &quot;sites&quot;, cex=2)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2011.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers</h2></hgroup><article  id="adding-other-layers-1">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, cex=2)
+ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2012.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers</h2></hgroup><article  id="adding-other-layers-2">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, cex=2)
+ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = &quot;blue&quot;)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2013.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers</h2></hgroup><article  id="adding-other-layers-3">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, cex=2)
+ordihull(dune.bray.ord,groups = dune.env$Management, label = TRUE, col = &quot;blue&quot;)
+ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2014.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers</h2></hgroup><article  id="adding-other-layers-4">
+
+<pre class = 'prettyprint lang-r'># Plot first, then add layers
+plot(dune.bray.ord, display = &quot;sites&quot;, cex=2)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2015.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers</h2></hgroup><article  id="adding-other-layers-5">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, cex=2)
+ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2016.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers - axes scaling</h2></hgroup><article  id="adding-other-layers---axes-scaling">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, type = &quot;n&quot;)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2017.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers - axes scaling</h2></hgroup><article  id="adding-other-layers---axes-scaling-1">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, type = &quot;n&quot;)
+points(dune.bray.ord,display = &quot;sites&quot;, cex = 2)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2018.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers - axes scaling</h2></hgroup><article  id="adding-other-layers---axes-scaling-2">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;n&quot;)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2019.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers - axes scaling</h2></hgroup><article  id="adding-other-layers---axes-scaling-3">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;n&quot;)
+points(dune.bray.ord, display = &quot;sites&quot;, cex = 2)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2020.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers</h2></hgroup><article  id="adding-other-layers-6">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;n&quot;)
+points(dune.bray.ord,display = &quot;sites&quot;, cex = 2)
+ordispider(dune.bray.ord,groups = dune.env$Management, label = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2021.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers</h2></hgroup><article  id="adding-other-layers-7">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;n&quot;)
+points(dune.bray.ord, display = &quot;sites&quot;, cex = 2)
+ordiellipse(dune.bray.ord,groups = dune.env$Management, label = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2022.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Adding other layers</h2></hgroup><article  id="adding-other-layers-8">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;n&quot;)
+points(dune.bray.ord,display = &quot;sites&quot;, cex = 2)
+ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2023.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Vectors in ordination space</h2></hgroup><article  id="vectors-in-ordination-space">
+
+<pre class = 'prettyprint lang-r'>dune.bray.ord.A1.fit &lt;- envfit(dune.bray.ord,dune.env$A1, permutations = 1000)
+dune.bray.ord.A1.fit</pre>
+
+<pre >
+***VECTORS
+
+     NMDS1 NMDS2   r2 Pr(&gt;r)  
+[1,]  0.99  0.14 0.38  0.013 *
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+P values based on 1000 permutations.</pre>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Vectors in ordination space</h2></hgroup><article  id="vectors-in-ordination-space-1">
+
+<pre class = 'prettyprint lang-r'>plot(dune.bray.ord, display = &quot;sites&quot;, type = &quot;n&quot;)
+points(dune.bray.ord,display = &quot;sites&quot;, cex = 2)
+plot(dune.bray.ord.A1.fit, add = TRUE)
+ordisurf(dune.bray.ord,dune.env$A1, add = TRUE)</pre>
+
+<img src='ordination_files/figure-html/NMDS%2025.png' title=''/>
+
+<!----------------------------slide boundary--------------------------------->
+
+
+</article></slide><slide class=''><hgroup><h2>Activity</h2></hgroup><article  id="activity">
+
+<p>Using the cleaned <code>varespec</code> data from the last exercise, and based on your finding of an appropriate distance metric:</p>
+
+<ol>
+<li>Load the data</li>
+<li>Create an NMDS plot using <code>metaMDS()</code>
+
+<ul>
+<li>use the distance metric you chose earlier
+
+<ul>
+<li>if this doesn&#39;t work, <code>bray</code> is a decent fallback</li>
+</ul></li>
+<li>Plot only the sites (not the species)</li>
+<li>Make the points blue squares, size (cex = 2)</li>
+<li>Add an <code>ordispider</code></li>
+<li>add a title with <code>main = &quot;title&quot;</code></li>
+</ul></li>
+</ol></article></slide>
+
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+<script src="ordination_files/ioslides-13.5.1/js/modernizr.custom.45394.js"></script>
+<script src="ordination_files/ioslides-13.5.1/js/prettify/prettify.js"></script>
+<script src="ordination_files/ioslides-13.5.1/js/prettify/lang-r.js"></script>
+<script src="ordination_files/ioslides-13.5.1/js/prettify/lang-yaml.js"></script>
+<script src="ordination_files/ioslides-13.5.1/js/hammer.js"></script>
+<script src="ordination_files/ioslides-13.5.1/js/slide-controller.js"></script>
+<script src="ordination_files/ioslides-13.5.1/js/slide-deck.js"></script>
+
+<!-- dynamically load mathjax for compatibility with --self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!-- map slide visiblity events into shiny -->
+<script>
+  (function() {
+    if (window.jQuery) {
+       window.jQuery(document).on('slideleave', function(e) {
+         window.jQuery(e.target).trigger('hidden');
+      });
+       window.jQuery(document).on('slideenter', function(e) {
+         window.jQuery(e.target).trigger('shown');
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>
