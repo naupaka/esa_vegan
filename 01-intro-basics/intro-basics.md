@@ -50,6 +50,18 @@ data(varespec)
 data(varechem)
 ```
 
+## Cleaning your data for import into R for use in vegan
+
+* We will use built-in datasets for species `varespec` and environmental variables `varechem`
+    * from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)
+
+
+```r
+library("vegan")
+data(varespec)
+data(varechem)
+```
+
 
 ```r
 head(varespec[,1:8], n = 3)
@@ -62,39 +74,44 @@ head(varespec[,1:8], n = 3)
 24    0.10    1.55       0    0.00   13.47    0.25       0       0
 ```
 
-## Summarizing data with `apply()`
 
-Sum of rows
+## Summarizing data with `apply()` | sums and sorting
 
-```r
-apply(varespec, 1, sum)
-```
-
-```
-    18     15     24     27     23     19     22     16     28     13 
- 89.20  89.82  94.21 125.61  90.46  81.27 109.76  88.52 110.70 101.89 
-    14     20     25      7      5      6      3      4      2      9 
- 81.65  64.11  94.06 103.38  94.77 110.90 106.67  84.83 119.13 122.60 
-    12     10     11     21 
-119.80 122.37 112.84  99.17 
-```
-Sum of columns
+**Sum of rows**
 
 ```r
-apply(varespec, 2, sum)
+sum.of.rows <- apply(varespec, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) 
 ```
 
 ```
-Cal.vul Emp.nig Led.pal Vac.myr Vac.vit Pin.syl Des.fle Bet.pub Vac.uli 
-  45.07  151.99    8.39   50.71  275.03    4.11    5.60    0.29   15.22 
-Dip.mon  Dic.sp Dic.fus Dic.pol Hyl.spl Ple.sch Pol.pil Pol.jun Pol.com 
-   3.24   40.50  113.52    6.06   18.04  377.97    0.61   13.85    0.71 
-Poh.nut Pti.cil Bar.lyc Cla.arb Cla.ran Cla.ste Cla.unc Cla.coc Cla.cor 
-   2.62   14.01    3.19  255.05  388.71  486.71   56.28    2.79    6.22 
-Cla.gra Cla.fim Cla.cri Cla.chl Cla.bot Cla.ama  Cla.sp Cet.eri Cet.isl 
-   5.14    3.96    7.47    1.16    0.47    0.14    0.52    3.60    2.03 
-Cet.niv Nep.arc  Ste.sp Pel.aph Ich.eri Cla.cer Cla.def Cla.phy 
-  11.85    5.26   17.52    0.76    0.22    0.10   10.23    0.80 
+   27     9    10    12     2    11     6    28 
+125.6 122.6 122.4 119.8 119.1 112.8 110.9 110.7 
+```
+
+## Summarizing data with `apply()` | sums and sorting
+
+**Sum of rows**
+
+```r
+sum.of.rows <- apply(varespec, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) 
+```
+
+```
+   27     9    10    12     2    11     6    28 
+125.6 122.6 122.4 119.8 119.1 112.8 110.9 110.7 
+```
+**Sum of columns**
+
+```r
+sum.of.columns <- apply(varespec, 2, sum)
+sort(sum.of.columns, decreasing = TRUE)[1:8] #top 8 columns (species)
+```
+
+```
+Cla.ste Cla.ran Ple.sch Vac.vit Cla.arb Emp.nig Dic.fus Cla.unc 
+ 486.71  388.71  377.97  275.03  255.05  151.99  113.52   56.28 
 ```
 
 

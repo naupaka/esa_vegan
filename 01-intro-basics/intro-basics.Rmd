@@ -2,17 +2,15 @@
 title: "Community data analysis using the vegan package in R"
 author: "Naupaka Zimmerman and Gavin Simpson"
 date: "August 9, 2014 • ESA 2014"
-bibliography: intro-basics.bib
-
 output:
   ioslides_presentation:
-    widescreen: true
-    smaller: false
-    fig_width: 7
+    fig_caption: yes
     fig_height: 6
-    fig_caption: true
-    keep_md: true
+    fig_width: 7
     highlight: tango
+    keep_md: yes
+    widescreen: yes
+bibliography: intro-basics.bib
 ---
 
 ```{r setup, include = FALSE}
@@ -63,19 +61,41 @@ data(varespec)
 data(varechem)
 ```
 
+## Cleaning your data for import into R for use in vegan
+
+* We will use built-in datasets for species `varespec` and environmental variables `varechem`
+    * from: Väre, H., Ohtonen, R. and Oksanen, J. (1995)
+
+```{r, results='hide'}
+library("vegan")
+data(varespec)
+data(varechem)
+```
+
 ```{r}
 head(varespec[,1:8], n = 3)
 ```
 
-## Summarizing data with `apply()`
 
-Sum of rows
+## Summarizing data with `apply()` | sums and sorting
+
+**Sum of rows**
 ```{r}
 sum.of.rows <- apply(varespec, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) 
 ```
-Sum of columns
+
+## Summarizing data with `apply()` | sums and sorting
+
+**Sum of rows**
+```{r}
+sum.of.rows <- apply(varespec, 1, sum)
+sort(sum.of.rows, decreasing = TRUE)[1:8] #top 8 rows (sites) 
+```
+**Sum of columns**
 ```{r}
 sum.of.columns <- apply(varespec, 2, sum)
+sort(sum.of.columns, decreasing = TRUE)[1:8] #top 8 columns (species)
 ```
 
 
