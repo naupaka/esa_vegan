@@ -412,6 +412,20 @@ sort(rank.UTM.NS.wisc, decreasing = TRUE)
 
 <!----------------------------slide boundary--------------------------------->
 
+## Activity
+
+There is a data file in the workshop repositiory, in the `01-intro-basics/data/` folder called `varespec.xlsx`.  
+
+1. Download this file (which has errors)
+2. Make a copy
+3. Clean it up
+4. Load it into R
+5. Try at least two different methods to standardize the data.
+6. Evaluate at least five different community distance metrics with `rankindex()`
+7. Calculate community distances using that metric.
+
+<!----------------------------slide boundary--------------------------------->
+
 # Diversity metrics
 
 <!----------------------------slide boundary--------------------------------->
