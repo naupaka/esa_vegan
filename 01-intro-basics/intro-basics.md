@@ -717,11 +717,90 @@ site.shannon[1:12]
 
 ## Rarefaction
 
+This is the same as `apply(BCI > 0, MARGIN = 1, sum)`    
+it gives the species count for each plot
+
+```r
+BCI.S <- specnumber(BCI)
+```
+This finds the plot with the least number of individuals
+
+```r
+# could also use rowsums() instead of apply()
+BCI.raremax <- min(apply(BCI, 1, sum))
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Rarefaction
+
+Rarefy BCI species matrix to the minimum number of individuals in any plot    
+and plot the relationship between observed and rarefied counts (plus add 1-1 line)
+
+```r
+BCI.Srare <- rarefy(BCI, BCI.raremax)
+plot(BCI.S, BCI.Srare, xlab = "Observed No. of Species", ylab = "Rarefied No. of Species")
+abline(0, 1)
+```
+
+![plot of chunk unnamed-chunk-36](./intro-basics_files/figure-html/unnamed-chunk-36.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
+## Rarefaction
+
+Put it all together
+
+```r
+rarecurve(BCI, step = 20, sample = BCI.raremax, col = "blue", cex = 0.6)
+```
+
+![plot of chunk unnamed-chunk-37](./intro-basics_files/figure-html/unnamed-chunk-37.png) 
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Beta diversity
 
-E.g. distance metrics discussed earlier.
-### Within vs between group similarities
+Multivariate homogeneity of groups dispersions
 
-* `betadisper()`
+```r
+BCI.bray <- vegdist(BCI, method = "bray")
+betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS))
+```
+
+```
+
+	Homogeneity of multivariate dispersions
+
+Call: betadisper(d = BCI.bray, group = as.factor(BCI.env$UTM.NS))
+
+No. of Positive Eigenvalues: 43
+No. of Negative Eigenvalues: 6
+
+Average distance to median:
+1011568.985 1011668.985 1011768.985 1011868.985 1011968.985 
+      0.282       0.266       0.314       0.294       0.334 
+
+Eigenvalues for PCoA axes:
+PCoA1 PCoA2 PCoA3 PCoA4 PCoA5 PCoA6 PCoA7 PCoA8 
+1.016 0.707 0.532 0.332 0.261 0.251 0.226 0.170 
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Beta diversity
+
+Boxplot of within-group multivariate dispersion
+
+```r
+boxplot(betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS)))
+```
+
+![plot of chunk unnamed-chunk-39](./intro-basics_files/figure-html/unnamed-chunk-39.png) 
+
+
+
+<!----------------------------slide boundary--------------------------------->
+
 
 ## References

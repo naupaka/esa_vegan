@@ -7,7 +7,7 @@ bibliography: ordination.bib
 output:
   ioslides_presentation:
     widescreen: true
-    smaller: true
+    smaller: false
     fig_width: 7
     fig_height: 6
     fig_caption: true
@@ -19,14 +19,48 @@ output:
 knitr::opts_chunk$set(comment = "", cache = TRUE)
 ```
 
+<!----------------------------slide boundary--------------------------------->
+
+# Ordination plots
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Unconstrained ordination
 
-What does it mean?
+**What does it mean?**
 
-Types:
+* First we look for major variation, then try to attribute it to environmental variation
+* vs. constrained ordination, where we only want to see what can be explained by environmental variables of interest
+
+<!----------------------------slide boundary--------------------------------->
+
+## Unconstrained ordination
+
+**What does it mean?**
+
+* First we look for major variation, then try to attribute it to environmental variation
+* vs. constrained ordination, where we only want to see what can be explained by environmental variables of interest
+
+**Examples of unconstrained ordination:**
 
 * Principal Components Analysis - PCA
 * Nonmetric Multidimensional Scaling - NMDS
+
+<!----------------------------slide boundary--------------------------------->
+
+## Unconstrained ordination
+
+**What does it mean?**
+
+* First we look for major variation, then try to attribute it to environmental variation
+* vs. constrained ordination, where we only want to see what can be explained by environmental variables of interest
+
+**Examples of unconstrained ordination:**
+
+* Principal Components Analysis - PCA
+* **Nonmetric Multidimensional Scaling - NMDS**
+
+<!----------------------------slide boundary--------------------------------->
 
 ## Plotting in R | Examples using NMDS
 

@@ -431,11 +431,60 @@ site.shannon[1:12]
 
 ## Rarefaction
 
+This is the same as `apply(BCI > 0, MARGIN = 1, sum)`    
+it gives the species count for each plot
+```{r}
+BCI.S <- specnumber(BCI)
+```
+This finds the plot with the least number of individuals
+```{r}
+# could also use rowsums() instead of apply()
+BCI.raremax <- min(apply(BCI, 1, sum))
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Rarefaction
+
+Rarefy BCI species matrix to the minimum number of individuals in any plot    
+and plot the relationship between observed and rarefied counts (plus add 1-1 line)
+```{r, fig.height=3.5}
+BCI.Srare <- rarefy(BCI, BCI.raremax)
+plot(BCI.S, BCI.Srare, xlab = "Observed No. of Species", ylab = "Rarefied No. of Species")
+abline(0, 1)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Rarefaction
+
+Put it all together
+```{r, fig.height=4.5}
+rarecurve(BCI, step = 20, sample = BCI.raremax, col = "blue", cex = 0.6)
+```
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Beta diversity
 
-E.g. distance metrics discussed earlier.
-### Within vs between group similarities
+Multivariate homogeneity of groups dispersions
+```{r}
+BCI.bray <- vegdist(BCI, method = "bray")
+betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS))
+```
 
-* `betadisper()`
+<!----------------------------slide boundary--------------------------------->
+
+## Beta diversity
+
+Boxplot of within-group multivariate dispersion
+```{r, fig.height=4.5}
+boxplot(betadisper(BCI.bray,group = as.factor(BCI.env$UTM.NS)))
+```
+
+
+
+<!----------------------------slide boundary--------------------------------->
+
 
 ## References

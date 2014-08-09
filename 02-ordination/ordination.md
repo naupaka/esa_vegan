@@ -4,14 +4,46 @@ August 9, 2014 • ESA 2014
 
 
 
+<!----------------------------slide boundary--------------------------------->
+
+# Ordination plots
+
+<!----------------------------slide boundary--------------------------------->
+
 ## Unconstrained ordination
 
-What does it mean?
+**What does it mean?**
 
-Types:
+* First we look for major variation, then try to attribute it to environmental variation
+* vs. constrained ordination, where we only want to see what can be explained by environmental variables of interest
+
+<!----------------------------slide boundary--------------------------------->
+
+## Unconstrained ordination
+
+**What does it mean?**
+
+* First we look for major variation, then try to attribute it to environmental variation
+* vs. constrained ordination, where we only want to see what can be explained by environmental variables of interest
+
+**Types of unconstrained ordination:**
 
 * Principal Components Analysis - PCA
 * Nonmetric Multidimensional Scaling - NMDS
+
+<!----------------------------slide boundary--------------------------------->
+
+## Unconstrained ordination
+
+**What does it mean?**
+
+* First we look for major variation, then try to attribute it to environmental variation
+* vs. constrained ordination, where we only want to see what can be explained by environmental variables of interest
+
+**Examples of unconstrained ordination:**
+
+* Principal Components Analysis - PCA
+* **Nonmetric Multidimensional Scaling - NMDS**
 
 ## Plotting in R | Examples using NMDS
 
