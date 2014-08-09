@@ -221,7 +221,7 @@ head(spec.sqrt[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Total**
 
@@ -237,7 +237,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Total**
 
@@ -265,7 +265,7 @@ head(spec.total[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Maximum**
 
@@ -281,7 +281,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Maximum** 
 
@@ -309,7 +309,7 @@ head(spec.max[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
 
@@ -325,7 +325,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Presence-Absence**
 
@@ -353,7 +353,7 @@ head(spec.pa[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Hellinger (Legendre & Gallagher 2001)**
 Square root of method "total"
@@ -370,7 +370,7 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Hellinger (Legendre & Gallagher 2001)**
 Square root of method "total"
@@ -399,10 +399,10 @@ head(spec.hellinger[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
-Species standardized to maximum, then sites by totals.  
+Shortcut function for standardizing species to maximum, then sites by totals.  
 
 ```r
 head(varespec[,1:8], n = 3)
@@ -416,10 +416,10 @@ head(varespec[,1:8], n = 3)
 ```
 
 <!----------------------------slide boundary--------------------------------->
-## Data transformation with `decostand()`
+## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
-Species standardized to maximum, then sites by totals.
+Shortcut function for standardizing species to maximum, then sites by totals.
 
 ```r
 head(varespec[,1:8], n = 3)
@@ -446,21 +446,96 @@ head(spec.wisc[,1:8], n = 3)
 
 <!----------------------------slide boundary--------------------------------->
 
-## Types of distance metrics | and why you might want to use one instead of another
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-* Presence/absence
-* Abundance based
-* Probabilistic
+How to choose a good one for your data set?  
+First step, read the help for vegdist
 
-## Calculating community distances with `vegdist()` | so many distance metrics, so little time!
+```r
+?vegdist
+```
 
-Examples: 
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-* Bray
-* Jaccard
-* Morisita
-* How to choose a good one for your data set?
-    * `rankindex()`
+Second, try `rankindex()`    
+
+Higher rank correlations indicate better separation along a environmental gradients
+
+```r
+rank.all <- rankindex(varechem, varespec, indices = 
+              c("bray", "euclid", "manhattan", "horn"), method = "spearman")
+rank.all
+```
+
+```
+     bray    euclid manhattan      horn 
+   0.2241    0.1469    0.2262    0.1785 
+```
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+Second, try `rankindex()`    
+
+Or across a single, selected gradient
+
+```r
+rank.Ca <- rankindex(varechem$Ca, varespec, indices = 
+              c("bray", "euclid", "manhattan", "horn"), method = "spearman")
+rank.Ca
+```
+
+```
+     bray    euclid manhattan      horn 
+  0.12707   0.08922   0.14425   0.10210 
+```
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+Second, try `rankindex()`    
+
+Can also use on standardized data
+
+```r
+rank.wisc <- rankindex(varechem$Ca, wisconsin(varespec), indices = 
+              c("bray", "euclid", "manhattan", "horn"), method = "spearman")
+rank.wisc
+```
+
+```
+     bray    euclid manhattan      horn 
+   0.2228    0.1745    0.2228    0.2058 
+```
+
+## Calculating distances with `vegdist()` | comparison
+
+
+```r
+sort(rank.all, decreasing = TRUE)
+```
+
+```
+manhattan      bray      horn    euclid 
+   0.2262    0.2241    0.1785    0.1469 
+```
+
+```r
+sort(rank.Ca, decreasing = TRUE)
+```
+
+```
+manhattan      bray      horn    euclid 
+  0.14425   0.12707   0.10210   0.08922 
+```
+
+```r
+sort(rank.wisc, decreasing = TRUE)
+```
+
+```
+     bray manhattan      horn    euclid 
+   0.2228    0.2228    0.2058    0.1745 
+```
+
 
 ## Rarefaction
 

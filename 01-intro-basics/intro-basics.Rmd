@@ -246,7 +246,7 @@ head(spec.hellinger[,1:8], n = 3)
 ## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
-Species standardized to maximum, then sites by totals.  
+Shortcut function for standardizing species to maximum, then sites by totals.  
 ```{r}
 head(varespec[,1:8], n = 3)
 ```
@@ -255,7 +255,7 @@ head(varespec[,1:8], n = 3)
 ## Data transformation in vegan with `decostand()`
 
 **Wisconsin double standardization**  
-Shotcut function for standardizing species to maximum, then sites by totals.
+Shortcut function for standardizing species to maximum, then sites by totals.
 ```{r}
 head(varespec[,1:8], n = 3)
 spec.wisc <- wisconsin(varespec)
@@ -264,21 +264,64 @@ head(spec.wisc[,1:8], n = 3)
 
 <!----------------------------slide boundary--------------------------------->
 
-## Types of distance metrics | and why you might want to use one instead of another
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-* Presence/absence
-* Abundance based
-* Probabilistic
+How to choose a good one for your data set?  
+First step, read the help for vegdist
+```{r}
+?vegdist
+```
 
-## Calculating community distances with `vegdist()` | so many distance metrics, so little time!
+<!----------------------------slide boundary--------------------------------->
 
-Examples: 
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
 
-* Bray
-* Jaccard
-* Morisita
-* How to choose a good one for your data set?
-    * `rankindex()`
+Second, try `rankindex()`    
+
+Higher rank correlations indicate better separation along a environmental gradients
+```{r}
+rank.all <- rankindex(varechem, varespec, indices = 
+              c("bray", "euclid", "manhattan", "horn"), method = "spearman")
+rank.all
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+Second, try `rankindex()`    
+
+Or across a single, selected gradient
+```{r}
+rank.Ca <- rankindex(varechem$Ca, varespec, indices = 
+              c("bray", "euclid", "manhattan", "horn"), method = "spearman")
+rank.Ca
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Calculating distances with `vegdist()` | so many distance metrics, so little time!
+
+Second, try `rankindex()`    
+
+Can also use on standardized data
+```{r}
+rank.wisc <- rankindex(varechem$Ca, wisconsin(varespec), indices = 
+              c("bray", "euclid", "manhattan", "horn"), method = "spearman")
+rank.wisc
+```
+
+<!----------------------------slide boundary--------------------------------->
+
+## Calculating distances with `vegdist()` | comparison
+
+```{r}
+sort(rank.all, decreasing = TRUE)
+sort(rank.Ca, decreasing = TRUE)
+sort(rank.wisc, decreasing = TRUE)
+```
+
+<!----------------------------slide boundary--------------------------------->
 
 ## Rarefaction
 
