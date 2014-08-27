@@ -2,8 +2,6 @@
 
 Welcome to the GitHub repository for workshop on community ecology analyses using the ```vegan``` package at ESA 2014.
 
-#### NOTE: This will be a work in progress until August 9th, 2014.
-
 **Location and time:**    
 Saturday, August 9, 2014    
 12:00 PM - 5:00 PM     
