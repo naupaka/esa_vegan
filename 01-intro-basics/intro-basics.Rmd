@@ -61,11 +61,11 @@ https://github.com/naupaka/esa_vegan
 
 ## Introduction to **vegan** | vegan today
 
- * The current stable release is version 2.0.10 which is available from CRAN
+ * The current stable release is version 2.3.0 which is available from CRAN
  * [http://cran.r-project.org/web/packages/vegan]()
- * Development is mainly conducted via [r-forge.r-project.org]() with a separate development version
- * Development branch is 2.1.x will soon be released to CRAN as the 2.2 release branch
- * R-forge also hosts our bug tracking, mailing lists \& forums which should be first port of call for getting help
+ * Development is solely conducted via [github](https://github.com/vegandevs/vegan) with a separate development version
+ * Development branch is 2.4.x (but no plans to push to CRAN as yet)
+ * Github also hosts our bug tracker but we still use R-Forge for mailing lists \& forums which should be first port of call for getting help
  * [http://r-forge.r-project.org/projects/vegan]()
  * Also several vignettes (manuals/guides) containing R code to explain how vegan works
  * The vegan tutorial is available at [http://vegan.r-forge.r-project.org]()
